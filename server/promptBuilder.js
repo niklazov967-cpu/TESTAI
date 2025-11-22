@@ -24,7 +24,10 @@ ${sourcesText}
 ТРЕБОВАНИЯ:
 1. Для каждой страны найди наиболее подходящий аналог
 2. Укажи полный химический состав (C, Mn, Si, Cr, Ni, Mo, V, Ti, P, S, Fe)
-   - ВАЖНО: Титан (Ti) обязателен для всех сталей! Если в стали нет титана, укажи "0" или "0.0"
+   - КРИТИЧЕСКИ ВАЖНО: Титан (Ti) ОБЯЗАТЕЛЕН в химическом составе для ВСЕХ сталей!
+   - Если в стали нет титана, ОБЯЗАТЕЛЬНО укажи "Ti": "0" или "Ti": "0.0"
+   - Поле "Ti" должно присутствовать в JSON для КАЖДОГО аналога (USA, Russia, China)
+   - Без поля "Ti" ответ будет считаться невалидным!
 3. Укажи механические свойства:
    - yield_strength (предел текучести, МПа)
    - tensile_strength (предел прочности, МПа)
@@ -43,6 +46,7 @@ ${sourcesText}
 - Если входная сталь из Китая, то для Китая укажи ту же марку
 - Для остальных стран найди реальные аналоги
 - Все значения должны быть числовыми или диапазонами (например, "18.0-20.0")
+- КРИТИЧЕСКИ ВАЖНО: В каждом chemical_composition ДОЛЖНО быть поле "Ti"! Проверь это перед отправкой ответа!
 
 ФОРМАТ ОТВЕТА (строго JSON):
 {
@@ -120,9 +124,12 @@ VALIDATION CRITERIA (with weights):
 
 2. **Chemical Composition (25%)** - Verify elements are within standard ranges
    - Check C, Cr, Ni, Mn, Si, Mo, V, Ti content
-   - ВАЖНО: Титан (Ti) должен быть указан для всех сталей! Если титана нет, значение должно быть "0" или "0.0"
+   - КРИТИЧЕСКИ ВАЖНО: Титан (Ti) ОБЯЗАТЕЛЕН для всех сталей!
+   - Если поле "Ti" отсутствует в chemical_composition - это КРИТИЧЕСКАЯ ОШИБКА! Добавь в errors!
+   - Если титана нет в стали, значение должно быть "0" или "0.0", но поле "Ti" ДОЛЖНО присутствовать!
    - Для титаностабилизированных сталей (например, 321, 08Х18Н10Т) Ti должен быть > 0
    - Verify ranges are realistic for the steel grade
+   - Если Ti отсутствует - снизь overall_score минимум на 20 баллов!
 
 3. **Carbon Equivalent (20%)** - Verify CE calculation and weldability assessment
    - Recalculate: CE = C + (Mn/6) + (Ni/20) + (Cr/10) + (Mo/50) + (V/10)
@@ -147,12 +154,16 @@ VALIDATION CRITERIA (with weights):
    - P should be < 0.05%
 
 FACT-CHECKING STEPS:
-1. Cross-reference chemical composition with known standards
-2. Verify mechanical properties are realistic for the steel class
-3. Recalculate carbon equivalent for each analog
-4. Check if steel grades actually exist in respective countries
-5. Verify weldability classification matches CE value
-6. Check for any obvious errors or inconsistencies
+1. ПЕРВЫМ ДЕЛОМ: Проверь наличие поля "Ti" в chemical_composition для ВСЕХ аналогов (USA, Russia, China)
+   - Если "Ti" отсутствует хотя бы в одном аналоге - это КРИТИЧЕСКАЯ ОШИБКА!
+   - Добавь в errors: "Missing Titanium (Ti) in chemical composition for [country]"
+   - Снизь overall_score минимум на 20 баллов
+2. Cross-reference chemical composition with known standards
+3. Verify mechanical properties are realistic for the steel class
+4. Recalculate carbon equivalent for each analog
+5. Check if steel grades actually exist in respective countries
+6. Verify weldability classification matches CE value
+7. Check for any obvious errors or inconsistencies
 
 SCORING GUIDE:
 - 100: Perfect match, no issues
