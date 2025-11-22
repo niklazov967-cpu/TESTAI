@@ -38,6 +38,11 @@ function enhanceResults(result) {
       
       // Расчет углеродного эквивалента
       if (analog.chemical_composition) {
+        // ВАЖНО: Гарантируем наличие титана (Ti) в химическом составе
+        if (analog.chemical_composition.Ti === undefined || analog.chemical_composition.Ti === null) {
+          analog.chemical_composition.Ti = '0';
+        }
+        
         analog.carbon_equivalent = utils.calculateCE(analog.chemical_composition);
         
         // Оценка свариваемости

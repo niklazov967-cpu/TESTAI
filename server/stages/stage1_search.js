@@ -44,7 +44,7 @@ function generateSearchQueries(steelGrade) {
     `${steelGrade} equivalent China GB`,
     
     // Запросы по параметрам
-    `${steelGrade} chemical composition C Cr Ni Mn`,
+    `${steelGrade} chemical composition C Cr Ni Mn Ti`,
     `${steelGrade} mechanical properties yield strength tensile strength`,
     `${steelGrade} carbon equivalent weldability`,
     

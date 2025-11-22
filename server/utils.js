@@ -61,11 +61,16 @@ function classifySteelGrade(composition) {
   const Cr = parseElement(composition.Cr);
   const Ni = parseElement(composition.Ni);
   const C = parseElement(composition.C);
+  const Ti = parseElement(composition.Ti || 0); // Титан
 
   // Нержавеющие стали (Cr >= 10.5%)
   if (Cr >= 10.5) {
     // Аустенитные (Cr 16-26%, Ni 6-22%, C <= 0.08%)
     if (Ni >= 6 && Ni <= 22 && Cr >= 16 && Cr <= 26 && C <= 0.08) {
+      // Проверка на титаностабилизированные стали
+      if (Ti > 0.1) {
+        return 'austenitic_stainless_titanium_stabilized';
+      }
       return 'austenitic_stainless';
     }
     // Мартенситные (Cr 11.5-18%, Ni < 2.5%, C 0.15-1.2%)
@@ -161,6 +166,7 @@ function assessPopularity(grade, country) {
 function formatSteelClass(steelClass) {
   const names = {
     austenitic_stainless: 'Аустенитная нержавеющая',
+    austenitic_stainless_titanium_stabilized: 'Аустенитная нержавеющая (титаностабилизированная)',
     ferritic_stainless: 'Ферритная нержавеющая',
     martensitic_stainless: 'Мартенситная нержавеющая',
     low_carbon_steel: 'Низкоуглеродистая',
