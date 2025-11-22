@@ -124,12 +124,15 @@ VALIDATION CRITERIA (with weights):
 
 2. **Chemical Composition (25%)** - Verify elements are within standard ranges
    - Check C, Cr, Ni, Mn, Si, Mo, V, Ti content
-   - КРИТИЧЕСКИ ВАЖНО: Титан (Ti) ОБЯЗАТЕЛЕН для всех сталей!
-   - Если поле "Ti" отсутствует в chemical_composition - это КРИТИЧЕСКАЯ ОШИБКА! Добавь в errors!
-   - Если титана нет в стали, значение должно быть "0" или "0.0", но поле "Ti" ДОЛЖНО присутствовать!
-   - Для титаностабилизированных сталей (например, 321, 08Х18Н10Т) Ti должен быть > 0
+   - ВАЖНО: Поле "Ti" должно присутствовать в chemical_composition для всех аналогов
+   - Если поле "Ti" отсутствует - добавь в errors, но НЕ снижай оценку, если сталь не требует титан
+   - Для титаностабилизированных сталей (321, 08Х18Н10Т, 0Cr18Ni10Ti и т.д.):
+     * Ti должен быть > 0 (обычно 0.4-0.8%)
+     * Если Ti = 0 или отсутствует - это ОШИБКА, снизь chemical_composition score на 15-20 баллов
+   - Для обычных сталей (304, 316, 08Х18Н10 и т.д.):
+     * Ti может быть 0 - это нормально
+     * Если Ti отсутствует, но значение должно быть 0 - это не ошибка, просто добавь в warnings
    - Verify ranges are realistic for the steel grade
-   - Если Ti отсутствует - снизь overall_score минимум на 20 баллов!
 
 3. **Carbon Equivalent (20%)** - Verify CE calculation and weldability assessment
    - Recalculate: CE = C + (Mn/6) + (Ni/20) + (Cr/10) + (Mo/50) + (V/10)
@@ -154,23 +157,31 @@ VALIDATION CRITERIA (with weights):
    - P should be < 0.05%
 
 FACT-CHECKING STEPS:
-1. ПЕРВЫМ ДЕЛОМ: Проверь наличие поля "Ti" в chemical_composition для ВСЕХ аналогов (USA, Russia, China)
-   - Если "Ti" отсутствует хотя бы в одном аналоге - это КРИТИЧЕСКАЯ ОШИБКА!
-   - Добавь в errors: "Missing Titanium (Ti) in chemical composition for [country]"
-   - Снизь overall_score минимум на 20 баллов
-2. Cross-reference chemical composition with known standards
-3. Verify mechanical properties are realistic for the steel class
-4. Recalculate carbon equivalent for each analog
-5. Check if steel grades actually exist in respective countries
-6. Verify weldability classification matches CE value
-7. Check for any obvious errors or inconsistencies
+1. ПЕРВЫМ ДЕЛОМ: Определи, является ли входная сталь титаностабилизированной
+   - Титаностабилизированные: 321, 08Х18Н10Т, 0Cr18Ni10Ti, 12Х18Н10Т и т.д. (содержат "Т" или "Ti" в названии)
+   - Обычные: 304, 316, 08Х18Н10, 0Cr18Ni9 и т.д.
+   
+2. Проверь наличие поля "Ti" в chemical_composition для ВСЕХ аналогов (USA, Russia, China)
+   - Если "Ti" отсутствует - добавь в errors, но НЕ снижай оценку автоматически
+   - Если сталь титаностабилизированная И Ti = 0 или отсутствует - это ОШИБКА, снизь chemical_composition score
+   - Если сталь обычная И Ti = 0 - это нормально, не снижай оценку
+3. Cross-reference chemical composition with known standards
+4. Verify mechanical properties are realistic for the steel class
+5. Recalculate carbon equivalent for each analog (CE = C + Mn/6 + Ni/20 + Cr/10 + Mo/50 + V/10)
+   - ВАЖНО: Для нержавеющих сталей CE обычно < 1.0, если CE > 2.0 - проверь расчет!
+6. Check if steel grades actually exist in respective countries
+7. Verify weldability classification matches CE value
+8. Check for any obvious errors or inconsistencies
 
 SCORING GUIDE:
 - 100: Perfect match, no issues
-- 90-99: Excellent match, minor differences
-- 80-89: Good match, acceptable differences
+- 90-99: Excellent match, minor differences (это ОТЛИЧНАЯ оценка!)
+- 80-89: Good match, acceptable differences (это ХОРОШАЯ оценка, не низкая!)
 - 70-79: Acceptable match, some concerns
 - Below 70: Significant issues, needs revision
+
+ВАЖНО: Оценка 85/100 - это ХОРОШАЯ оценка, не низкая! Не снижай оценку без серьезных причин.
+Если подбор аналогов правильный и параметры соответствуют стандартам - давай высокую оценку (90+).
 
 OUTPUT FORMAT (strict JSON):
 {
