@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск аналогов сталей v3.0</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Поиск аналогов сталей</h1>
+            <p class="subtitle">Трёхэтапная архитектура: Tavily → DeepSeek → OpenAI</p>
+        </header>
+
+        <main>
+            <div class="search-section">
+                <div class="input-group">
+                    <label for="steel-grade">Марка стали:</label>
+                    <input 
+                        type="text" 
+                        id="steel-grade" 
+                        placeholder="Например: AISI 304, 09Г2С, Q345"
+                        autocomplete="off"
+                    >
+                    <button id="search-btn" class="btn-primary">Найти аналоги</button>
+                </div>
+            </div>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Обработка запроса...</p>
+                <div class="stage-info">
+                    <div id="stage1" class="stage">📡 Stage 1: Поиск данных</div>
+                    <div id="stage2" class="stage">🤖 Stage 2: Обработка</div>
+                    <div id="stage3" class="stage">✅ Stage 3: Валидация</div>
+                </div>
+            </div>
+
+            <div id="error" class="error hidden"></div>
+
+            <div id="results" class="results hidden">
+                <div class="result-header">
+                    <h2>Результаты поиска</h2>
+                    <div class="validation-score">
+                        <span class="score-label">Оценка валидации:</span>
+                        <span id="validation-score" class="score-value">-</span>
+                    </div>
+                </div>
+
+                <div class="analogs-grid">
+                    <div class="analog-card" id="analog-usa">
+                        <h3>🇺🇸 США</h3>
+                        <div class="analog-content"></div>
+                    </div>
+                    <div class="analog-card" id="analog-russia">
+                        <h3>🇷🇺 Россия</h3>
+                        <div class="analog-content"></div>
+                    </div>
+                    <div class="analog-card" id="analog-china">
+                        <h3>🇨🇳 Китай</h3>
+                        <div class="analog-content"></div>
+                    </div>
+                </div>
+
+                <div class="validation-details">
+                    <h3>Детали валидации</h3>
+                    <div id="validation-info"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Версия 3.0 | Three-Stage Pipeline Architecture</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
