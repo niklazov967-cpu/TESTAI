@@ -19,21 +19,23 @@ npm install
 
 ### 2. Настройка API ключей
 
-Создайте файл `.env` в корне проекта:
+Создайте файл `.env` в корне проекта (скопируйте из примера ниже):
 
 ```env
 # Tavily API (Stage 1: Search)
-TAVILY_API_KEY=your_tavily_api_key
+TAVILY_API_KEY=your_tavily_api_key_here
 
 # DeepSeek API (Stage 2: Processing)
-DEEPSEEK_API_KEY=your_deepseek_api_key
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
 
 # OpenAI API (Stage 3: Validation)
-OPENAI_API_KEY=your_openai_api_key
+OPENAI_API_KEY=your_openai_api_key_here
 
 # Server
 PORT=3000
 ```
+
+**Важно:** Файл `.env` не включен в репозиторий по соображениям безопасности. Создайте его вручную после клонирования проекта.
 
 ### 3. Запуск сервера
 
