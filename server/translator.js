@@ -81,12 +81,37 @@ ${text}
         // Убираем кавычки если есть
         translated = translated.replace(/^["']|["']$/g, '');
         
-        console.log(`[Translator] Перевод завершен`);
+        // Проверяем, что перевод действительно произошел (текст изменился или стал на русском)
+        if (translated === text && !isRussian(translated)) {
+            console.warn(`[Translator] Перевод не изменил текст, возможно ошибка API`);
+            // Пытаемся еще раз с другим промптом
+            const retryPrompt = `Переведи на русский язык: ${text}`;
+            const retryResponse = await axios.post(
+                'https://api.deepseek.com/v1/chat/completions',
+                {
+                    model: 'deepseek-chat',
+                    messages: [{ role: 'user', content: retryPrompt }],
+                    temperature: 0.3,
+                    max_tokens: 1000
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 30000
+                }
+            );
+            const retryContent = retryResponse.data.choices[0].message.content.trim();
+            translated = retryContent.replace(/^["']|["']$/g, '');
+        }
+        
+        console.log(`[Translator] Перевод завершен: "${text.substring(0, 30)}..." -> "${translated.substring(0, 30)}..."`);
         return translated;
         
     } catch (error) {
         console.error('[Translator] Ошибка перевода:', error.message);
-        // В случае ошибки возвращаем оригинальный текст
+        // В случае ошибки возвращаем оригинальный текст, но это будет проверено перед сохранением в кэш
         return text;
     }
 }
@@ -148,21 +173,56 @@ async function translateValidation(validation) {
     if (validation.errors && Array.isArray(validation.errors)) {
         translated.errors = [];
         for (const error of validation.errors) {
-            translated.errors.push(await translateToRussian(error));
+            if (typeof error === 'string' && error.trim().length > 0) {
+                const translatedError = await translateToRussian(error);
+                // Проверяем, что перевод действительно произошел
+                if (translatedError !== error || isRussian(translatedError)) {
+                    translated.errors.push(translatedError);
+                } else {
+                    // Если перевод не удался, пытаемся еще раз
+                    console.warn(`[Translator] Повторная попытка перевода ошибки: ${error.substring(0, 50)}...`);
+                    const retryTranslation = await translateToRussian(error);
+                    translated.errors.push(retryTranslation);
+                }
+            } else {
+                translated.errors.push(error);
+            }
         }
     }
     
     if (validation.warnings && Array.isArray(validation.warnings)) {
         translated.warnings = [];
         for (const warning of validation.warnings) {
-            translated.warnings.push(await translateToRussian(warning));
+            if (typeof warning === 'string' && warning.trim().length > 0) {
+                const translatedWarning = await translateToRussian(warning);
+                if (translatedWarning !== warning || isRussian(translatedWarning)) {
+                    translated.warnings.push(translatedWarning);
+                } else {
+                    console.warn(`[Translator] Повторная попытка перевода предупреждения: ${warning.substring(0, 50)}...`);
+                    const retryTranslation = await translateToRussian(warning);
+                    translated.warnings.push(retryTranslation);
+                }
+            } else {
+                translated.warnings.push(warning);
+            }
         }
     }
     
     if (validation.recommendations && Array.isArray(validation.recommendations)) {
         translated.recommendations = [];
         for (const recommendation of validation.recommendations) {
-            translated.recommendations.push(await translateToRussian(recommendation));
+            if (typeof recommendation === 'string' && recommendation.trim().length > 0) {
+                const translatedRecommendation = await translateToRussian(recommendation);
+                if (translatedRecommendation !== recommendation || isRussian(translatedRecommendation)) {
+                    translated.recommendations.push(translatedRecommendation);
+                } else {
+                    console.warn(`[Translator] Повторная попытка перевода рекомендации: ${recommendation.substring(0, 50)}...`);
+                    const retryTranslation = await translateToRussian(recommendation);
+                    translated.recommendations.push(retryTranslation);
+                }
+            } else {
+                translated.recommendations.push(recommendation);
+            }
         }
     }
     

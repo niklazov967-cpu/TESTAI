@@ -12,8 +12,8 @@ async function execute(steelGrade, config) {
   
   console.log(`[Этап 1] Сгенерировано ${queries.length} поисковых запросов`);
 
-  // Выполнение всех запросов
-  const searchResults = await tavilyClient.multiSearch(queries);
+  // Выполнение всех запросов с передачей конфигурации
+  const searchResults = await tavilyClient.multiSearch(queries, config);
 
   // Агрегация результатов
   const aggregatedData = aggregateResults(searchResults);
@@ -26,7 +26,10 @@ async function execute(steelGrade, config) {
     search_results: searchResults,
     aggregated_data: aggregatedData,
     sources_count: aggregatedData.sources_count,
-    total_results: aggregatedData.total_results
+    total_results: aggregatedData.total_results,
+    total_results_from_queries: aggregatedData.total_results_from_queries,
+    successful_queries: aggregatedData.successful_queries,
+    duplicates_removed: aggregatedData.duplicates_removed
   };
 }
 
@@ -60,9 +63,15 @@ function generateSearchQueries(steelGrade) {
 function aggregateResults(searchResults) {
   const allResults = [];
   const uniqueUrls = new Set();
+  let totalResultsFromQueries = 0;
+  let successfulQueries = 0;
 
   for (const queryResult of searchResults) {
     if (queryResult.success) {
+      successfulQueries++;
+      const resultsCount = queryResult.results.length;
+      totalResultsFromQueries += resultsCount;
+      
       for (const result of queryResult.results) {
         if (!uniqueUrls.has(result.url)) {
           uniqueUrls.add(result.url);
@@ -84,6 +93,9 @@ function aggregateResults(searchResults) {
   return {
     sources_count: allResults.length,
     total_results: allResults.length,
+    total_results_from_queries: totalResultsFromQueries,
+    successful_queries: successfulQueries,
+    duplicates_removed: totalResultsFromQueries - allResults.length,
     top_sources: allResults.slice(0, 10),
     all_sources: allResults
   };

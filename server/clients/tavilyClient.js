@@ -12,9 +12,12 @@ class TavilyClient {
 
   /**
    * Выполнить множественные поисковые запросы
+   * @param {Array} queries - Массив поисковых запросов
+   * @param {Object} config - Конфигурация (опционально)
    */
-  async multiSearch(queries) {
-    console.log(`[Tavily] Выполнение ${queries.length} поисковых запросов...`);
+  async multiSearch(queries, config = {}) {
+    const maxResults = config.tavily_max_results || 5;
+    console.log(`[Tavily] Выполнение ${queries.length} поисковых запросов (max_results: ${maxResults})...`);
     
     const results = [];
     
@@ -23,7 +26,7 @@ class TavilyClient {
       console.log(`[Tavily] Запрос ${i + 1}/${queries.length}: ${query.substring(0, 60)}...`);
       
       try {
-        const result = await this.search(query);
+        const result = await this.search(query, maxResults);
         results.push({
           query,
           results: result.results,
@@ -50,8 +53,10 @@ class TavilyClient {
 
   /**
    * Выполнить один поисковый запрос
+   * @param {string} query - Поисковый запрос
+   * @param {number} maxResults - Максимальное количество результатов (по умолчанию 5)
    */
-  async search(query) {
+  async search(query, maxResults = 5) {
     try {
       const response = await axios.post(
         `${this.baseURL}/search`,
@@ -59,7 +64,7 @@ class TavilyClient {
           api_key: this.apiKey,
           query: query,
           search_depth: 'basic',
-          max_results: 5
+          max_results: maxResults
         },
         {
           headers: {

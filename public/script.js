@@ -13,6 +13,7 @@ let stageTimers = {
     stage1: null,
     stage2: null,
     stage3: null,
+    stage4: null,
     total: null
 };
 
@@ -20,6 +21,7 @@ let stageStartTimes = {
     stage1: null,
     stage2: null,
     stage3: null,
+    stage4: null,
     total: null
 };
 
@@ -130,7 +132,20 @@ function handleProgressEvent(eventType, data) {
         case 'stage1_complete':
             stopStageTimer(1);
             updateStageStatus(1, 'Завершено');
-            updateStageIterations(1, data.queries_executed || data.sources_count || 0);
+            // Обновляем информацию о запросах и источниках
+            if (data.queries_executed && data.sources_count) {
+                let infoText = `Запросов: ${data.queries_executed} | Источников: ${data.sources_count}`;
+                if (data.total_results_from_queries) {
+                    infoText += ` (получено: ${data.total_results_from_queries}`;
+                    if (data.duplicates_removed > 0) {
+                        infoText += `, дубликатов удалено: ${data.duplicates_removed}`;
+                    }
+                    infoText += ')';
+                }
+                document.getElementById('stage1-iterations').textContent = infoText;
+            } else {
+                updateStageIterations(1, data.queries_executed || data.sources_count || 0);
+            }
             updateLoadingStatus('Этап 1 завершен. Запуск этапа 2...');
             break;
             
@@ -157,15 +172,30 @@ function handleProgressEvent(eventType, data) {
             stopStageTimer(3);
             updateStageStatus(3, 'Завершено');
             updateStageIterations(3, 8); // Стандартное количество проверок
-            updateLoadingStatus('Этап 3 завершен. Перевод результатов...');
+            updateLoadingStatus('Этап 3 завершен. Запуск этапа 4...');
             break;
             
         case 'translation_start':
-            updateLoadingStatus(data.message || 'Перевод результатов на русский...');
+            // Запуск Stage 4 для перевода
+            updateStageStatus(4, data.message || 'Перевод результатов на русский...');
+            startStageTimer(4);
+            updateLoadingStatus(data.message || 'Этап 4: Перевод результатов на русский...');
             break;
             
         case 'translation_complete':
+            // Завершаем Stage 4
+            stopStageTimer(4);
+            updateStageStatus(4, 'Завершено');
+            if (data.texts_translated) {
+                updateStageIterations(4, data.texts_translated);
+            }
             updateLoadingStatus('Перевод завершен. Завершение обработки...');
+            break;
+            
+        case 'translation_error':
+            stopStageTimer(4);
+            updateStageStatus(4, 'Ошибка перевода');
+            updateLoadingStatus('Ошибка перевода (продолжаем без перевода)...');
             break;
             
         case 'complete':
@@ -203,12 +233,14 @@ function resetTimers() {
     if (stageTimers.stage1) clearInterval(stageTimers.stage1);
     if (stageTimers.stage2) clearInterval(stageTimers.stage2);
     if (stageTimers.stage3) clearInterval(stageTimers.stage3);
+    if (stageTimers.stage4) clearInterval(stageTimers.stage4);
     if (stageTimers.total) clearInterval(stageTimers.total);
     
     // Сброс времени
     stageStartTimes.stage1 = null;
     stageStartTimes.stage2 = null;
     stageStartTimes.stage3 = null;
+    stageStartTimes.stage4 = null;
     stageStartTimes.total = null;
 }
 
@@ -216,18 +248,22 @@ function resetStages() {
     document.getElementById('stage1').classList.remove('active');
     document.getElementById('stage2').classList.remove('active');
     document.getElementById('stage3').classList.remove('active');
+    document.getElementById('stage4').classList.remove('active');
     
     document.getElementById('stage1-time').textContent = '00:00';
     document.getElementById('stage2-time').textContent = '00:00';
     document.getElementById('stage3-time').textContent = '00:00';
+    document.getElementById('stage4-time').textContent = '00:00';
     
     document.getElementById('stage1-status').textContent = 'Ожидание...';
     document.getElementById('stage2-status').textContent = 'Ожидание...';
     document.getElementById('stage3-status').textContent = 'Ожидание...';
+    document.getElementById('stage4-status').textContent = 'Ожидание...';
     
     document.getElementById('stage1-iterations').textContent = 'Запросов: 0';
     document.getElementById('stage2-iterations').textContent = 'Итераций: 0';
     document.getElementById('stage3-iterations').textContent = 'Проверок: 0';
+    document.getElementById('stage4-iterations').textContent = 'Текстов: 0';
 }
 
 function startTotalTimer() {
@@ -287,7 +323,15 @@ function updateStageIterations(stageNum, iterations) {
         iterationsElement.textContent = `Итераций: ${iterations}`;
     } else if (stageNum === 3) {
         iterationsElement.textContent = `Проверок: ${iterations}`;
+    } else if (stageNum === 4) {
+        iterationsElement.textContent = `Текстов: ${iterations}`;
     }
+}
+
+// Обновление информации о результатах Stage 1
+function updateStage1Results(sourcesCount, queriesExecuted) {
+    const iterationsElement = document.getElementById('stage1-iterations');
+    iterationsElement.textContent = `Запросов: ${queriesExecuted} | Источников: ${sourcesCount}`;
 }
 
 function hideLoading() {
@@ -296,6 +340,7 @@ function hideLoading() {
     document.getElementById('stage1').classList.remove('active');
     document.getElementById('stage2').classList.remove('active');
     document.getElementById('stage3').classList.remove('active');
+    document.getElementById('stage4').classList.remove('active');
 }
 
 function showError(message) {

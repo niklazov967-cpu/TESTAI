@@ -26,8 +26,76 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
   if (config.cache_enabled) {
     const cached = cacheManager.get(steelGrade);
     if (cached) {
-      console.log('✅ Найдено в кэше, возвращаем закэшированный результат');
+        console.log('✅ Найдено в кэше, проверяем перевод...');
       sendProgress('cached', { cached: true });
+      
+      // Проверяем, нужно ли перевести данные из кэша
+      const needsTranslation = checkIfNeedsTranslation(cached);
+      if (needsTranslation) {
+        console.log('🌐 Обнаружен английский текст в кэше, переводим...');
+        sendProgress('translation_start', {
+          stage: 4,
+          message: 'Перевод данных из кэша...',
+          timestamp: Date.now()
+        });
+        
+        try {
+          let textsTranslated = 0;
+          
+          // Переводим валидацию (все поля, включая errors, warnings, recommendations)
+          if (cached.validation) {
+            const errorsCount = cached.validation.errors?.length || 0;
+            const warningsCount = cached.validation.warnings?.length || 0;
+            const recommendationsCount = cached.validation.recommendations?.length || 0;
+            
+            cached.validation = await translator.translateValidation(cached.validation);
+            textsTranslated += errorsCount + warningsCount + recommendationsCount;
+          }
+          
+          // Переводим классы стали, свариваемость, популярность
+          for (const country of ['USA', 'Russia', 'China']) {
+            if (cached.analogs && cached.analogs[country]) {
+              const analog = cached.analogs[country];
+              if (analog.steel_class && !translator.isRussian(analog.steel_class)) {
+                analog.steel_class = await translator.translateToRussian(analog.steel_class);
+                textsTranslated++;
+              }
+              if (analog.weldability && !translator.isRussian(analog.weldability)) {
+                analog.weldability = await translator.translateToRussian(analog.weldability);
+                textsTranslated++;
+              }
+              if (analog.popularity && !translator.isRussian(analog.popularity)) {
+                analog.popularity = await translator.translateToRussian(analog.popularity);
+                textsTranslated++;
+              }
+            }
+          }
+          
+          // Проверяем, что перевод успешен перед сохранением
+          const translationSuccessful = checkTranslationSuccess(cached);
+          if (translationSuccessful) {
+            // Сохраняем переведенную версию обратно в кэш
+            cacheManager.save(steelGrade, cached);
+            console.log(`✅ Перевод данных из кэша завершен (переведено ${textsTranslated} текстов)`);
+            sendProgress('translation_complete', {
+              stage: 4,
+              message: 'Перевод завершен',
+              texts_translated: textsTranslated,
+              timestamp: Date.now()
+            });
+          } else {
+            console.warn('⚠️ Перевод данных из кэша не завершен полностью');
+          }
+        } catch (error) {
+          console.error('⚠️ Ошибка перевода данных из кэша:', error.message);
+          sendProgress('translation_error', {
+            stage: 4,
+            message: 'Ошибка перевода данных из кэша',
+            timestamp: Date.now()
+          });
+        }
+      }
+      
       return {
         ...cached,
         cached: true
@@ -59,6 +127,10 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
       message: 'Поиск данных завершен',
       sources_count: searchData.sources_count,
       queries_executed: searchData.queries_executed,
+      total_results: searchData.total_results,
+      total_results_from_queries: searchData.total_results_from_queries || searchData.sources_count,
+      successful_queries: searchData.successful_queries || searchData.queries_executed,
+      duplicates_removed: searchData.duplicates_removed || 0,
       timestamp: Date.now()
     });
 
@@ -135,16 +207,29 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
       timestamp: new Date().toISOString()
     };
 
-    // Перевод всех текстов на русский язык
-    console.log('\n🌐 Перевод результатов на русский язык...');
+    // ========================================
+    // ЭТАП 4: Перевод на русский язык
+    // ========================================
+    console.log('\n🌐 ЭТАП 4: Перевод результатов на русский язык');
+    console.log('─'.repeat(60));
+    
     sendProgress('translation_start', {
+      stage: 4,
       message: 'Перевод результатов на русский язык...',
       timestamp: Date.now()
     });
     
+    let textsTranslated = 0;
     try {
       // Переводим валидацию
-      finalResult.validation = await translator.translateValidation(finalResult.validation);
+      if (finalResult.validation) {
+        const errorsCount = finalResult.validation.errors?.length || 0;
+        const warningsCount = finalResult.validation.warnings?.length || 0;
+        const recommendationsCount = finalResult.validation.recommendations?.length || 0;
+        
+        finalResult.validation = await translator.translateValidation(finalResult.validation);
+        textsTranslated += errorsCount + warningsCount + recommendationsCount;
+      }
       
       // Переводим классы стали, свариваемость, популярность
       for (const country of ['USA', 'Russia', 'China']) {
@@ -152,32 +237,45 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
           const analog = finalResult.analogs[country];
           if (analog.steel_class && !translator.isRussian(analog.steel_class)) {
             analog.steel_class = await translator.translateToRussian(analog.steel_class);
+            textsTranslated++;
           }
           if (analog.weldability && !translator.isRussian(analog.weldability)) {
             analog.weldability = await translator.translateToRussian(analog.weldability);
+            textsTranslated++;
           }
           if (analog.popularity && !translator.isRussian(analog.popularity)) {
             analog.popularity = await translator.translateToRussian(analog.popularity);
+            textsTranslated++;
           }
         }
       }
-      console.log('✅ Перевод завершен');
+      
+      console.log(`✅ Этап 4 завершен: переведено ${textsTranslated} текстов`);
       sendProgress('translation_complete', {
+        stage: 4,
         message: 'Перевод завершен',
+        texts_translated: textsTranslated,
         timestamp: Date.now()
       });
     } catch (error) {
       console.error('⚠️ Ошибка перевода (продолжаем без перевода):', error.message);
       sendProgress('translation_error', {
+        stage: 4,
         message: 'Ошибка перевода (продолжаем без перевода)',
         timestamp: Date.now()
       });
     }
 
-    // Сохранение в кэш
+    // Сохранение в кэш только после успешного перевода
     if (config.cache_enabled && validatedData.validation.passed) {
-      cacheManager.save(steelGrade, finalResult);
-      console.log('\n💾 Результат сохранен в кэш');
+      // Проверяем, что перевод выполнен успешно
+      const translationSuccessful = checkTranslationSuccess(finalResult);
+      if (translationSuccessful) {
+        cacheManager.save(steelGrade, finalResult);
+        console.log('\n💾 Результат сохранен в кэш (с переводом)');
+      } else {
+        console.warn('\n⚠️ Перевод не завершен, результат не сохранен в кэш');
+      }
     }
 
     console.log(`\n${'='.repeat(60)}`);
@@ -190,6 +288,76 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     console.error('\n❌ Ошибка конвейера:', error);
     throw error;
   }
+}
+
+/**
+ * Проверяет, нужно ли перевести данные (есть ли английский текст)
+ */
+function checkIfNeedsTranslation(data) {
+  if (!data) return false;
+  
+  // Проверяем валидацию
+  if (data.validation) {
+    const checkArray = (arr) => {
+      if (!Array.isArray(arr)) return false;
+      return arr.some(item => typeof item === 'string' && !translator.isRussian(item));
+    };
+    
+    if (checkArray(data.validation.errors) || 
+        checkArray(data.validation.warnings) || 
+        checkArray(data.validation.recommendations)) {
+      return true;
+    }
+  }
+  
+  // Проверяем аналоги
+  if (data.analogs) {
+    for (const country of ['USA', 'Russia', 'China']) {
+      const analog = data.analogs[country];
+      if (analog) {
+        if (analog.steel_class && !translator.isRussian(analog.steel_class)) return true;
+        if (analog.weldability && !translator.isRussian(analog.weldability)) return true;
+        if (analog.popularity && !translator.isRussian(analog.popularity)) return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+/**
+ * Проверяет, успешно ли выполнен перевод
+ */
+function checkTranslationSuccess(data) {
+  if (!data) return false;
+  
+  // Проверяем валидацию
+  if (data.validation) {
+    const checkArray = (arr) => {
+      if (!Array.isArray(arr)) return true; // Если массива нет, считаем успешным
+      return !arr.some(item => typeof item === 'string' && !translator.isRussian(item));
+    };
+    
+    if (!checkArray(data.validation.errors) || 
+        !checkArray(data.validation.warnings) || 
+        !checkArray(data.validation.recommendations)) {
+      return false;
+    }
+  }
+  
+  // Проверяем аналоги
+  if (data.analogs) {
+    for (const country of ['USA', 'Russia', 'China']) {
+      const analog = data.analogs[country];
+      if (analog) {
+        if (analog.steel_class && !translator.isRussian(analog.steel_class)) return false;
+        if (analog.weldability && !translator.isRussian(analog.weldability)) return false;
+        if (analog.popularity && !translator.isRussian(analog.popularity)) return false;
+      }
+    }
+  }
+  
+  return true;
 }
 
 module.exports = {
