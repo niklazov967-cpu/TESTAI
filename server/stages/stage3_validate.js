@@ -24,7 +24,7 @@ function ensureTitaniumPresence(processedData) {
  * Фактчекинг и валидация результатов
  */
 async function execute(steelGrade, processedData, searchData, config) {
-  console.log(`[Stage 3] Validating results for: ${steelGrade}`);
+  console.log(`[Этап 3] Валидация результатов для: ${steelGrade}`);
 
   // КРИТИЧЕСКАЯ ПРОВЕРКА: Убеждаемся, что Ti присутствует во всех аналогах
   ensureTitaniumPresence(processedData);
@@ -53,7 +53,7 @@ async function execute(steelGrade, processedData, searchData, config) {
     iterations_used: processedData.iterations_used || 1
   };
 
-  console.log(`[Stage 3] Validation complete: ${validationResult.overall_score}/100`);
+  console.log(`[Этап 3] Валидация завершена: ${validationResult.overall_score}/100`);
 
   return finalResult;
 }

@@ -23,6 +23,8 @@ let stageStartTimes = {
     total: null
 };
 
+let eventSource = null;
+
 // Обработчик поиска
 searchBtn.addEventListener('click', handleSearch);
 steelGradeInput.addEventListener('keypress', (e) => {
@@ -45,12 +47,17 @@ async function handleSearch() {
     showLoading();
     searchBtn.disabled = true;
 
+    // Закрываем предыдущее соединение если есть
+    if (eventSource) {
+        eventSource.close();
+    }
+
     try {
-        // Симуляция этапов с обновлениями
-        updateLoadingStatus('Запуск Stage 1: Поиск данных через Tavily...');
-        startStageTimer(1);
+        // Запуск общего таймера
+        startTotalTimer();
+        updateLoadingStatus('Инициализация поиска...');
         
-        // Запуск запроса
+        // Создаем EventSource для получения обновлений через SSE
         const response = await fetch(`${API_BASE}/search`, {
             method: 'POST',
             headers: {
@@ -59,66 +66,135 @@ async function handleSearch() {
             body: JSON.stringify({ steel_grade: steelGrade })
         });
 
-        // Stage 1 завершен
-        stopStageTimer(1);
-        updateLoadingStatus('Stage 1 завершен. Запуск Stage 2: Обработка через DeepSeek...');
-        startStageTimer(2);
-        
-        const data = await response.json();
-
         if (!response.ok) {
-            throw new Error(data.message || 'Ошибка при выполнении запроса');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Ошибка при выполнении запроса');
         }
 
-        // Stage 2 завершен
-        stopStageTimer(2);
-        updateLoadingStatus('Stage 2 завершен. Запуск Stage 3: Валидация через OpenAI...');
-        startStageTimer(3);
-        
-        // Обновление информации об итерациях из данных
-        if (data.pipeline) {
-            updateStageIterations(1, data.pipeline.stage1_sources || 0);
-            updateStageIterations(2, data.pipeline.stage2_iterations || 0);
-            updateStageIterations(3, data.pipeline.stage3_checks || 0);
-        }
-        
-        // Небольшая задержка для отображения Stage 3
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Stage 3 завершен
-        stopStageTimer(3);
-        updateLoadingStatus('Все этапы завершены!');
-        
-        // Остановка общего таймера
-        if (stageTimers.total) {
-            clearInterval(stageTimers.total);
-        }
+        // Читаем поток SSE
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
 
-        displayResults(data);
+        while (true) {
+            const { done, value } = await reader.read();
+            
+            if (done) break;
+            
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n\n');
+            buffer = lines.pop() || '';
+
+            for (const chunk of lines) {
+                if (!chunk.trim()) continue;
+                
+                const lines = chunk.split('\n');
+                let eventType = 'message';
+                let data = '';
+
+                for (const line of lines) {
+                    if (line.startsWith('event: ')) {
+                        eventType = line.substring(7);
+                    } else if (line.startsWith('data: ')) {
+                        data = line.substring(6);
+                    }
+                }
+
+                if (data) {
+                    try {
+                        const eventData = JSON.parse(data);
+                        handleProgressEvent(eventType, eventData);
+                    } catch (e) {
+                        console.error('Ошибка парсинга события:', e);
+                    }
+                }
+            }
+        }
 
     } catch (error) {
         resetTimers();
         showError(`Ошибка: ${error.message}`);
-    } finally {
         hideLoading();
         searchBtn.disabled = false;
     }
 }
 
+function handleProgressEvent(eventType, data) {
+    switch (eventType) {
+        case 'stage1_start':
+            updateStageStatus(1, data.message || 'Поиск данных...');
+            startStageTimer(1);
+            updateLoadingStatus(data.message || 'Этап 1: Поиск данных...');
+            break;
+            
+        case 'stage1_complete':
+            stopStageTimer(1);
+            updateStageStatus(1, 'Завершено');
+            updateStageIterations(1, data.queries_executed || data.sources_count || 0);
+            updateLoadingStatus('Этап 1 завершен. Запуск этапа 2...');
+            break;
+            
+        case 'stage2_start':
+            updateStageStatus(2, data.message || 'Обработка данных...');
+            startStageTimer(2);
+            updateLoadingStatus(data.message || 'Этап 2: Обработка данных...');
+            break;
+            
+        case 'stage2_complete':
+            stopStageTimer(2);
+            updateStageStatus(2, 'Завершено');
+            updateStageIterations(2, data.iterations || 1);
+            updateLoadingStatus('Этап 2 завершен. Запуск этапа 3...');
+            break;
+            
+        case 'stage3_start':
+            updateStageStatus(3, data.message || 'Валидация результатов...');
+            startStageTimer(3);
+            updateLoadingStatus(data.message || 'Этап 3: Валидация результатов...');
+            break;
+            
+        case 'stage3_complete':
+            stopStageTimer(3);
+            updateStageStatus(3, 'Завершено');
+            updateStageIterations(3, 8); // Стандартное количество проверок
+            updateLoadingStatus('Этап 3 завершен. Перевод результатов...');
+            break;
+            
+        case 'translation_start':
+            updateLoadingStatus(data.message || 'Перевод результатов на русский...');
+            break;
+            
+        case 'translation_complete':
+            updateLoadingStatus('Перевод завершен. Завершение обработки...');
+            break;
+            
+        case 'complete':
+            // Остановка всех таймеров
+            if (stageTimers.total) {
+                clearInterval(stageTimers.total);
+            }
+            updateLoadingStatus('Все этапы завершены!');
+            displayResults(data);
+            hideLoading();
+            searchBtn.disabled = false;
+            break;
+            
+        case 'error':
+            resetTimers();
+            showError(`Ошибка: ${data.message || 'Неизвестная ошибка'}`);
+            hideLoading();
+            searchBtn.disabled = false;
+            break;
+            
+        case 'cached':
+            updateLoadingStatus('Результат найден в кэше...');
+            break;
+    }
+}
+
 function showLoading() {
     loadingDiv.classList.remove('hidden');
-    
-    // Сброс таймеров
     resetTimers();
-    
-    // Запуск общего таймера
-    stageStartTimes.total = Date.now();
-    startTotalTimer();
-    
-    // Обновление статуса
-    updateLoadingStatus('Инициализация поиска...');
-    
-    // Сброс всех этапов
     resetStages();
 }
 
@@ -141,16 +217,21 @@ function resetStages() {
     document.getElementById('stage2').classList.remove('active');
     document.getElementById('stage3').classList.remove('active');
     
-    document.getElementById('stage1-time').textContent = '--:--';
-    document.getElementById('stage2-time').textContent = '--:--';
-    document.getElementById('stage3-time').textContent = '--:--';
+    document.getElementById('stage1-time').textContent = '00:00';
+    document.getElementById('stage2-time').textContent = '00:00';
+    document.getElementById('stage3-time').textContent = '00:00';
     
-    document.getElementById('stage1-iterations').textContent = 'Итераций: 0';
+    document.getElementById('stage1-status').textContent = 'Ожидание...';
+    document.getElementById('stage2-status').textContent = 'Ожидание...';
+    document.getElementById('stage3-status').textContent = 'Ожидание...';
+    
+    document.getElementById('stage1-iterations').textContent = 'Запросов: 0';
     document.getElementById('stage2-iterations').textContent = 'Итераций: 0';
     document.getElementById('stage3-iterations').textContent = 'Проверок: 0';
 }
 
 function startTotalTimer() {
+    stageStartTimes.total = Date.now();
     stageTimers.total = setInterval(() => {
         if (stageStartTimes.total) {
             const elapsed = Math.floor((Date.now() - stageStartTimes.total) / 1000);
@@ -192,6 +273,10 @@ function updateLoadingStatus(message) {
     document.getElementById('loading-status').textContent = message;
 }
 
+function updateStageStatus(stageNum, status) {
+    document.getElementById(`stage${stageNum}-status`).textContent = status;
+}
+
 function updateStageIterations(stageNum, iterations) {
     const stageId = `stage${stageNum}`;
     const iterationsElement = document.getElementById(`${stageId}-iterations`);
@@ -206,9 +291,7 @@ function updateStageIterations(stageNum, iterations) {
 }
 
 function hideLoading() {
-    // Остановка всех таймеров
     resetTimers();
-    
     loadingDiv.classList.add('hidden');
     document.getElementById('stage1').classList.remove('active');
     document.getElementById('stage2').classList.remove('active');
@@ -407,4 +490,3 @@ function displayValidationDetails(validation) {
 
     container.innerHTML = html || '<p>Нет дополнительной информации</p>';
 }
-

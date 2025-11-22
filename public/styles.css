@@ -140,22 +140,33 @@ main {
 
 .stage-header {
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 1.1em;
+}
+
+.stage-status {
+    font-size: 0.85em;
+    opacity: 0.9;
+    margin-bottom: 10px;
+    font-style: italic;
 }
 
 .stage-details {
     font-size: 0.9em;
     margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .stage-time {
-    margin-bottom: 5px;
     font-weight: 600;
+    font-size: 1.1em;
 }
 
 .stage-iterations {
     opacity: 0.9;
+    font-size: 0.9em;
 }
 
 .total-time {
@@ -170,6 +181,7 @@ main {
     margin: 15px 0;
     font-weight: 600;
     color: #667eea;
+    font-size: 1.1em;
 }
 
 .error {

@@ -24,10 +24,7 @@ ${sourcesText}
 ТРЕБОВАНИЯ:
 1. Для каждой страны найди наиболее подходящий аналог
 2. Укажи полный химический состав (C, Mn, Si, Cr, Ni, Mo, V, Ti, P, S, Fe)
-   - КРИТИЧЕСКИ ВАЖНО: Титан (Ti) ОБЯЗАТЕЛЕН в химическом составе для ВСЕХ сталей!
-   - Если в стали нет титана, ОБЯЗАТЕЛЬНО укажи "Ti": "0" или "Ti": "0.0"
-   - Поле "Ti" должно присутствовать в JSON для КАЖДОГО аналога (USA, Russia, China)
-   - Без поля "Ti" ответ будет считаться невалидным!
+   - Если элемент отсутствует в стали, укажи "0" или "0.0"
 3. Укажи механические свойства:
    - yield_strength (предел текучести, МПа)
    - tensile_strength (предел прочности, МПа)
@@ -46,7 +43,6 @@ ${sourcesText}
 - Если входная сталь из Китая, то для Китая укажи ту же марку
 - Для остальных стран найди реальные аналоги
 - Все значения должны быть числовыми или диапазонами (например, "18.0-20.0")
-- КРИТИЧЕСКИ ВАЖНО: В каждом chemical_composition ДОЛЖНО быть поле "Ti"! Проверь это перед отправкой ответа!
 
 ФОРМАТ ОТВЕТА (строго JSON):
 {
@@ -124,14 +120,8 @@ VALIDATION CRITERIA (with weights):
 
 2. **Chemical Composition (25%)** - Verify elements are within standard ranges
    - Check C, Cr, Ni, Mn, Si, Mo, V, Ti content
-   - ВАЖНО: Поле "Ti" должно присутствовать в chemical_composition для всех аналогов
-   - Если поле "Ti" отсутствует - добавь в errors, но НЕ снижай оценку, если сталь не требует титан
-   - Для титаностабилизированных сталей (321, 08Х18Н10Т, 0Cr18Ni10Ti и т.д.):
-     * Ti должен быть > 0 (обычно 0.4-0.8%)
-     * Если Ti = 0 или отсутствует - это ОШИБКА, снизь chemical_composition score на 15-20 баллов
-   - Для обычных сталей (304, 316, 08Х18Н10 и т.д.):
-     * Ti может быть 0 - это нормально
-     * Если Ti отсутствует, но значение должно быть 0 - это не ошибка, просто добавь в warnings
+   - Для титаностабилизированных сталей (например, 321, 08Х18Н10Т) Ti должен быть > 0
+   - Если элемент отсутствует, значение должно быть "0" или "0.0"
    - Verify ranges are realistic for the steel grade
 
 3. **Carbon Equivalent (20%)** - Verify CE calculation and weldability assessment
@@ -157,31 +147,19 @@ VALIDATION CRITERIA (with weights):
    - P should be < 0.05%
 
 FACT-CHECKING STEPS:
-1. ПЕРВЫМ ДЕЛОМ: Определи, является ли входная сталь титаностабилизированной
-   - Титаностабилизированные: 321, 08Х18Н10Т, 0Cr18Ni10Ti, 12Х18Н10Т и т.д. (содержат "Т" или "Ti" в названии)
-   - Обычные: 304, 316, 08Х18Н10, 0Cr18Ni9 и т.д.
-   
-2. Проверь наличие поля "Ti" в chemical_composition для ВСЕХ аналогов (USA, Russia, China)
-   - Если "Ti" отсутствует - добавь в errors, но НЕ снижай оценку автоматически
-   - Если сталь титаностабилизированная И Ti = 0 или отсутствует - это ОШИБКА, снизь chemical_composition score
-   - Если сталь обычная И Ti = 0 - это нормально, не снижай оценку
-3. Cross-reference chemical composition with known standards
-4. Verify mechanical properties are realistic for the steel class
-5. Recalculate carbon equivalent for each analog (CE = C + Mn/6 + Ni/20 + Cr/10 + Mo/50 + V/10)
-   - ВАЖНО: Для нержавеющих сталей CE обычно < 1.0, если CE > 2.0 - проверь расчет!
-6. Check if steel grades actually exist in respective countries
-7. Verify weldability classification matches CE value
-8. Check for any obvious errors or inconsistencies
+1. Cross-reference chemical composition with known standards
+2. Verify mechanical properties are realistic for the steel class
+3. Recalculate carbon equivalent for each analog
+4. Check if steel grades actually exist in respective countries
+5. Verify weldability classification matches CE value
+6. Check for any obvious errors or inconsistencies
 
 SCORING GUIDE:
 - 100: Perfect match, no issues
-- 90-99: Excellent match, minor differences (это ОТЛИЧНАЯ оценка!)
-- 80-89: Good match, acceptable differences (это ХОРОШАЯ оценка, не низкая!)
+- 90-99: Excellent match, minor differences
+- 80-89: Good match, acceptable differences
 - 70-79: Acceptable match, some concerns
 - Below 70: Significant issues, needs revision
-
-ВАЖНО: Оценка 85/100 - это ХОРОШАЯ оценка, не низкая! Не снижай оценку без серьезных причин.
-Если подбор аналогов правильный и параметры соответствуют стандартам - давай высокую оценку (90+).
 
 OUTPUT FORMAT (strict JSON):
 {

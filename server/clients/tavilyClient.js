@@ -14,13 +14,13 @@ class TavilyClient {
    * Выполнить множественные поисковые запросы
    */
   async multiSearch(queries) {
-    console.log(`[Tavily] Executing ${queries.length} search queries...`);
+    console.log(`[Tavily] Выполнение ${queries.length} поисковых запросов...`);
     
     const results = [];
     
     for (let i = 0; i < queries.length; i++) {
       const query = queries[i];
-      console.log(`[Tavily] Query ${i + 1}/${queries.length}: ${query.substring(0, 60)}...`);
+      console.log(`[Tavily] Запрос ${i + 1}/${queries.length}: ${query.substring(0, 60)}...`);
       
       try {
         const result = await this.search(query);
@@ -35,7 +35,7 @@ class TavilyClient {
           await new Promise(resolve => setTimeout(resolve, 500));
         }
       } catch (error) {
-        console.error(`[Tavily] Query failed: ${error.message}`);
+        console.error(`[Tavily] Ошибка запроса: ${error.message}`);
         results.push({
           query,
           results: [],
@@ -79,7 +79,7 @@ class TavilyClient {
       };
 
     } catch (error) {
-      console.error('[Tavily] API error:', error.message);
+      console.error('[Tavily] Ошибка API:', error.message);
       throw error;
     }
   }
