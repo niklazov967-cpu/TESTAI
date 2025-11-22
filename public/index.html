@@ -11,6 +11,7 @@
         <header>
             <h1>🔍 Поиск аналогов сталей</h1>
             <p class="subtitle">Трёхэтапная архитектура: Tavily → DeepSeek → OpenAI</p>
+            <a href="settings.html" style="color: white; text-decoration: none; margin-top: 10px; display: inline-block; opacity: 0.9; font-size: 0.9em;">⚙️ Настройки</a>
         </header>
 
         <main>
@@ -29,11 +30,35 @@
 
             <div id="loading" class="loading hidden">
                 <div class="spinner"></div>
-                <p>Обработка запроса...</p>
+                <p id="loading-status">Обработка запроса...</p>
                 <div class="stage-info">
-                    <div id="stage1" class="stage">📡 Stage 1: Поиск данных</div>
-                    <div id="stage2" class="stage">🤖 Stage 2: Обработка</div>
-                    <div id="stage3" class="stage">✅ Stage 3: Валидация</div>
+                    <div id="stage1" class="stage">
+                        <div class="stage-header">📡 Stage 1: Поиск данных</div>
+                        <div class="stage-status" id="stage1-status">Ожидание...</div>
+                        <div class="stage-details">
+                            <div class="stage-time" id="stage1-time">00:00</div>
+                            <div class="stage-iterations" id="stage1-iterations">Запросов: 0</div>
+                        </div>
+                    </div>
+                    <div id="stage2" class="stage">
+                        <div class="stage-header">🤖 Stage 2: Обработка</div>
+                        <div class="stage-status" id="stage2-status">Ожидание...</div>
+                        <div class="stage-details">
+                            <div class="stage-time" id="stage2-time">00:00</div>
+                            <div class="stage-iterations" id="stage2-iterations">Итераций: 0</div>
+                        </div>
+                    </div>
+                    <div id="stage3" class="stage">
+                        <div class="stage-header">✅ Stage 3: Валидация</div>
+                        <div class="stage-status" id="stage3-status">Ожидание...</div>
+                        <div class="stage-details">
+                            <div class="stage-time" id="stage3-time">00:00</div>
+                            <div class="stage-iterations" id="stage3-iterations">Проверок: 0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="total-time">
+                    <strong>Общее время: <span id="total-time">00:00</span></strong>
                 </div>
             </div>
 

@@ -24,7 +24,7 @@ ${sourcesText}
 ТРЕБОВАНИЯ:
 1. Для каждой страны найди наиболее подходящий аналог
 2. Укажи полный химический состав (C, Mn, Si, Cr, Ni, Mo, V, Ti, P, S, Fe)
-   - ВАЖНО: Титан (Ti) обязателен для всех сталей! Если в стали нет титана, укажи "0" или "0.0"
+   - Если элемент отсутствует в стали, укажи "0" или "0.0"
 3. Укажи механические свойства:
    - yield_strength (предел текучести, МПа)
    - tensile_strength (предел прочности, МПа)
@@ -120,8 +120,8 @@ VALIDATION CRITERIA (with weights):
 
 2. **Chemical Composition (25%)** - Verify elements are within standard ranges
    - Check C, Cr, Ni, Mn, Si, Mo, V, Ti content
-   - ВАЖНО: Титан (Ti) должен быть указан для всех сталей! Если титана нет, значение должно быть "0" или "0.0"
    - Для титаностабилизированных сталей (например, 321, 08Х18Н10Т) Ti должен быть > 0
+   - Если элемент отсутствует, значение должно быть "0" или "0.0"
    - Verify ranges are realistic for the steel grade
 
 3. **Carbon Equivalent (20%)** - Verify CE calculation and weldability assessment

@@ -7,7 +7,7 @@ const utils = require('../utils');
  * Обработка данных и поиск аналогов
  */
 async function execute(steelGrade, searchData, config) {
-  console.log(`[Stage 2] Processing data for: ${steelGrade}`);
+  console.log(`[Этап 2] Обработка данных для: ${steelGrade}`);
 
   // Построение промпта с данными поиска
   const prompt = promptBuilder.buildStage2Prompt(steelGrade, searchData, config);
@@ -19,8 +19,11 @@ async function execute(steelGrade, searchData, config) {
 
   // Расчет дополнительных параметров
   const enhancedResult = enhanceResults(result);
+  
+  // Устанавливаем количество итераций (всегда 1, так как повторных попыток нет)
+  enhancedResult.iterations_used = 1;
 
-  console.log(`[Stage 2] Processing complete`);
+  console.log(`[Этап 2] Обработка завершена`);
 
   return enhancedResult;
 }
@@ -38,21 +41,21 @@ function enhanceResults(result) {
       
       // Расчет углеродного эквивалента
       if (analog.chemical_composition) {
-        // ВАЖНО: Гарантируем наличие титана (Ti) в химическом составе
-        if (analog.chemical_composition.Ti === undefined || analog.chemical_composition.Ti === null) {
-          analog.chemical_composition.Ti = '0';
-        }
-        
         analog.carbon_equivalent = utils.calculateCE(analog.chemical_composition);
         
         // Оценка свариваемости
         analog.weldability = utils.assessWeldability(analog.carbon_equivalent);
         
         // Классификация стали
-        analog.steel_class = utils.classifySteelGrade(analog.chemical_composition);
+        const steelClass = utils.classifySteelGrade(analog.chemical_composition);
+        analog.steel_class = utils.formatSteelClass(steelClass);
         
         // Оценка популярности
-        analog.popularity = utils.assessPopularity(analog.grade, country);
+        const popularity = utils.assessPopularity(analog.grade, country);
+        analog.popularity = utils.formatPopularity(popularity);
+        
+        // Форматирование свариваемости
+        analog.weldability = utils.formatWeldability(analog.weldability);
       }
     }
   }

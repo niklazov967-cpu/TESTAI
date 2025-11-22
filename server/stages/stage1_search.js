@@ -5,12 +5,12 @@ const tavilyClient = require('../clients/tavilyClient');
  * Множественные поисковые запросы для сбора данных
  */
 async function execute(steelGrade, config) {
-  console.log(`[Stage 1] Searching for: ${steelGrade}`);
+  console.log(`[Этап 1] Поиск для: ${steelGrade}`);
 
   // Генерация множественных запросов
   const queries = generateSearchQueries(steelGrade);
   
-  console.log(`[Stage 1] Generated ${queries.length} search queries`);
+  console.log(`[Этап 1] Сгенерировано ${queries.length} поисковых запросов`);
 
   // Выполнение всех запросов
   const searchResults = await tavilyClient.multiSearch(queries);
@@ -18,7 +18,7 @@ async function execute(steelGrade, config) {
   // Агрегация результатов
   const aggregatedData = aggregateResults(searchResults);
 
-  console.log(`[Stage 1] Aggregated ${aggregatedData.sources_count} unique sources`);
+  console.log(`[Этап 1] Агрегировано ${aggregatedData.sources_count} уникальных источников`);
 
   return {
     steel_grade: steelGrade,

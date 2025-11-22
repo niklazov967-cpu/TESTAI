@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки - Поиск аналогов сталей</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .settings-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .settings-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .settings-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 600px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .required-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .required-section h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ Настройки системы</h1>
+            <p class="subtitle">Конфигурация и документация</p>
+        </header>
+
+        <main class="settings-container">
+            <a href="index.html" class="back-link">← Вернуться к поиску</a>
+
+            <div id="alert-container"></div>
+
+            <!-- Обязательный просмотр промптов и алгоритмов -->
+            <div class="required-section">
+                <h3>📚 ОБЯЗАТЕЛЬНО К ПРОСМОТРУ</h3>
+                <p>Перед использованием системы обязательно ознакомьтесь с промптами и алгоритмами работы в разделе "Документация" ниже.</p>
+            </div>
+
+            <!-- Настройки конфигурации -->
+            <div class="settings-section">
+                <h2>📋 Конфигурация системы</h2>
+                <form id="config-form">
+                    <div class="form-group">
+                        <label for="cache_enabled">Кэширование</label>
+                        <select id="cache_enabled">
+                            <option value="true">Включено</option>
+                            <option value="false">Выключено</option>
+                        </select>
+                        <small>Включить/выключить кэширование результатов поиска</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="validation_strictness">Строгость валидации</label>
+                        <select id="validation_strictness">
+                            <option value="low">Низкая</option>
+                            <option value="medium">Средняя</option>
+                            <option value="high">Высокая</option>
+                            <option value="strict">Строгая</option>
+                        </select>
+                        <small>Уровень строгости проверки результатов валидации</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max_iterations">Максимум итераций</label>
+                        <input type="number" id="max_iterations" min="1" max="10" value="3">
+                        <small>Максимальное количество попыток обработки данных (1-10)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tavily_max_results">Максимум результатов Tavily</label>
+                        <input type="number" id="tavily_max_results" min="1" max="20" value="5">
+                        <small>Максимальное количество результатов на один поисковый запрос (1-20)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deepseek_temperature">Температура DeepSeek</label>
+                        <input type="number" id="deepseek_temperature" min="0" max="1" step="0.1" value="0.7">
+                        <small>Температура для модели DeepSeek (0.0-1.0). Чем выше, тем более креативные ответы</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="openai_temperature">Температура OpenAI</label>
+                        <input type="number" id="openai_temperature" min="0" max="1" step="0.1" value="0.3">
+                        <small>Температура для модели OpenAI (0.0-1.0). Низкая температура = более точные ответы</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="openai_model">Модель OpenAI</label>
+                        <select id="openai_model">
+                            <option value="gpt-4o-mini">gpt-4o-mini (рекомендуется)</option>
+                            <option value="gpt-4o">gpt-4o</option>
+                            <option value="gpt-4-turbo">gpt-4-turbo</option>
+                        </select>
+                        <small>Модель OpenAI для валидации результатов</small>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+                        <button type="button" class="btn btn-secondary" id="reset-config">Сбросить к defaults</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Управление кэшем -->
+            <div class="settings-section">
+                <h2>💾 Управление кэшем</h2>
+                <p>Кэш хранит результаты предыдущих поисков для ускорения повторных запросов.</p>
+                <div class="btn-group">
+                    <button class="btn btn-danger" id="clear-cache-btn">Очистить кэш</button>
+                </div>
+                <div id="cache-status" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Документация -->
+            <div class="settings-section">
+                <h2>📚 Документация системы</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" data-tab="prompts">Промпты</button>
+                    <button class="tab" data-tab="algorithms">Алгоритмы</button>
+                    <button class="tab" data-tab="architecture">Архитектура</button>
+                </div>
+
+                <div id="prompts" class="tab-content active">
+                    <h3>Промпты для трёхэтапной обработки</h3>
+                    <div id="prompts-content" class="code-block">
+                        <p>Загрузка промптов...</p>
+                    </div>
+                </div>
+
+                <div id="algorithms" class="tab-content">
+                    <h3>Алгоритмы работы системы</h3>
+                    <div id="algorithms-content" class="code-block">
+                        <h4>Stage 1: Tavily Search (Поиск данных)</h4>
+                        <pre>1. Генерация 9 поисковых запросов для заданной марки стали
+2. Выполнение параллельных запросов через Tavily API
+3. Агрегация результатов и удаление дубликатов
+4. Сортировка по релевантности
+5. Возврат топ-10 источников для обработки</pre>
+
+                        <h4>Stage 2: DeepSeek Processing (Обработка)</h4>
+                        <pre>1. Построение промпта с данными из Stage 1
+2. Отправка запроса в DeepSeek API
+3. Парсинг JSON ответа с аналогами
+4. Проверка наличия титана (Ti) в составе
+5. Если Ti отсутствует - повторная попытка (до 3 раз)
+6. Расчет углеродного эквивалента (CE)
+7. Классификация стали
+8. Оценка популярности и свариваемости</pre>
+
+                        <h4>Stage 3: OpenAI Validation (Валидация)</h4>
+                        <pre>1. Проверка наличия Ti во всех аналогах
+2. Построение промпта валидации
+3. Отправка запроса в OpenAI API
+4. Фактчекинг всех параметров:
+   - Механические свойства (30%)
+   - Химический состав (25%)
+   - Углеродный эквивалент (20%)
+   - Класс стали (15%)
+   - Свариваемость (5%)
+   - Популярность (3%)
+   - Вредные примеси (2%)
+5. Расчет общей оценки (0-100)
+6. Генерация ошибок, предупреждений и рекомендаций</pre>
+
+                        <h4>Расчет углеродного эквивалента (CE)</h4>
+                        <pre>CE = C + (Mn/6) + (Ni/20) + (Cr/10) + (Mo/50) + (V/10)
+
+Оценка свариваемости:
+- CE ≤ 0.35: отличная
+- CE 0.36-0.45: хорошая
+- CE 0.46-0.55: требуется подогрев
+- CE > 0.55: сложная</pre>
+                    </div>
+                </div>
+
+                <div id="architecture" class="tab-content">
+                    <h3>Архитектура системы</h3>
+                    <div id="architecture-content" class="code-block">
+                        <pre>┌─────────────────────────────────────────────────────────┐
+│                    FRONTEND (Browser)                    │
+│  index.html → script.js → API calls                     │
+└────────────────────┬────────────────────────────────────┘
+                     │ HTTP/JSON
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│              BACKEND (Node.js + Express)                │
+│                                                         │
+│  ┌──────────────────────────────────────────────┐      │
+│  │         server.js (API Routes)               │      │
+│  └──────────────┬───────────────────────────────┘      │
+│                 │                                       │
+│  ┌──────────────▼───────────────────────────────┐      │
+│  │      searchEngine.js (Main Pipeline)         │      │
+│  │                                              │      │
+│  │  STAGE 1: Tavily Search                     │      │
+│  │  ├─ tavilyClient.js                         │      │
+│  │  └─ stage1_search.js                        │      │
+│  │                                              │      │
+│  │  STAGE 2: DeepSeek Processing               │      │
+│  │  ├─ deepseekClient.js                       │      │
+│  │  ├─ promptBuilder.js                        │      │
+│  │  ├─ utils.js                                │      │
+│  │  └─ stage2_process.js                       │      │
+│  │                                              │      │
+│  │  STAGE 3: OpenAI Validation                 │      │
+│  │  ├─ openaiClient.js                         │      │
+│  │  └─ stage3_validate.js                      │      │
+│  └──────────────────────────────────────────────┘      │
+│                                                         │
+│  ┌──────────────┐  ┌──────────────┐                   │
+│  │ config.js    │  │cacheManager  │                   │
+│  └──────────────┘  └──────────────┘                   │
+└─────────────────────────────────────────────────────────┘
+                     │
+                     │ API Calls
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│              EXTERNAL SERVICES                           │
+│  Tavily API  │  DeepSeek API  │  OpenAI API            │
+└─────────────────────────────────────────────────────────┘</pre>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
+

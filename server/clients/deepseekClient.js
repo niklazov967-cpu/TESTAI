@@ -15,7 +15,7 @@ class DeepSeekClient {
    */
   async processData(prompt, options = {}) {
     try {
-      console.log('[DeepSeek] Processing data...');
+      console.log('[DeepSeek] Обработка данных...');
       
       const response = await axios.post(
         `${this.baseURL}/chat/completions`,
@@ -42,19 +42,19 @@ class DeepSeekClient {
       try {
         return JSON.parse(content);
       } catch (parseError) {
-        console.error('[DeepSeek] Failed to parse response:', content);
-        throw new Error('Invalid JSON response from DeepSeek API');
+        console.error('[DeepSeek] Ошибка парсинга ответа:', content);
+        throw new Error('Неверный JSON ответ от DeepSeek API');
       }
 
     } catch (error) {
       if (error.response) {
-        console.error('[DeepSeek] API error:', error.response.data);
-        throw new Error(`DeepSeek API error: ${error.response.data.error?.message || 'Unknown error'}`);
+        console.error('[DeepSeek] Ошибка API:', error.response.data);
+        throw new Error(`Ошибка DeepSeek API: ${error.response.data.error?.message || 'Неизвестная ошибка'}`);
       } else if (error.request) {
-        console.error('[DeepSeek] No response from API');
-        throw new Error('No response from DeepSeek API');
+        console.error('[DeepSeek] Нет ответа от API');
+        throw new Error('Нет ответа от DeepSeek API');
       } else {
-        console.error('[DeepSeek] Client error:', error.message);
+        console.error('[DeepSeek] Ошибка клиента:', error.message);
         throw error;
       }
     }

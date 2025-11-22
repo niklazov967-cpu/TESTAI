@@ -15,7 +15,7 @@ class OpenAIClient {
    */
   async validate(prompt, options = {}) {
     try {
-      console.log('[OpenAI] Validating results...');
+      console.log('[OpenAI] Валидация результатов...');
       
       const response = await axios.post(
         `${this.baseURL}/chat/completions`,
@@ -24,7 +24,7 @@ class OpenAIClient {
           messages: [
             { 
               role: 'system', 
-              content: 'You are an expert metallurgist specializing in steel grades validation and fact-checking. Your task is to verify the accuracy of steel analog data.' 
+              content: 'Ты эксперт-металлург, специализирующийся на валидации марок сталей и проверке фактов. Твоя задача - проверить точность данных об аналогах сталей.' 
             },
             { 
               role: 'user', 
@@ -49,19 +49,19 @@ class OpenAIClient {
       try {
         return JSON.parse(content);
       } catch (parseError) {
-        console.error('[OpenAI] Failed to parse response:', content);
-        throw new Error('Invalid JSON response from OpenAI API');
+        console.error('[OpenAI] Ошибка парсинга ответа:', content);
+        throw new Error('Неверный JSON ответ от OpenAI API');
       }
 
     } catch (error) {
       if (error.response) {
-        console.error('[OpenAI] API error:', error.response.data);
-        throw new Error(`OpenAI API error: ${error.response.data.error?.message || 'Unknown error'}`);
+        console.error('[OpenAI] Ошибка API:', error.response.data);
+        throw new Error(`Ошибка OpenAI API: ${error.response.data.error?.message || 'Неизвестная ошибка'}`);
       } else if (error.request) {
-        console.error('[OpenAI] No response from API');
-        throw new Error('No response from OpenAI API');
+        console.error('[OpenAI] Нет ответа от API');
+        throw new Error('Нет ответа от OpenAI API');
       } else {
-        console.error('[OpenAI] Client error:', error.message);
+        console.error('[OpenAI] Ошибка клиента:', error.message);
         throw error;
       }
     }

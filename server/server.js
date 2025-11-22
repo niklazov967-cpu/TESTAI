@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // API Routes
 
-// 1. Поиск аналогов (трёхэтапный процесс)
+// 1. Поиск аналогов (трёхэтапный процесс) с SSE для обновлений прогресса
 app.post('/api/search', async (req, res) => {
   try {
     const { steel_grade } = req.body;
@@ -25,22 +25,46 @@ app.post('/api/search', async (req, res) => {
     if (!steel_grade) {
       return res.status(400).json({
         status: 'error',
-        message: 'steel_grade is required'
+        message: 'Требуется указать марку стали'
       });
     }
 
-    console.log(`[API] Starting 3-stage search for: ${steel_grade}`);
+    console.log(`[API] Запуск 3-этапного поиска для: ${steel_grade}`);
+
+    // Настройка SSE
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no'); // Отключаем буферизацию для nginx
+
+    // Функция для отправки событий
+    const sendEvent = (event, data) => {
+      res.write(`event: ${event}\n`);
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
 
     const config = configManager.getConfig();
-    const result = await searchEngine.findSteelAnalogs(steel_grade, config);
+    
+    // Запуск поиска с callback для обновлений
+    searchEngine.findSteelAnalogs(steel_grade, config, sendEvent)
+      .then(result => {
+        sendEvent('complete', result);
+        res.end();
+      })
+      .catch(error => {
+        console.error('[API] Ошибка поиска:', error);
+        sendEvent('error', { message: error.message });
+        res.end();
+      });
 
-    res.json(result);
   } catch (error) {
-    console.error('[API] Search error:', error);
-    res.status(500).json({
-      status: 'error',
-      message: error.message
-    });
+    console.error('[API] Ошибка поиска:', error);
+    if (!res.headersSent) {
+      res.status(500).json({
+        status: 'error',
+        message: error.message
+      });
+    }
   }
 });
 
@@ -56,7 +80,7 @@ app.post('/api/config', (req, res) => {
     configManager.updateConfig(req.body);
     res.json({
       status: 'success',
-      message: 'Configuration updated'
+      message: 'Конфигурация обновлена'
     });
   } catch (error) {
     res.status(500).json({
@@ -72,7 +96,7 @@ app.delete('/api/cache', (req, res) => {
     cacheManager.clear();
     res.json({
       status: 'success',
-      message: 'Cache cleared'
+      message: 'Кэш очищен'
     });
   } catch (error) {
     res.status(500).json({
@@ -95,15 +119,55 @@ app.get('/api/cache/:steel_grade', (req, res) => {
   } else {
     res.json({
       cached: false,
-      message: 'Not found in cache'
+      message: 'Не найдено в кэше'
+    });
+  }
+});
+
+// 6. Получить промпты для просмотра
+app.get('/api/prompts', (req, res) => {
+  try {
+    const promptBuilder = require('./promptBuilder');
+    
+    // Создаем пример данных для промптов
+    const exampleSearchData = {
+      sources_count: 45,
+      aggregated_data: {
+        top_sources: [
+          { title: 'Пример источника', content: 'Пример содержимого...' }
+        ]
+      }
+    };
+    
+    const exampleProcessedData = {
+      analogs: {
+        USA: { grade: 'AISI 304', chemical_composition: { C: '0.08', Ti: '0' } },
+        Russia: { grade: '08Х18Н10', chemical_composition: { C: '0.08', Ti: '0' } },
+        China: { grade: '0Cr18Ni9', chemical_composition: { C: '0.08', Ti: '0' } }
+      }
+    };
+    
+    const config = configManager.getConfig();
+    
+    const stage2Prompt = promptBuilder.buildStage2Prompt('AISI 304', exampleSearchData, config);
+    const stage3Prompt = promptBuilder.buildStage3Prompt('AISI 304', exampleProcessedData, exampleSearchData, config);
+    
+    res.json({
+      stage2: stage2Prompt,
+      stage3: stage3Prompt
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
     });
   }
 });
 
 // Запуск сервера
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📊 API available at http://localhost:${PORT}/api`);
-  console.log(`🔧 3-Stage Pipeline: Tavily → DeepSeek → OpenAI`);
+  console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
+  console.log(`📊 API доступно на http://localhost:${PORT}/api`);
+  console.log(`🔧 3-этапный конвейер: Tavily → DeepSeek → OpenAI`);
 });
 

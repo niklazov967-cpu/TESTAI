@@ -138,6 +138,52 @@ main {
     transform: scale(1.05);
 }
 
+.stage-header {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+.stage-status {
+    font-size: 0.85em;
+    opacity: 0.9;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.stage-details {
+    font-size: 0.9em;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stage-time {
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.stage-iterations {
+    opacity: 0.9;
+    font-size: 0.9em;
+}
+
+.total-time {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    font-size: 1.2em;
+}
+
+#loading-status {
+    margin: 15px 0;
+    font-weight: 600;
+    color: #667eea;
+    font-size: 1.1em;
+}
+
 .error {
     background: #fee;
     color: #c33;
