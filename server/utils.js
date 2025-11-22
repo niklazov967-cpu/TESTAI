@@ -33,9 +33,27 @@ function calculateCE(composition) {
 }
 
 /**
- * Оценка свариваемости на основе CE
+ * Оценка свариваемости на основе CE и класса стали
+ * @param {number} CE - Углеродный эквивалент
+ * @param {string} steelClass - Класс стали (опционально)
  */
-function assessWeldability(CE) {
+function assessWeldability(CE, steelClass = null) {
+  // Для нержавеющих сталей формула CE не применима
+  // Аустенитные нержавеющие стали имеют отличную свариваемость независимо от CE
+  if (steelClass) {
+    if (steelClass === 'austenitic_stainless' || 
+        steelClass === 'austenitic_stainless_titanium_stabilized') {
+      return 'excellent';
+    }
+    // Ферритные и мартенситные нержавеющие стали имеют хорошую свариваемость
+    if (steelClass === 'ferritic_stainless' || 
+        steelClass === 'martensitic_stainless' ||
+        steelClass === 'stainless_other') {
+      return 'good';
+    }
+  }
+  
+  // Для углеродистых и низколегированных сталей используем стандартную формулу CE
   if (CE <= 0.35) return 'excellent';
   if (CE <= 0.45) return 'good';
   if (CE <= 0.55) return 'requires_preheat';

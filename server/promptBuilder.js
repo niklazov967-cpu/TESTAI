@@ -126,17 +126,22 @@ VALIDATION CRITERIA (with weights):
 
 3. **Carbon Equivalent (20%)** - Verify CE calculation and weldability assessment
    - Recalculate: CE = C + (Mn/6) + (Ni/20) + (Cr/10) + (Mo/50) + (V/10)
-   - Check if CE matches weldability classification
+   - ВАЖНО: Формула CE применима ТОЛЬКО для углеродистых и низколегированных сталей!
+   - Для нержавеющих сталей формула CE дает завышенные значения и НЕ должна использоваться для оценки свариваемости
 
 4. **Steel Class (15%)** - Confirm all analogs belong to the same class
    - Austenitic, ferritic, martensitic, low/medium/high carbon
    - All three analogs must be in the same class
 
-5. **Weldability (5%)** - Check if weldability matches CE value
-   - CE ≤ 0.35: excellent
-   - CE 0.36-0.45: good
-   - CE 0.46-0.55: requires_preheat
-   - CE > 0.55: difficult
+5. **Weldability (5%)** - Check if weldability matches steel class and CE value
+   - ВАЖНО: Для нержавеющих сталей свариваемость оценивается по классу, а НЕ по CE!
+   - Аустенитные нержавеющие стали: отличная свариваемость (excellent) независимо от CE
+   - Ферритные и мартенситные нержавеющие стали: хорошая свариваемость (good)
+   - Для углеродистых сталей используй CE:
+     * CE ≤ 0.35: excellent
+     * CE 0.36-0.45: good
+     * CE 0.46-0.55: requires_preheat
+     * CE > 0.55: difficult
 
 6. **Popularity (3%)** - Verify if grades are real and commonly used
    - Check if steel grades actually exist in respective countries
@@ -149,9 +154,11 @@ VALIDATION CRITERIA (with weights):
 FACT-CHECKING STEPS:
 1. Cross-reference chemical composition with known standards
 2. Verify mechanical properties are realistic for the steel class
-3. Recalculate carbon equivalent for each analog
+3. Recalculate carbon equivalent for each analog (но помни: для нержавеющих сталей CE не используется для оценки свариваемости!)
 4. Check if steel grades actually exist in respective countries
-5. Verify weldability classification matches CE value
+5. Verify weldability classification:
+   - Для нержавеющих сталей: проверь, что свариваемость соответствует классу стали (аустенитные = excellent)
+   - Для углеродистых сталей: проверь, что свариваемость соответствует CE значению
 6. Check for any obvious errors or inconsistencies
 
 SCORING GUIDE:

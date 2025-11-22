@@ -41,21 +41,21 @@ function enhanceResults(result) {
       
       // Расчет углеродного эквивалента
       if (analog.chemical_composition) {
-        analog.carbon_equivalent = utils.calculateCE(analog.chemical_composition);
-        
-        // Оценка свариваемости
-        analog.weldability = utils.assessWeldability(analog.carbon_equivalent);
-        
-        // Классификация стали
+        // Сначала классифицируем сталь, чтобы правильно оценить свариваемость
         const steelClass = utils.classifySteelGrade(analog.chemical_composition);
         analog.steel_class = utils.formatSteelClass(steelClass);
+        
+        // Расчет углеродного эквивалента
+        analog.carbon_equivalent = utils.calculateCE(analog.chemical_composition);
+        
+        // Оценка свариваемости с учетом класса стали
+        // Для нержавеющих сталей формула CE не применима
+        const weldabilityRaw = utils.assessWeldability(analog.carbon_equivalent, steelClass);
+        analog.weldability = utils.formatWeldability(weldabilityRaw);
         
         // Оценка популярности
         const popularity = utils.assessPopularity(analog.grade, country);
         analog.popularity = utils.formatPopularity(popularity);
-        
-        // Форматирование свариваемости
-        analog.weldability = utils.formatWeldability(analog.weldability);
       }
     }
   }
