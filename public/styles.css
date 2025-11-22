@@ -138,6 +138,40 @@ main {
     transform: scale(1.05);
 }
 
+.stage-header {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.stage-details {
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.stage-time {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.stage-iterations {
+    opacity: 0.9;
+}
+
+.total-time {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    font-size: 1.2em;
+}
+
+#loading-status {
+    margin: 15px 0;
+    font-weight: 600;
+    color: #667eea;
+}
+
 .error {
     background: #fee;
     color: #c33;

@@ -100,6 +100,46 @@ app.get('/api/cache/:steel_grade', (req, res) => {
   }
 });
 
+// 6. Получить промпты для просмотра
+app.get('/api/prompts', (req, res) => {
+  try {
+    const promptBuilder = require('./promptBuilder');
+    
+    // Создаем пример данных для промптов
+    const exampleSearchData = {
+      sources_count: 45,
+      aggregated_data: {
+        top_sources: [
+          { title: 'Пример источника', content: 'Пример содержимого...' }
+        ]
+      }
+    };
+    
+    const exampleProcessedData = {
+      analogs: {
+        USA: { grade: 'AISI 304', chemical_composition: { C: '0.08', Ti: '0' } },
+        Russia: { grade: '08Х18Н10', chemical_composition: { C: '0.08', Ti: '0' } },
+        China: { grade: '0Cr18Ni9', chemical_composition: { C: '0.08', Ti: '0' } }
+      }
+    };
+    
+    const config = configManager.getConfig();
+    
+    const stage2Prompt = promptBuilder.buildStage2Prompt('AISI 304', exampleSearchData, config);
+    const stage3Prompt = promptBuilder.buildStage3Prompt('AISI 304', exampleProcessedData, exampleSearchData, config);
+    
+    res.json({
+      stage2: stage2Prompt,
+      stage3: stage3Prompt
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
