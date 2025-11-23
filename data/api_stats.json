@@ -1,7 +1,7 @@
 {
   "tavily": {
-    "total_requests": 336,
-    "successful_requests": 296,
+    "total_requests": 341,
+    "successful_requests": 301,
     "failed_requests": 40,
     "total_tokens": {
       "input": 0,
@@ -10,27 +10,57 @@
     },
     "total_cost_usd": 0,
     "performance": {
-      "avg_response_time_ms": 401.76488095238096,
+      "avg_response_time_ms": 399.5131964809384,
       "min_response_time_ms": 140,
       "max_response_time_ms": 3205,
-      "total_response_time_ms": 134993
+      "total_response_time_ms": 136234
     },
     "models_used": {},
     "daily": {
       "2025-11-23": {
-        "requests": 336,
+        "requests": 341,
         "tokens": 0,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 336,
+        "requests": 341,
         "tokens": 0,
         "cost": 0
       }
     },
     "recent_requests": [
+      {
+        "timestamp": "2025-11-23T16:45:23.287Z",
+        "operation": "search",
+        "response_time_ms": 183,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T16:45:22.589Z",
+        "operation": "search",
+        "response_time_ms": 179,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T16:45:21.906Z",
+        "operation": "search",
+        "response_time_ms": 183,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T16:45:21.219Z",
+        "operation": "search",
+        "response_time_ms": 192,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T16:45:20.520Z",
+        "operation": "search",
+        "response_time_ms": 504,
+        "success": true
+      },
       {
         "timestamp": "2025-11-23T16:23:37.139Z",
         "operation": "search",
@@ -119,36 +149,6 @@
         "timestamp": "2025-11-23T15:24:08.794Z",
         "operation": "search",
         "response_time_ms": 1348,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:07.445Z",
-        "operation": "search",
-        "response_time_ms": 155,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:07.287Z",
-        "operation": "search",
-        "response_time_ms": 159,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:07.126Z",
-        "operation": "search",
-        "response_time_ms": 167,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:06.957Z",
-        "operation": "search",
-        "response_time_ms": 159,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:06.796Z",
-        "operation": "search",
-        "response_time_ms": 166,
         "success": true
       }
     ]

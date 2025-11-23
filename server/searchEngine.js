@@ -1,7 +1,6 @@
 const cacheManager = require('./cacheManager');
 const stage1Search = require('./stages/stage1_search');
 const stage2Process = require('./stages/stage2_process');
-const stage2SequentialSearch = require('./stages/stage2_sequential_search');
 const stage2ProcessOpenAI = require('./stages/stage2_process_openai');
 const stage3Validate = require('./stages/stage3_validate');
 const translator = require('./translator');
