@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTabs();
     setupForm();
     setupCacheButton();
+    setupBalanceCheck();
 });
 
 // Загрузка конфигурации
@@ -148,6 +149,56 @@ function setupCacheButton() {
             showAlert('Ошибка: ' + error.message, 'error');
         }
     });
+}
+
+// Настройка проверки баланса
+function setupBalanceCheck() {
+    const btn = document.getElementById('check-balance-btn');
+    const valueSpan = document.getElementById('deepseek-balance-value');
+    const detailsSmall = document.getElementById('deepseek-balance-details');
+
+    const checkBalance = async () => {
+        btn.disabled = true;
+        valueSpan.textContent = 'Загрузка...';
+        detailsSmall.textContent = '';
+
+        try {
+            const response = await fetch(`${API_BASE}/balance/deepseek`);
+            const data = await response.json();
+            
+            if (response.ok) {
+                // DeepSeek balance response usually looks like:
+                // { "is_available": true, "balance_infos": [{ "currency": "CNY", "total_balance": "10.00", "granted_balance": "0.00", "topped_up_balance": "10.00" }] }
+                
+                if (data.balance_infos && data.balance_infos.length > 0) {
+                    const info = data.balance_infos[0];
+                    valueSpan.textContent = `${info.total_balance} ${info.currency}`;
+                    valueSpan.style.color = 'green';
+                    valueSpan.style.fontWeight = 'bold';
+                    
+                    detailsSmall.textContent = `Доступно: ${data.is_available ? 'Да' : 'Нет'}. Пополнено: ${info.topped_up_balance}, Гранты: ${info.granted_balance}`;
+                } else {
+                    valueSpan.textContent = 'Нет данных о балансе';
+                    valueSpan.style.color = 'orange';
+                }
+            } else {
+                valueSpan.textContent = 'Ошибка';
+                valueSpan.style.color = 'red';
+                showAlert('Ошибка получения баланса: ' + (data.message || 'Unknown error'), 'error');
+            }
+        } catch (error) {
+            valueSpan.textContent = 'Ошибка сети';
+            valueSpan.style.color = 'red';
+            showAlert('Ошибка: ' + error.message, 'error');
+        } finally {
+            btn.disabled = false;
+        }
+    };
+
+    btn.addEventListener('click', checkBalance);
+    
+    // Автоматическая загрузка при открытии
+    checkBalance();
 }
 
 // Показать уведомление

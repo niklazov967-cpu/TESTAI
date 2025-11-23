@@ -7,6 +7,7 @@ const searchEngine = require('./searchEngine');
 const standardsEngine = require('./standardsEngine');
 const configManager = require('./config');
 const cacheManager = require('./cacheManager');
+const deepseekClient = require('./clients/deepseekClient');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -321,7 +322,20 @@ app.get('/api/standards/cache/info', (req, res) => {
   }
 });
 
-// 7. Получить промпты для стандартов
+// 7. Получить баланс DeepSeek
+app.get('/api/balance/deepseek', async (req, res) => {
+  try {
+    const balanceInfo = await deepseekClient.getBalance();
+    res.json(balanceInfo);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// 8. Получить промпты для стандартов
 app.get('/api/standards/prompts', async (req, res) => {
   try {
     const promptBuilder = require('./promptBuilder');

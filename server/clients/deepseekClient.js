@@ -59,6 +59,23 @@ class DeepSeekClient {
       }
     }
   }
+
+  /**
+   * Получить баланс аккаунта
+   */
+  async getBalance() {
+    try {
+      const response = await axios.get('https://api.deepseek.com/user/balance', {
+        headers: {
+          'Authorization': `Bearer ${this.apiKey}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('[DeepSeek] Ошибка получения баланса:', error.message);
+      throw error;
+    }
+  }
 }
 
 module.exports = new DeepSeekClient();
