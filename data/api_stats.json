@@ -1,7 +1,7 @@
 {
   "tavily": {
-    "total_requests": 435,
-    "successful_requests": 395,
+    "total_requests": 479,
+    "successful_requests": 439,
     "failed_requests": 40,
     "total_tokens": {
       "input": 0,
@@ -10,174 +10,174 @@
     },
     "total_cost_usd": 0,
     "performance": {
-      "avg_response_time_ms": 405.8436781609195,
+      "avg_response_time_ms": 418.482254697286,
       "min_response_time_ms": 140,
       "max_response_time_ms": 3271,
-      "total_response_time_ms": 176542
+      "total_response_time_ms": 200453
     },
     "models_used": {},
     "daily": {
       "2025-11-23": {
-        "requests": 435,
+        "requests": 479,
         "tokens": 0,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 435,
+        "requests": 479,
         "tokens": 0,
         "cost": 0
       }
     },
     "recent_requests": [
       {
-        "timestamp": "2025-11-23T17:16:59.895Z",
+        "timestamp": "2025-11-23T17:32:32.334Z",
         "operation": "search",
-        "response_time_ms": 904,
+        "response_time_ms": 156,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:58.988Z",
+        "timestamp": "2025-11-23T17:32:32.176Z",
         "operation": "search",
-        "response_time_ms": 1037,
+        "response_time_ms": 156,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:57.949Z",
+        "timestamp": "2025-11-23T17:32:32.018Z",
         "operation": "search",
-        "response_time_ms": 882,
+        "response_time_ms": 152,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:57.064Z",
+        "timestamp": "2025-11-23T17:32:31.863Z",
         "operation": "search",
-        "response_time_ms": 1001,
+        "response_time_ms": 158,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:56.060Z",
+        "timestamp": "2025-11-23T17:32:31.703Z",
         "operation": "search",
-        "response_time_ms": 1276,
+        "response_time_ms": 157,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:54.783Z",
+        "timestamp": "2025-11-23T17:32:31.545Z",
         "operation": "search",
-        "response_time_ms": 1178,
+        "response_time_ms": 156,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:53.605Z",
+        "timestamp": "2025-11-23T17:32:31.387Z",
         "operation": "search",
-        "response_time_ms": 1075,
+        "response_time_ms": 158,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:52.527Z",
+        "timestamp": "2025-11-23T17:32:31.226Z",
         "operation": "search",
-        "response_time_ms": 1267,
+        "response_time_ms": 354,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:35.358Z",
+        "timestamp": "2025-11-23T17:32:15.151Z",
         "operation": "search",
-        "response_time_ms": 170,
+        "response_time_ms": 224,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:34.683Z",
+        "timestamp": "2025-11-23T17:32:14.424Z",
         "operation": "search",
-        "response_time_ms": 175,
+        "response_time_ms": 168,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:34.004Z",
+        "timestamp": "2025-11-23T17:32:13.753Z",
         "operation": "search",
-        "response_time_ms": 176,
+        "response_time_ms": 179,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:33.324Z",
+        "timestamp": "2025-11-23T17:32:13.070Z",
         "operation": "search",
-        "response_time_ms": 184,
+        "response_time_ms": 187,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:32.635Z",
-        "operation": "search",
-        "response_time_ms": 194,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:16:31.933Z",
-        "operation": "search",
-        "response_time_ms": 183,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:16:31.244Z",
+        "timestamp": "2025-11-23T17:32:12.380Z",
         "operation": "search",
         "response_time_ms": 181,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:30.559Z",
+        "timestamp": "2025-11-23T17:32:11.697Z",
         "operation": "search",
-        "response_time_ms": 182,
+        "response_time_ms": 179,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:29.875Z",
-        "operation": "search",
-        "response_time_ms": 176,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:16:29.193Z",
+        "timestamp": "2025-11-23T17:32:11.016Z",
         "operation": "search",
         "response_time_ms": 184,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:28.502Z",
+        "timestamp": "2025-11-23T17:32:10.329Z",
         "operation": "search",
         "response_time_ms": 173,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:16:27.825Z",
+        "timestamp": "2025-11-23T17:32:09.647Z",
         "operation": "search",
-        "response_time_ms": 184,
+        "response_time_ms": 170,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:08.972Z",
+        "operation": "search",
+        "response_time_ms": 173,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:08.296Z",
+        "operation": "search",
+        "response_time_ms": 164,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:07.630Z",
+        "operation": "search",
+        "response_time_ms": 187,
         "success": true
       }
     ]
   },
   "deepseek": {
-    "total_requests": 49,
-    "successful_requests": 44,
+    "total_requests": 61,
+    "successful_requests": 56,
     "failed_requests": 5,
     "total_tokens": {
-      "input": 104253,
-      "output": 37053,
-      "total": 141306
+      "input": 128788,
+      "output": 40158,
+      "total": 168946
     },
-    "total_cost_usd": 0.04196938999999999,
+    "total_cost_usd": 0.04627368999999998,
     "performance": {
-      "avg_response_time_ms": 31810.571428571428,
+      "avg_response_time_ms": 27376.55737704918,
       "min_response_time_ms": 5029,
       "max_response_time_ms": 139352,
-      "total_response_time_ms": 1558718
+      "total_response_time_ms": 1669970
     },
     "models_used": {
       "deepseek-chat": {
-        "requests": 45,
+        "requests": 57,
         "tokens": {
-          "input": 100060,
-          "output": 29053,
-          "total": 129113
+          "input": 124595,
+          "output": 32158,
+          "total": 156753
         },
-        "cost": 0.022143240000000005
+        "cost": 0.026447540000000002
       },
       "deepseek-reasoner": {
         "requests": 4,
@@ -191,19 +191,151 @@
     },
     "daily": {
       "2025-11-23": {
-        "requests": 49,
-        "tokens": 141306,
+        "requests": 61,
+        "tokens": 168946,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 49,
-        "tokens": 141306,
+        "requests": 61,
+        "tokens": 168946,
         "cost": 0
       }
     },
     "recent_requests": [
+      {
+        "timestamp": "2025-11-23T17:32:44.215Z",
+        "operation": "process",
+        "response_time_ms": 11874,
+        "tokens": {
+          "input": 1718,
+          "output": 331
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:43.452Z",
+        "operation": "process",
+        "response_time_ms": 11114,
+        "tokens": {
+          "input": 2926,
+          "output": 319
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:42.697Z",
+        "operation": "process",
+        "response_time_ms": 10351,
+        "tokens": {
+          "input": 1328,
+          "output": 284
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:24.772Z",
+        "operation": "process",
+        "response_time_ms": 9616,
+        "tokens": {
+          "input": 2119,
+          "output": 250
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:22.678Z",
+        "operation": "process",
+        "response_time_ms": 7515,
+        "tokens": {
+          "input": 2088,
+          "output": 181
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:22.579Z",
+        "operation": "process",
+        "response_time_ms": 7416,
+        "tokens": {
+          "input": 2089,
+          "output": 182
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:03.509Z",
+        "operation": "process",
+        "response_time_ms": 10814,
+        "tokens": {
+          "input": 2938,
+          "output": 333
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:03.249Z",
+        "operation": "process",
+        "response_time_ms": 10549,
+        "tokens": {
+          "input": 1711,
+          "output": 316
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:02.001Z",
+        "operation": "process",
+        "response_time_ms": 9293,
+        "tokens": {
+          "input": 1322,
+          "output": 284
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:26:44.041Z",
+        "operation": "process",
+        "response_time_ms": 8942,
+        "tokens": {
+          "input": 2119,
+          "output": 262
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:26:42.133Z",
+        "operation": "process",
+        "response_time_ms": 7029,
+        "tokens": {
+          "input": 2089,
+          "output": 182
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:26:41.844Z",
+        "operation": "process",
+        "response_time_ms": 6739,
+        "tokens": {
+          "input": 2088,
+          "output": 181
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
       {
         "timestamp": "2025-11-23T17:17:30.273Z",
         "operation": "process",
@@ -291,399 +423,267 @@
         },
         "model": "deepseek-chat",
         "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:57:20.963Z",
-        "operation": "process",
-        "response_time_ms": 9415,
-        "tokens": {
-          "input": 609,
-          "output": 253
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:57:20.781Z",
-        "operation": "process",
-        "response_time_ms": 9228,
-        "tokens": {
-          "input": 609,
-          "output": 264
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:53:23.437Z",
-        "operation": "process",
-        "response_time_ms": 20821,
-        "tokens": {
-          "input": 2374,
-          "output": 627
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:48:56.395Z",
-        "operation": "process",
-        "response_time_ms": 30581,
-        "tokens": {
-          "input": 2362,
-          "output": 899
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:48:12.076Z",
-        "operation": "process",
-        "response_time_ms": 20793,
-        "tokens": {
-          "input": 2374,
-          "output": 625
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:23:57.164Z",
-        "operation": "process",
-        "response_time_ms": 20013,
-        "tokens": {
-          "input": 2374,
-          "output": 621
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:40.056Z",
-        "operation": "process",
-        "response_time_ms": 31259,
-        "tokens": {
-          "input": 2299,
-          "output": 981
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:04.525Z",
-        "operation": "process",
-        "response_time_ms": 19894,
-        "tokens": {
-          "input": 2376,
-          "output": 600
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:20:01.375Z",
-        "operation": "process",
-        "response_time_ms": 29122,
-        "tokens": {
-          "input": 2351,
-          "output": 930
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:19:21.154Z",
-        "operation": "process",
-        "response_time_ms": 20622,
-        "tokens": {
-          "input": 2376,
-          "output": 639
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:15:37.299Z",
-        "operation": "process",
-        "response_time_ms": 28268,
-        "tokens": {
-          "input": 2323,
-          "output": 883
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:15:01.847Z",
-        "operation": "process",
-        "response_time_ms": 21421,
-        "tokens": {
-          "input": 2376,
-          "output": 625
-        },
-        "model": "deepseek-chat",
-        "success": true
       }
     ]
   },
   "openai": {
-    "total_requests": 61,
-    "successful_requests": 61,
+    "total_requests": 87,
+    "successful_requests": 87,
     "failed_requests": 0,
     "total_tokens": {
-      "input": 137768,
-      "output": 16378,
-      "total": 154146
+      "input": 184562,
+      "output": 22244,
+      "total": 206806
     },
-    "total_cost_usd": 0.030492,
+    "total_cost_usd": 0.04103069999999999,
     "performance": {
-      "avg_response_time_ms": 6181.459016393443,
+      "avg_response_time_ms": 5991.367816091954,
       "min_response_time_ms": 1892,
       "max_response_time_ms": 21680,
-      "total_response_time_ms": 377069
+      "total_response_time_ms": 521249
     },
     "models_used": {
       "gpt-4o-mini": {
-        "requests": 61,
+        "requests": 87,
         "tokens": {
-          "input": 137768,
-          "output": 16378,
-          "total": 154146
+          "input": 184562,
+          "output": 22244,
+          "total": 206806
         },
-        "cost": 0.030492
+        "cost": 0.04103069999999999
       }
     },
     "daily": {
       "2025-11-23": {
-        "requests": 61,
-        "tokens": 154146,
+        "requests": 87,
+        "tokens": 206806,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 61,
-        "tokens": 154146,
+        "requests": 87,
+        "tokens": 206806,
         "cost": 0
       }
     },
     "recent_requests": [
       {
-        "timestamp": "2025-11-23T17:17:45.218Z",
+        "timestamp": "2025-11-23T17:33:16.124Z",
         "operation": "validate",
-        "response_time_ms": 5794,
+        "response_time_ms": 6066,
         "tokens": {
-          "input": 1683,
-          "output": 242
+          "input": 1985,
+          "output": 155
         },
         "model": "gpt-4o-mini",
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:17:43.327Z",
+        "timestamp": "2025-11-23T17:33:15.843Z",
         "operation": "validate",
-        "response_time_ms": 3904,
+        "response_time_ms": 5783,
         "tokens": {
-          "input": 1676,
-          "output": 207
+          "input": 1991,
+          "output": 229
         },
         "model": "gpt-4o-mini",
         "success": true
       },
       {
-        "timestamp": "2025-11-23T17:17:42.831Z",
+        "timestamp": "2025-11-23T17:33:14.429Z",
         "operation": "validate",
-        "response_time_ms": 3402,
+        "response_time_ms": 4373,
         "tokens": {
-          "input": 1685,
-          "output": 151
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:17:39.418Z",
-        "operation": "processData",
-        "response_time_ms": 9136,
-        "tokens": {
-          "input": 2255,
-          "output": 622
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:16:51.246Z",
-        "operation": "validate",
-        "response_time_ms": 5979,
-        "tokens": {
-          "input": 1603,
-          "output": 230
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:16:50.960Z",
-        "operation": "validate",
-        "response_time_ms": 5695,
-        "tokens": {
-          "input": 1707,
-          "output": 202
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:16:47.487Z",
-        "operation": "validate",
-        "response_time_ms": 2226,
-        "tokens": {
-          "input": 1670,
-          "output": 101
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T17:04:23.459Z",
-        "operation": "validate",
-        "response_time_ms": 4383,
-        "tokens": {
-          "input": 2324,
-          "output": 178
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:58:12.485Z",
-        "operation": "validate",
-        "response_time_ms": 5311,
-        "tokens": {
-          "input": 2322,
+          "input": 1984,
           "output": 198
         },
         "model": "gpt-4o-mini",
         "success": true
       },
       {
-        "timestamp": "2025-11-23T16:53:30.318Z",
-        "operation": "validate",
-        "response_time_ms": 6873,
-        "tokens": {
-          "input": 2323,
-          "output": 208
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:49:17.028Z",
-        "operation": "validate",
-        "response_time_ms": 4257,
-        "tokens": {
-          "input": 2299,
-          "output": 164
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:49:12.764Z",
+        "timestamp": "2025-11-23T17:33:10.052Z",
         "operation": "processData",
-        "response_time_ms": 11418,
+        "response_time_ms": 13226,
         "tokens": {
-          "input": 2248,
-          "output": 579
+          "input": 2424,
+          "output": 612
         },
         "model": "gpt-4o-mini",
         "success": true
       },
       {
-        "timestamp": "2025-11-23T16:49:01.343Z",
-        "operation": "validate",
-        "response_time_ms": 4942,
-        "tokens": {
-          "input": 2323,
-          "output": 184
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:48:16.582Z",
-        "operation": "validate",
-        "response_time_ms": 4498,
-        "tokens": {
-          "input": 2321,
-          "output": 174
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T16:24:01.232Z",
-        "operation": "validate",
-        "response_time_ms": 4059,
-        "tokens": {
-          "input": 2317,
-          "output": 161
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:25:00.073Z",
-        "operation": "validate",
-        "response_time_ms": 4879,
-        "tokens": {
-          "input": 2303,
-          "output": 150
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:24:55.190Z",
+        "timestamp": "2025-11-23T17:32:56.822Z",
         "operation": "processData",
-        "response_time_ms": 10678,
+        "response_time_ms": 6456,
         "tokens": {
-          "input": 2248,
-          "output": 581
+          "input": 868,
+          "output": 219
         },
         "model": "gpt-4o-mini",
         "success": true
       },
       {
-        "timestamp": "2025-11-23T15:24:44.507Z",
-        "operation": "validate",
-        "response_time_ms": 4445,
-        "tokens": {
-          "input": 2350,
-          "output": 150
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:20:20.466Z",
-        "operation": "validate",
-        "response_time_ms": 4045,
-        "tokens": {
-          "input": 2303,
-          "output": 172
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T15:20:16.415Z",
+        "timestamp": "2025-11-23T17:32:55.756Z",
         "operation": "processData",
-        "response_time_ms": 11204,
+        "response_time_ms": 5392,
         "tokens": {
-          "input": 2248,
-          "output": 581
+          "input": 1291,
+          "output": 215
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:53.917Z",
+        "operation": "processData",
+        "response_time_ms": 3551,
+        "tokens": {
+          "input": 874,
+          "output": 156
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:50.352Z",
+        "operation": "validate",
+        "response_time_ms": 6124,
+        "tokens": {
+          "input": 2031,
+          "output": 248
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:48.987Z",
+        "operation": "validate",
+        "response_time_ms": 4762,
+        "tokens": {
+          "input": 2078,
+          "output": 207
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:48.623Z",
+        "operation": "validate",
+        "response_time_ms": 4402,
+        "tokens": {
+          "input": 2053,
+          "output": 142
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:30.866Z",
+        "operation": "validate",
+        "response_time_ms": 6080,
+        "tokens": {
+          "input": 1913,
+          "output": 256
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:29.793Z",
+        "operation": "validate",
+        "response_time_ms": 5010,
+        "tokens": {
+          "input": 1914,
+          "output": 230
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:32:28.379Z",
+        "operation": "validate",
+        "response_time_ms": 3602,
+        "tokens": {
+          "input": 1984,
+          "output": 101
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:32.573Z",
+        "operation": "validate",
+        "response_time_ms": 4760,
+        "tokens": {
+          "input": 1984,
+          "output": 190
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:32.546Z",
+        "operation": "validate",
+        "response_time_ms": 4731,
+        "tokens": {
+          "input": 1985,
+          "output": 188
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:31.140Z",
+        "operation": "validate",
+        "response_time_ms": 3321,
+        "tokens": {
+          "input": 1995,
+          "output": 118
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:27.804Z",
+        "operation": "processData",
+        "response_time_ms": 12055,
+        "tokens": {
+          "input": 2424,
+          "output": 614
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:15.746Z",
+        "operation": "processData",
+        "response_time_ms": 5276,
+        "tokens": {
+          "input": 874,
+          "output": 156
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:15.169Z",
+        "operation": "processData",
+        "response_time_ms": 4697,
+        "tokens": {
+          "input": 868,
+          "output": 155
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T17:27:15.000Z",
+        "operation": "processData",
+        "response_time_ms": 4533,
+        "tokens": {
+          "input": 1291,
+          "output": 215
         },
         "model": "gpt-4o-mini",
         "success": true
