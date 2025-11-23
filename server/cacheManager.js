@@ -148,9 +148,8 @@ function saveStandardsCache(cache) {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    // Преобразуем объект в массив для сохранения
-    const array = Object.values(cache);
-    fs.writeFileSync(STANDARDS_CACHE_PATH, JSON.stringify(array, null, 2), 'utf8');
+    // Сохраняем как объект, а не массив
+    fs.writeFileSync(STANDARDS_CACHE_PATH, JSON.stringify(cache, null, 2), 'utf8');
   } catch (error) {
     console.error('[Cache] Error saving standards cache:', error.message);
   }

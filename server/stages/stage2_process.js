@@ -5,25 +5,37 @@ const utils = require('../utils');
 /**
  * STAGE 2: DeepSeek Processing
  * Обработка данных и поиск аналогов
+ * Поддерживает выбор модели: deepseek-chat (по умолчанию) или deepseek-reasoner
  */
 async function execute(steelGrade, searchData, config) {
+  // Получаем модель из конфига (по умолчанию deepseek-chat)
+  const model = config.deepseek_model || 'deepseek-chat';
+  
   console.log(`[Этап 2] Обработка данных для: ${steelGrade}`);
+  
+  if (model === 'deepseek-reasoner') {
+    console.log('[Этап 2] 🧠 Используется DeepSeek Reasoner (расширенное мышление)');
+  } else {
+    console.log('[Этап 2] 💬 Используется DeepSeek Chat (стандартная модель)');
+  }
 
   // Построение промпта с данными поиска
   const prompt = promptBuilder.buildStage2Prompt(steelGrade, searchData, config);
 
-  // Обработка через DeepSeek
+  // Обработка через DeepSeek с выбранной моделью
   const result = await deepseekClient.processData(prompt, {
-    temperature: config.deepseek_temperature || 0.7
+    temperature: config.deepseek_temperature || 0.7,
+    model: model
   });
 
   // Расчет дополнительных параметров
   const enhancedResult = enhanceResults(result);
   
-  // Устанавливаем количество итераций (всегда 1, так как повторных попыток нет)
+  // Устанавливаем количество итераций
   enhancedResult.iterations_used = 1;
+  enhancedResult.model_used = model;
 
-  console.log(`[Этап 2] Обработка завершена`);
+  console.log(`[Этап 2] Обработка завершена (модель: ${model})`);
 
   return enhancedResult;
 }
@@ -64,6 +76,7 @@ function enhanceResults(result) {
 }
 
 module.exports = {
-  execute
+  execute,
+  enhanceResults  // Экспортируем для использования в stage2_process_openai
 };
 

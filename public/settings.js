@@ -57,6 +57,7 @@ async function loadConfig() {
         document.getElementById('deepseek_temperature').value = config.deepseek_temperature;
         document.getElementById('openai_temperature').value = config.openai_temperature;
         document.getElementById('openai_model').value = config.openai_model;
+        document.getElementById('escalation_threshold').value = config.escalation_threshold || 70;
     } catch (error) {
         showAlert('Ошибка загрузки конфигурации: ' + error.message, 'error');
     }
@@ -124,7 +125,8 @@ function setupForm() {
             tavily_max_results: parseInt(document.getElementById('tavily_max_results').value),
             deepseek_temperature: parseFloat(document.getElementById('deepseek_temperature').value),
             openai_temperature: parseFloat(document.getElementById('openai_temperature').value),
-            openai_model: document.getElementById('openai_model').value
+            openai_model: document.getElementById('openai_model').value,
+            escalation_threshold: parseInt(document.getElementById('escalation_threshold').value)
         };
         
         try {

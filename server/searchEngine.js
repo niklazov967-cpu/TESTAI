@@ -1,6 +1,7 @@
 const cacheManager = require('./cacheManager');
 const stage1Search = require('./stages/stage1_search');
 const stage2Process = require('./stages/stage2_process');
+const stage2ProcessOpenAI = require('./stages/stage2_process_openai');
 const stage3Validate = require('./stages/stage3_validate');
 const translator = require('./translator');
 
@@ -136,19 +137,33 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
 
     // ========================================
     // ЭТАП 2: DeepSeek Processing (Обработка)
+    // С умной эскалацией моделей при ошибках
     // ========================================
     console.log('\n🤖 ЭТАП 2: Обработка через DeepSeek');
     console.log('─'.repeat(60));
     
+    let attempt = 1;
+    let processedData = null;
+    let validatedData = null;
+    let modelUsed = 'deepseek-chat';
+    const maxAttempts = 3;
+    
+    // ПОПЫТКА 1: DeepSeek Chat (стандартная модель)
+    console.log(`\n[Попытка ${attempt}/${maxAttempts}] 💬 DeepSeek Chat (стандартная модель)`);
+    
     sendProgress('stage2_start', {
       stage: 2,
-      message: 'Обработка данных через DeepSeek...',
+      message: 'Обработка данных через DeepSeek Chat...',
+      attempt: attempt,
       timestamp: Date.now()
     });
     
-    const processedData = await stage2Process.execute(steelGrade, searchData, config);
+    processedData = await stage2Process.execute(steelGrade, searchData, {
+      ...config,
+      deepseek_model: 'deepseek-chat'
+    });
     
-    console.log(`✅ Этап 2 завершен: аналоги найдены`);
+    console.log(`✅ Этап 2 (попытка ${attempt}) завершен: аналоги найдены`);
     console.log(`   - США: ${processedData.analogs.USA.grade}`);
     console.log(`   - Россия: ${processedData.analogs.Russia.grade}`);
     console.log(`   - Китай: ${processedData.analogs.China.grade}`);
@@ -156,6 +171,8 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     sendProgress('stage2_complete', {
       stage: 2,
       message: 'Обработка данных завершена',
+      attempt: attempt,
+      model: 'deepseek-chat',
       iterations: processedData.iterations_used || 1,
       analogs: {
         USA: processedData.analogs.USA.grade,
@@ -174,12 +191,14 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     sendProgress('stage3_start', {
       stage: 3,
       message: 'Валидация результатов через OpenAI...',
+      attempt: attempt,
       timestamp: Date.now()
     });
     
-    const validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
+    validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
     
-    console.log(`✅ Этап 3 завершен: оценка валидации ${validatedData.validation.overall_score}/100`);
+    const validationScore = validatedData.validation.overall_score;
+    console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка валидации ${validationScore}/100`);
     console.log(`   - Валидация пройдена: ${validatedData.validation.passed}`);
     console.log(`   - Ошибки: ${validatedData.validation.errors.length}`);
     console.log(`   - Предупреждения: ${validatedData.validation.warnings.length}`);
@@ -187,10 +206,140 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     sendProgress('stage3_complete', {
       stage: 3,
       message: 'Валидация завершена',
-      score: validatedData.validation.overall_score,
+      attempt: attempt,
+      score: validationScore,
       passed: validatedData.validation.passed,
       timestamp: Date.now()
     });
+
+    // ========================================
+    // ПРОВЕРКА: Нужна ли эскалация?
+    // ========================================
+    const escalationThreshold = config.escalation_threshold || 70;
+    
+    if (validationScore < escalationThreshold && attempt < maxAttempts) {
+      // ПОПЫТКА 2: DeepSeek Reasoner (умная модель)
+      attempt = 2;
+      modelUsed = 'deepseek-reasoner';
+      
+      console.log(`\n⚠️ Валидация не прошла (балл: ${validationScore}/100)`);
+      console.log(`\n[Попытка ${attempt}/${maxAttempts}] 🧠 DeepSeek Reasoner (умная модель с расширенным мышлением)`);
+      console.log('─'.repeat(60));
+      
+      sendProgress('stage2_retry', {
+        stage: 2,
+        message: 'Повторная обработка с DeepSeek Reasoner...',
+        attempt: attempt,
+        reason: `Предыдущая попытка: балл ${validationScore}/100`,
+        timestamp: Date.now()
+      });
+      
+      processedData = await stage2Process.execute(steelGrade, searchData, {
+        ...config,
+        deepseek_model: 'deepseek-reasoner'
+      });
+      
+      console.log(`✅ Этап 2 (попытка ${attempt}) завершен`);
+      
+      sendProgress('stage2_complete', {
+        stage: 2,
+        message: 'Обработка через Reasoner завершена',
+        attempt: attempt,
+        model: 'deepseek-reasoner',
+        timestamp: Date.now()
+      });
+      
+      // Повторная валидация
+      console.log('\n✅ ЭТАП 3: Повторная валидация через OpenAI');
+      console.log('─'.repeat(60));
+      
+      sendProgress('stage3_start', {
+        stage: 3,
+        message: 'Повторная валидация результатов...',
+        attempt: attempt,
+        timestamp: Date.now()
+      });
+      
+      validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
+      const validationScore2 = validatedData.validation.overall_score;
+      
+      console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка ${validationScore2}/100`);
+      
+      sendProgress('stage3_complete', {
+        stage: 3,
+        message: 'Повторная валидация завершена',
+        attempt: attempt,
+        score: validationScore2,
+        passed: validatedData.validation.passed,
+        timestamp: Date.now()
+      });
+      
+      // ПОПЫТКА 3: OpenAI (запасной вариант)
+      if (validationScore2 < escalationThreshold && attempt < maxAttempts) {
+        attempt = 3;
+        modelUsed = 'gpt-4o-mini';
+        
+        console.log(`\n⚠️ Повторная валидация не прошла (балл: ${validationScore2}/100)`);
+        console.log(`\n[Попытка ${attempt}/${maxAttempts}] 🚀 OpenAI GPT-4o-mini (запасной вариант)`);
+        console.log('─'.repeat(60));
+        
+        sendProgress('stage2_retry', {
+          stage: 2,
+          message: 'Финальная попытка с OpenAI...',
+          attempt: attempt,
+          reason: `DeepSeek Reasoner: балл ${validationScore2}/100`,
+          timestamp: Date.now()
+        });
+        
+        processedData = await stage2ProcessOpenAI.execute(steelGrade, searchData, config);
+        
+        console.log(`✅ Этап 2 (попытка ${attempt}) завершен`);
+        
+        sendProgress('stage2_complete', {
+          stage: 2,
+          message: 'Обработка через OpenAI завершена',
+          attempt: attempt,
+          model: 'gpt-4o-mini',
+          timestamp: Date.now()
+        });
+        
+        // Финальная валидация
+        console.log('\n✅ ЭТАП 3: Финальная валидация через OpenAI');
+        console.log('─'.repeat(60));
+        
+        sendProgress('stage3_start', {
+          stage: 3,
+          message: 'Финальная валидация результатов...',
+          attempt: attempt,
+          timestamp: Date.now()
+        });
+        
+        validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
+        const validationScore3 = validatedData.validation.overall_score;
+        
+        console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка ${validationScore3}/100`);
+        
+        if (validationScore3 < 70) {
+          console.error(`\n❌ Все ${maxAttempts} попытки не прошли валидацию`);
+          console.error(`   Финальный балл: ${validationScore3}/100`);
+        } else {
+          console.log(`\n🎉 Попытка ${attempt} успешна! Балл: ${validationScore3}/100`);
+        }
+        
+        sendProgress('stage3_complete', {
+          stage: 3,
+          message: validationScore3 >= 70 ? 'Финальная валидация успешна' : 'Финальная валидация не прошла',
+          attempt: attempt,
+          score: validationScore3,
+          passed: validatedData.validation.passed,
+          timestamp: Date.now()
+        });
+      } else if (validationScore2 >= 70) {
+        console.log(`\n🎉 Попытка ${attempt} (Reasoner) успешна! Балл: ${validationScore2}/100`);
+      }
+    } else if (validationScore >= 70) {
+      console.log(`\n🎉 Попытка ${attempt} успешна с первого раза! Балл: ${validationScore}/100`);
+    }
 
     // Финальный результат
     let finalResult = {
@@ -201,6 +350,8 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
       pipeline: {
         stage1_sources: searchData.sources_count,
         stage2_iterations: processedData.iterations_used || 1,
+        stage2_attempts: attempt,
+        stage2_model_used: modelUsed,
         stage3_checks: validatedData.validation.checks_performed || 8
       },
       cached: false,

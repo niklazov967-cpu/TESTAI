@@ -26,10 +26,19 @@ ${sourcesText}
 2. Укажи полный химический состав (C, Mn, Si, Cr, Ni, Mo, V, Ti, P, S, Fe)
    - Если элемент отсутствует в стали, укажи "0" или "0.0"
 3. Укажи механические свойства:
-   - yield_strength (предел текучести, МПа)
-   - tensile_strength (предел прочности, МПа)
-   - elongation (относительное удлинение, %)
-   - impact_toughness (ударная вязкость, Дж/см²)
+   - yield_strength (предел текучести, МПа) - ОБЯЗАТЕЛЬНО
+   - tensile_strength (предел прочности, МПа) - ОБЯЗАТЕЛЬНО
+   - elongation (относительное удлинение, %) - ОБЯЗАТЕЛЬНО
+   - impact_toughness (ударная вязкость, Дж) - ЖЕЛАТЕЛЬНО
+   
+   ⚠️ ВАЖНО для impact_toughness:
+   - Если точное значение найдено в источниках - используй его
+   - Если точное значение НЕ найдено, используй типичное для класса стали:
+     * Аустенитные нержавеющие (304, 316, 904L): 100-200 Дж
+     * Ферритные/мартенситные нержавеющие: 40-80 Дж  
+     * Углеродистые и низколегированные стали: 20-60 Дж
+   - Для нержавеющих сталей допустимо указать "0" если данных нет
+   - Для углеродистых сталей ВСЕГДА укажи хотя бы примерное значение
 4. Укажи стандарт (AISI/ASTM для США, ГОСТ для России, GB для Китая)
 
 ПРИОРИТЕТЫ (по важности):
@@ -115,7 +124,12 @@ ${sourcesText}
 
 VALIDATION CRITERIA (with weights):
 1. **Mechanical Properties (30%)** - Check if values are realistic and within ±15% tolerance
-   - Verify yield strength, tensile strength, elongation, impact toughness
+   - ⚠️ CRITICAL: ALL mechanical properties MUST be non-zero for all analogs
+   - Impact toughness MUST be > 0 (typical range: 10-400 J, depending on steel class)
+   - Yield strength MUST be > 0 and < tensile strength
+   - Tensile strength MUST be realistic for the steel grade (300-3000 MPa)
+   - Elongation MUST be > 0 (typical range: 1-80%)
+   - If ANY mechanical property is 0 or missing, score this criterion as 0/30
    - Cross-reference with known standards
 
 2. **Chemical Composition (25%)** - Verify elements are within standard ranges
@@ -223,7 +237,7 @@ async function buildStandardsStage2Prompt(searchResults, standardCode, standardT
   prompt += '\n\n---\n\n';
 
   // Добавляем активные блоки
-  const blocks = config.prompt_blocks.stage2_deepseek;
+  const blocks = config?.prompt_blocks?.stage2_deepseek || {};
 
   if (blocks.block_methodology) {
     prompt += await loadPromptBlock('block_methodology');

@@ -153,12 +153,71 @@ function handleProgressEvent(eventType, data) {
             updateStageStatus(2, data.message || 'Обработка данных...');
             startStageTimer(2);
             updateLoadingStatus(data.message || 'Этап 2: Обработка данных...');
+            
+            // Показываем информацию о попытке
+            if (data.attempt && data.attempt > 1) {
+                const attemptBadge = `<span style="background: #ffc107; color: #000; padding: 3px 8px; border-radius: 4px; margin-left: 8px; font-size: 0.85em;">ПОПЫТКА ${data.attempt}/3</span>`;
+                const statusEl = document.querySelector('#stage2 .status');
+                if (statusEl) {
+                    statusEl.innerHTML = data.message + attemptBadge;
+                }
+            }
+            break;
+            
+        case 'stage2_retry':
+            // Эскалация - повторная попытка
+            updateStageStatus(2, data.message || 'Повторная обработка...');
+            
+            const retryBadge = `<span style="background: #ff6b6b; color: white; padding: 3px 8px; border-radius: 4px; margin-left: 8px; font-size: 0.85em; animation: pulse 1s infinite;">🔄 ПОПЫТКА ${data.attempt}/3</span>`;
+            let retryStatusEl = document.querySelector('#stage2 .status');
+            if (retryStatusEl) {
+                retryStatusEl.innerHTML = data.message + retryBadge;
+            }
+            
+            // Показываем информацию о причине эскалации
+            if (data.reason) {
+                updateLoadingStatus(`⚠️ ${data.reason}. Запуск повторной попытки...`);
+            }
+            
+            // Добавляем визуальное выделение
+            let retryStage2El = document.getElementById('stage2');
+            if (retryStage2El) {
+                retryStage2El.style.borderLeft = '4px solid #ffc107';
+                retryStage2El.style.background = '#fff9e6';
+                retryStage2El.style.color = '#856404'; // Темно-желтый текст для читаемости
+            }
             break;
             
         case 'stage2_complete':
             stopStageTimer(2);
-            updateStageStatus(2, 'Завершено');
+            
+            // Показываем модель, если указана
+            let completionMessage = 'Завершено';
+            if (data.model) {
+                const modelIcon = data.model.includes('reasoner') ? '🧠' : 
+                                 data.model.includes('gpt') ? '🚀' : '💬';
+                const modelName = data.model === 'deepseek-reasoner' ? 'Reasoner' :
+                                 data.model === 'deepseek-chat' ? 'Chat' :
+                                 data.model === 'gpt-4o-mini' ? 'GPT-4o-mini' : data.model;
+                completionMessage = `${modelIcon} ${modelName}`;
+            }
+            
+            // Добавляем попытку, если > 1
+            if (data.attempt && data.attempt > 1) {
+                completionMessage += ` <span style="font-size: 0.85em; color: #666;">(попытка ${data.attempt})</span>`;
+            }
+            
+            updateStageStatus(2, completionMessage);
             updateStageIterations(2, data.iterations || 1);
+            
+            // Убираем подсветку эскалации
+            let completeStage2El = document.getElementById('stage2');
+            if (completeStage2El) {
+                completeStage2El.style.borderLeft = '';
+                completeStage2El.style.background = '';
+                completeStage2El.style.color = ''; // Сбрасываем цвет текста
+            }
+            
             updateLoadingStatus('Этап 2 завершен. Запуск этапа 3...');
             break;
             
@@ -310,7 +369,7 @@ function updateLoadingStatus(message) {
 }
 
 function updateStageStatus(stageNum, status) {
-    document.getElementById(`stage${stageNum}-status`).textContent = status;
+    document.getElementById(`stage${stageNum}-status`).innerHTML = status;
 }
 
 function updateStageIterations(stageNum, iterations) {

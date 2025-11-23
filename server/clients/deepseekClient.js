@@ -13,17 +13,62 @@ class DeepSeekClient {
 
   /**
    * Обработка данных и поиск аналогов
+   * Поддерживает deepseek-chat и deepseek-reasoner
+   * С автоматическими повторными попытками при сбоях
    */
   async processData(prompt, options = {}) {
+    const model = options.model || 'deepseek-chat';
+    const maxRetries = 3;
+    let lastError = null;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        if (attempt > 1) {
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // 1s, 2s, 4s
+          console.log(`[DeepSeek] Повторная попытка ${attempt}/${maxRetries} через ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+        
+        return await this._makeRequest(prompt, model, options);
+        
+      } catch (error) {
+        lastError = error;
+        
+        // Если это последняя попытка или ошибка не подлежит retry - выбрасываем
+        if (attempt === maxRetries) {
+          throw error;
+        }
+        
+        // Retry только для ошибок сети или таймаутов
+        if (error.message.includes('Нет ответа') || 
+            error.message.includes('timeout') || 
+            error.code === 'ECONNABORTED' ||
+            error.code === 'ETIMEDOUT') {
+          console.warn(`[DeepSeek] Попытка ${attempt}/${maxRetries} не удалась: ${error.message}`);
+          continue;
+        }
+        
+        // Для других ошибок (например, ошибки API) - сразу выбрасываем
+        throw error;
+      }
+    }
+    
+    throw lastError;
+  }
+  
+  /**
+   * Внутренний метод для выполнения запроса
+   */
+  async _makeRequest(prompt, model, options = {}) {
     const startTime = Date.now();
     
     try {
-      console.log('[DeepSeek] Обработка данных...');
+      console.log(`[DeepSeek] Обработка данных (модель: ${model})...`);
       
       const response = await axios.post(
         `${this.baseURL}/chat/completions`,
         {
-          model: 'deepseek-chat',
+          model: model,
           messages: [
             { role: 'user', content: prompt }
           ],
@@ -36,7 +81,7 @@ class DeepSeekClient {
             'Authorization': `Bearer ${this.apiKey}`,
             'Content-Type': 'application/json'
           },
-          timeout: 60000
+          timeout: 90000 // Увеличен до 90 секунд для больших запросов
         }
       );
 
@@ -53,7 +98,7 @@ class DeepSeekClient {
         success: true,
         response_time_ms: responseTime,
         tokens,
-        model: 'deepseek-chat'
+        model: model
       });
       
       try {
@@ -71,7 +116,7 @@ class DeepSeekClient {
         success: false,
         response_time_ms: responseTime,
         error: error.message,
-        model: 'deepseek-chat'
+        model: model
       });
       
       if (error.response) {

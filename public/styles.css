@@ -314,16 +314,22 @@ main {
     color: #333;
 }
 
-.warnings, .recommendations {
+.criteria-item span {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.warnings, .recommendations, .errors {
     margin-top: 20px;
 }
 
-.warnings h4, .recommendations h4 {
+.warnings h4, .recommendations h4, .errors h4 {
     margin-bottom: 10px;
     color: #555;
 }
 
-.warnings ul, .recommendations ul {
+.warnings ul, .recommendations ul, .errors ul {
     list-style: none;
     padding-left: 0;
 }
@@ -342,6 +348,15 @@ main {
     border-left: 4px solid #28a745;
     margin-bottom: 10px;
     border-radius: 5px;
+}
+
+.errors li {
+    padding: 10px;
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #721c24;
 }
 
 .hidden {
@@ -502,6 +517,19 @@ footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
+    }
+}
+
+/* Анимация для pulse (мигание при эскалации) */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
     }
 }
 

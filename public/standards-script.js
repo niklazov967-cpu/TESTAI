@@ -2,7 +2,6 @@ const API_BASE = '/api/standards';
 
 // Элементы DOM
 const standardCodeInput = document.getElementById('standard-code');
-const standardTypeSelect = document.getElementById('standard-type');
 const searchBtn = document.getElementById('search-btn');
 const loadingDiv = document.getElementById('loading');
 const errorDiv = document.getElementById('error');
@@ -34,7 +33,7 @@ standardCodeInput.addEventListener('keypress', (e) => {
 
 async function handleSearch() {
     const standardCode = standardCodeInput.value.trim();
-    const standardType = standardTypeSelect.value;
+    const standardType = 'general'; // Всегда general, поле убрано из UI
     
     if (!standardCode) {
         showError('Пожалуйста, введите код стандарта');
@@ -146,12 +145,71 @@ function handleProgressEvent(eventType, data) {
             updateStageStatus(2, data.message || 'Обработка данных...');
             startStageTimer(2);
             updateLoadingStatus(data.message || 'Этап 2: Обработка данных...');
+            
+            // Показываем информацию о попытке
+            if (data.attempt && data.attempt > 1) {
+                const attemptBadge = `<span style="background: #ffc107; color: #000; padding: 3px 8px; border-radius: 4px; margin-left: 8px; font-size: 0.85em;">ПОПЫТКА ${data.attempt}/3</span>`;
+                const statusEl = document.querySelector('#stage2 .status');
+                if (statusEl) {
+                    statusEl.innerHTML = data.message + attemptBadge;
+                }
+            }
+            break;
+            
+        case 'stage2_retry':
+            // Эскалация - повторная попытка
+            updateStageStatus(2, data.message || 'Повторная обработка...');
+            
+            const retryBadge = `<span style="background: #ff6b6b; color: white; padding: 3px 8px; border-radius: 4px; margin-left: 8px; font-size: 0.85em; animation: pulse 1s infinite;">🔄 ПОПЫТКА ${data.attempt}/3</span>`;
+            let retryStatusEl = document.querySelector('#stage2 .status');
+            if (retryStatusEl) {
+                retryStatusEl.innerHTML = data.message + retryBadge;
+            }
+            
+            // Показываем информацию о причине эскалации
+            if (data.reason) {
+                updateLoadingStatus(`⚠️ ${data.reason}. Запуск повторной попытки...`);
+            }
+            
+            // Добавляем визуальное выделение
+            let retryStage2El = document.getElementById('stage2');
+            if (retryStage2El) {
+                retryStage2El.style.borderLeft = '4px solid #ffc107';
+                retryStage2El.style.background = '#fff9e6';
+                retryStage2El.style.color = '#856404'; // Темно-желтый текст для читаемости
+            }
             break;
             
         case 'stage2_complete':
             stopStageTimer(2);
-            updateStageStatus(2, 'Завершено');
+            
+            // Показываем модель, если указана
+            let completionMessage = 'Завершено';
+            if (data.model) {
+                const modelIcon = data.model.includes('reasoner') ? '🧠' : 
+                                 data.model.includes('gpt') ? '🚀' : '💬';
+                const modelName = data.model === 'deepseek-reasoner' ? 'Reasoner' :
+                                 data.model === 'deepseek-chat' ? 'Chat' :
+                                 data.model === 'gpt-4o-mini' ? 'GPT-4o-mini' : data.model;
+                completionMessage = `${modelIcon} ${modelName}`;
+            }
+            
+            // Добавляем попытку, если > 1
+            if (data.attempt && data.attempt > 1) {
+                completionMessage += ` <span style="font-size: 0.85em; color: #666;">(попытка ${data.attempt})</span>`;
+            }
+            
+            updateStageStatus(2, completionMessage);
             updateStageIterations(2, 1);
+            
+            // Убираем подсветку эскалации
+            let completeStage2El = document.getElementById('stage2');
+            if (completeStage2El) {
+                completeStage2El.style.borderLeft = '';
+                completeStage2El.style.background = '';
+                completeStage2El.style.color = ''; // Сбрасываем цвет текста
+            }
+            
             updateLoadingStatus('Этап 2 завершен. Запуск этапа 3...');
             break;
             
@@ -271,7 +329,7 @@ function updateLoadingStatus(message) {
 }
 
 function updateStageStatus(stageNum, status) {
-    document.getElementById(`stage${stageNum}-status`).textContent = status;
+    document.getElementById(`stage${stageNum}-status`).innerHTML = status;
 }
 
 function updateStageIterations(stageNum, iterations) {
@@ -393,15 +451,21 @@ function displayValidationDetails(validation) {
 
     let html = '';
 
+    // Отображение оценок по критериям в виде карточек
     if (validation.criteria_scores) {
         html += '<div class="criteria-scores">';
-        html += '<h4>Оценки по критериям:</h4>';
-        html += '<ul>';
         
         const criteriaLabels = {
+            'completeness': 'Полнота данных',
+            'accuracy': 'Точность',
+            'relevance': 'Релевантность',
+            'consistency': 'Согласованность',
+            'source_quality': 'Качество источников',
+            'technical_details': 'Технические детали',
+            'practical_usability': 'Применимость',
             'technical_accuracy': 'Техническая точность',
             'dimensional_compatibility': 'Размерная совместимость',
-            'pressure_temperature_ratings': 'Классы давления/температуры',
+            'pressure_temperature_ratings': 'Давление/температура',
             'material_equivalence': 'Эквивалентность материалов',
             'regulatory_compliance': 'Соответствие регуляциям',
             'practical_applicability': 'Практическая применимость',
@@ -409,46 +473,53 @@ function displayValidationDetails(validation) {
         };
 
         for (const [key, score] of Object.entries(validation.criteria_scores)) {
-            const label = criteriaLabels[key] || key;
+            const label = criteriaLabels[key] || key.replace(/_/g, ' ');
             const color = score >= 80 ? '#28a745' : score >= 70 ? '#ffc107' : '#dc3545';
-            html += `<li><strong>${label}:</strong> <span style="color: ${color}">${score}/100</span></li>`;
+            html += `
+                <div class="criteria-item">
+                    <strong>${label}</strong>
+                    <span style="color: ${color}">${score}/100</span>
+                </div>
+            `;
         }
         
-        html += '</ul>';
         html += '</div>';
     }
 
-    if (validation.errors && validation.errors.length > 0) {
-        html += '<div class="validation-errors">';
-        html += '<h4 style="color: #dc3545;">Ошибки:</h4>';
-        html += '<ul>';
-        validation.errors.forEach(error => {
-            html += `<li style="color: #dc3545;">${error}</li>`;
-        });
-        html += '</ul>';
-        html += '</div>';
-    }
-
+    // Предупреждения
     if (validation.warnings && validation.warnings.length > 0) {
-        html += '<div class="validation-warnings">';
-        html += '<h4 style="color: #ffc107;">Предупреждения:</h4>';
-        html += '<ul>';
-        validation.warnings.forEach(warning => {
-            html += `<li style="color: #ffc107;">${warning}</li>`;
-        });
-        html += '</ul>';
-        html += '</div>';
+        html += `
+            <div class="warnings">
+                <h4>⚠️ Предупреждения</h4>
+                <ul>
+                    ${validation.warnings.map(w => `<li>${w}</li>`).join('')}
+                </ul>
+            </div>
+        `;
     }
 
+    // Рекомендации
     if (validation.recommendations && validation.recommendations.length > 0) {
-        html += '<div class="validation-recommendations">';
-        html += '<h4 style="color: #28a745;">Рекомендации:</h4>';
-        html += '<ul>';
-        validation.recommendations.forEach(rec => {
-            html += `<li style="color: #28a745;">${rec}</li>`;
-        });
-        html += '</ul>';
-        html += '</div>';
+        html += `
+            <div class="recommendations">
+                <h4>✅ Рекомендации</h4>
+                <ul>
+                    ${validation.recommendations.map(r => `<li>${r}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
+    // Ошибки (если есть)
+    if (validation.errors && validation.errors.length > 0) {
+        html += `
+            <div class="errors">
+                <h4>❌ Ошибки</h4>
+                <ul>
+                    ${validation.errors.map(e => `<li>${e}</li>`).join('')}
+                </ul>
+            </div>
+        `;
     }
 
     validationInfo.innerHTML = html;
@@ -468,31 +539,58 @@ function displayCompatibility(compatibility) {
         { key: 'GB_to_EN', label: 'GB ↔ EN' }
     ];
 
+    // Словари для перевода значений
+    const physicalInterchangeLabels = {
+        'COMPATIBLE': 'Совместимы',
+        'PARTIALLY_COMPATIBLE': 'Частично совместимы',
+        'REQUIRES_VERIFICATION': 'Требуется проверка',
+        'NOT_COMPATIBLE': 'Несовместимы'
+    };
+
+    const functionalEquivalenceLabels = {
+        'YES': 'Да',
+        'CLOSE': 'Близко',
+        'DIFFERENT': 'Различаются',
+        'NO': 'Нет'
+    };
+
+    const riskLevelLabels = {
+        'low': 'Низкий',
+        'medium': 'Средний',
+        'high': 'Высокий',
+        'critical': 'Критический'
+    };
+
+    const riskColors = {
+        'low': '#28a745',
+        'medium': '#ffc107',
+        'high': '#ff9800',
+        'critical': '#dc3545'
+    };
+
     pairs.forEach(pair => {
         const assessment = compatibility[pair.key];
         if (assessment) {
-            const riskColors = {
-                'low': '#28a745',
-                'medium': '#ffc107',
-                'high': '#ff9800',
-                'critical': '#dc3545'
-            };
+            const physicalValue = physicalInterchangeLabels[assessment.physical_interchange] || assessment.physical_interchange || '-';
+            const functionalValue = functionalEquivalenceLabels[assessment.functional_equivalence] || assessment.functional_equivalence || '-';
+            const riskLabel = riskLevelLabels[assessment.risk_level] || assessment.risk_level || '-';
+            const riskColor = riskColors[assessment.risk_level] || '#666';
 
             html += `
                 <div class="compatibility-pair">
                     <h4>${pair.label}</h4>
                     <div class="property-item">
                         <span class="property-label">Физическая взаимозаменяемость:</span>
-                        <span class="property-value">${assessment.physical_interchange || '-'}</span>
+                        <span class="property-value">${physicalValue}</span>
                     </div>
                     <div class="property-item">
                         <span class="property-label">Функциональная эквивалентность:</span>
-                        <span class="property-value">${assessment.functional_equivalence || '-'}</span>
+                        <span class="property-value">${functionalValue}</span>
                     </div>
                     <div class="property-item">
                         <span class="property-label">Уровень риска:</span>
-                        <span class="property-value" style="color: ${riskColors[assessment.risk_level] || '#666'}">
-                            ${assessment.risk_level || '-'}
+                        <span class="property-value" style="color: ${riskColor}; font-weight: bold;">
+                            ${riskLabel}
                         </span>
                     </div>
                     ${assessment.notes ? `

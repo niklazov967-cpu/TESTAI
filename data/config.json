@@ -1,6 +1,7 @@
 {
   "cache_enabled": true,
   "validation_strictness": "medium",
+  "escalation_threshold": 70,
   "max_iterations": 3,
   "tavily_max_results": 15,
   "deepseek_temperature": 0.7,

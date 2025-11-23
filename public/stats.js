@@ -175,6 +175,45 @@ function displayAPIDetails(apiName, data) {
             </div>
         </div>
         
+        ${Object.keys(data.models_used || {}).length > 0 ? `
+            <div style="background: #e8f4f8; padding: 20px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid #667eea;">
+                <h4 style="color: #667eea; margin-bottom: 15px;">🤖 Использование моделей</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    ${Object.entries(data.models_used).map(([model, stats]) => {
+                        const percentage = data.total_requests > 0 
+                            ? ((stats.requests / data.total_requests) * 100).toFixed(1)
+                            : 0;
+                        
+                        const modelIcon = model.includes('reasoner') ? '🧠' : 
+                                         model.includes('gpt') ? '✨' : '💬';
+                        
+                        const modelBadge = model.includes('reasoner') ? 
+                            '<span style="background: #ffc107; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; margin-left: 8px;">УМНАЯ</span>' : '';
+                        
+                        return `
+                            <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                <div style="font-weight: bold; margin-bottom: 10px; display: flex; align-items: center;">
+                                    ${modelIcon} <span style="flex: 1;">${model}</span> ${modelBadge}
+                                </div>
+                                <div style="line-height: 1.8; font-size: 0.95em;">
+                                    <div>📊 Запросов: <strong>${stats.requests}</strong> (${percentage}%)</div>
+                                    ${stats.tokens.total > 0 ? `
+                                        <div>📝 Токенов: <strong>${stats.tokens.total.toLocaleString()}</strong></div>
+                                        <div style="color: #ffc107;">💰 Стоимость: <strong>$${stats.cost.toFixed(4)}</strong></div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                ${apiName === 'deepseek' && data.models_used['deepseek-reasoner'] ? `
+                    <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-radius: 8px; border-left: 3px solid #ffc107;">
+                        <strong>💡 DeepSeek Reasoner:</strong> Умная модель с расширенным мышлением. Используется автоматически при эскалации, когда стандартная модель не смогла пройти валидацию.
+                    </div>
+                ` : ''}
+            </div>
+        ` : ''}
+        
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
             <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
                 <h4 style="color: #667eea; margin-bottom: 15px;">📅 Сегодня (${today})</h4>

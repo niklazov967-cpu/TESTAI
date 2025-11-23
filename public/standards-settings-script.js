@@ -44,6 +44,7 @@ function applySettingsToUI(config) {
     // Параметры валидации
     document.getElementById('validation_strictness').value = config.validation_settings.strictness;
     document.getElementById('min_overall_score').value = config.validation_settings.min_overall_score;
+    document.getElementById('escalation_threshold').value = config.validation_settings.escalation_threshold || 70;
 
     // Настройки кэша
     document.getElementById('cache_enabled').checked = config.cache_settings.enabled;
@@ -73,6 +74,7 @@ function collectSettingsFromUI() {
     // Параметры валидации
     config.validation_settings.strictness = document.getElementById('validation_strictness').value;
     config.validation_settings.min_overall_score = parseInt(document.getElementById('min_overall_score').value);
+    config.validation_settings.escalation_threshold = parseInt(document.getElementById('escalation_threshold').value);
 
     // Настройки кэша
     config.cache_settings.enabled = document.getElementById('cache_enabled').checked;

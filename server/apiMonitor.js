@@ -15,7 +15,8 @@ const PRICING = {
     'gpt-4-turbo': { input: 10.00, output: 30.00 }
   },
   deepseek: {
-    'deepseek-chat': { input: 0.14, output: 0.28 }
+    'deepseek-chat': { input: 0.14, output: 0.28 },
+    'deepseek-reasoner': { input: 0.55, output: 2.19 }  // Reasoner дороже
   }
 };
 
@@ -66,6 +67,7 @@ class APIMonitor {
         max_response_time_ms: 0,
         total_response_time_ms: 0
       },
+      models_used: {},  // Отслеживание использования разных моделей
       daily: {},
       monthly: {},
       recent_requests: []
@@ -93,6 +95,11 @@ class APIMonitor {
   logRequest(apiName, operation, data = {}) {
     const stats = this.stats[apiName];
     if (!stats) return;
+    
+    // Инициализация models_used если отсутствует (для обратной совместимости)
+    if (!stats.models_used) {
+      stats.models_used = {};
+    }
 
     const now = new Date();
     const dateKey = now.toISOString().split('T')[0]; // YYYY-MM-DD
@@ -121,6 +128,34 @@ class APIMonitor {
           (data.tokens.output || 0) / 1000000 * price.output
         );
         stats.total_cost_usd += cost;
+      }
+    }
+
+    // Отслеживание использования моделей
+    if (data.model) {
+      if (!stats.models_used[data.model]) {
+        stats.models_used[data.model] = {
+          requests: 0,
+          tokens: { input: 0, output: 0, total: 0 },
+          cost: 0
+        };
+      }
+      
+      stats.models_used[data.model].requests++;
+      
+      if (data.tokens) {
+        stats.models_used[data.model].tokens.input += data.tokens.input || 0;
+        stats.models_used[data.model].tokens.output += data.tokens.output || 0;
+        stats.models_used[data.model].tokens.total += (data.tokens.input || 0) + (data.tokens.output || 0);
+        
+        if (PRICING[apiName] && PRICING[apiName][data.model]) {
+          const price = PRICING[apiName][data.model];
+          const cost = (
+            (data.tokens.input || 0) / 1000000 * price.input +
+            (data.tokens.output || 0) / 1000000 * price.output
+          );
+          stats.models_used[data.model].cost += cost;
+        }
       }
     }
 

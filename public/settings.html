@@ -300,6 +300,12 @@
                     <small>От 0.0 до 1.0. Низкая температура = более консервативные и точные оценки</small>
                 </div>
 
+                <div class="form-group">
+                    <label for="escalation_threshold">Порог эскалации (балл валидации):</label>
+                    <input type="number" id="escalation_threshold" min="60" max="95" value="70">
+                    <small>От 60 до 95. При оценке ниже этого порога запускается эскалация на более умные модели (DeepSeek Reasoner → GPT-4o-mini)</small>
+                </div>
+
                 <div class="info-box yellow">
                     <strong>Критерии валидации OpenAI:</strong>
                     • Механические свойства (30% веса)<br>

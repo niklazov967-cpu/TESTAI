@@ -322,6 +322,19 @@ app.post('/api/standards/settings/reset', (req, res) => {
   }
 });
 
+// 5. Получить весь кэш стандартов
+app.get('/api/standards/cache', (req, res) => {
+  try {
+    const cache = cacheManager.getAllStandards();
+    res.json(cache);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
 // 5. Очистить кэш стандартов
 app.delete('/api/standards/cache', (req, res) => {
   try {

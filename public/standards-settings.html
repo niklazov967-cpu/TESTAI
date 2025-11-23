@@ -275,6 +275,19 @@
                         <input type="number" id="min_overall_score" min="50" max="100" value="70">
                         <small>От 50 до 100. Результаты ниже этого балла будут отклонены.</small>
                     </div>
+                    <div class="form-group">
+                        <label for="escalation_threshold">Порог эскалации (балл валидации):</label>
+                        <input type="number" id="escalation_threshold" min="60" max="95" value="70">
+                        <small>От 60 до 95. При оценке ниже этого порога запускается эскалация на более умные модели (DeepSeek Reasoner → GPT-4o-mini).</small>
+                    </div>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="settings-section">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="save-btn">💾 Сохранить настройки</button>
+                        <button class="btn btn-secondary" id="reset-btn">🔄 Сбросить к умолчаниям</button>
+                    </div>
                 </div>
 
                 <!-- Настройки кэша -->
@@ -302,14 +315,6 @@
                     <div class="btn-group">
                         <button class="btn btn-danger" id="clear-cache-btn">🗑️ Очистить весь кэш</button>
                         <button class="btn btn-secondary" id="refresh-cache-btn">🔄 Обновить список</button>
-                    </div>
-                </div>
-
-                <!-- Кнопки действий -->
-                <div class="settings-section">
-                    <div class="btn-group">
-                        <button class="btn btn-primary" id="save-btn">💾 Сохранить настройки</button>
-                        <button class="btn btn-secondary" id="reset-btn">🔄 Сбросить к умолчаниям</button>
                     </div>
                 </div>
 

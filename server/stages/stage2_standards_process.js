@@ -18,9 +18,11 @@ async function execute(standardCode, standardType, searchData, config) {
 
   console.log(`[Этап 2] Промпт собран из ${Object.values(config.prompt_blocks.stage2_deepseek).filter(v => v).length} активных блоков`);
 
-  // Отправка в DeepSeek
+  // Отправка в DeepSeek с указанием модели
+  const model = config.deepseek_model || 'deepseek-chat';
   const processedData = await deepseekClient.processData(prompt, {
-    temperature: 0.7, // Можно добавить в конфигурацию стандартов при необходимости
+    model: model,
+    temperature: 0.7,
     max_tokens: 4000
   });
 
