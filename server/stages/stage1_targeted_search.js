@@ -173,10 +173,7 @@ async function execute(steelGrade, validationResult, existingAnalogs, existingSo
     console.log(`[Целевой поиск] Запрос ${i + 1}/${limitedQueries.length}: ${queryObj.query.substring(0, 60)}...`);
     
     try {
-      const results = await tavilyClient.search(queryObj.query, {
-        max_results: maxResultsPerQuery,
-        search_depth: config.targeted_search_depth || 'advanced'
-      });
+      const results = await tavilyClient.search(queryObj.query, maxResultsPerQuery);
       
       // Добавляем метаданные о фокусе поиска
       results.forEach(result => {
