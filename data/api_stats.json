@@ -365,47 +365,80 @@
     ]
   },
   "openai": {
-    "total_requests": 6,
-    "successful_requests": 6,
+    "total_requests": 9,
+    "successful_requests": 9,
     "failed_requests": 0,
     "total_tokens": {
-      "input": 14916,
-      "output": 1188,
-      "total": 16104
+      "input": 21799,
+      "output": 2133,
+      "total": 23932
     },
-    "total_cost_usd": 0.0029502,
+    "total_cost_usd": 0.00454965,
     "performance": {
-      "avg_response_time_ms": 4523.333333333333,
+      "avg_response_time_ms": 5297.333333333333,
       "min_response_time_ms": 2218,
-      "max_response_time_ms": 6250,
-      "total_response_time_ms": 27140
+      "max_response_time_ms": 13312,
+      "total_response_time_ms": 47676
     },
     "models_used": {
       "gpt-4o-mini": {
-        "requests": 6,
+        "requests": 9,
         "tokens": {
-          "input": 14916,
-          "output": 1188,
-          "total": 16104
+          "input": 21799,
+          "output": 2133,
+          "total": 23932
         },
-        "cost": 0.0029502
+        "cost": 0.00454965
       }
     },
     "daily": {
       "2025-11-23": {
-        "requests": 6,
-        "tokens": 16104,
+        "requests": 9,
+        "tokens": 23932,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 6,
-        "tokens": 16104,
+        "requests": 9,
+        "tokens": 23932,
         "cost": 0
       }
     },
     "recent_requests": [
+      {
+        "timestamp": "2025-11-23T14:30:07.581Z",
+        "operation": "validate",
+        "response_time_ms": 2376,
+        "tokens": {
+          "input": 2302,
+          "output": 174
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:30:05.204Z",
+        "operation": "processData",
+        "response_time_ms": 13312,
+        "tokens": {
+          "input": 2248,
+          "output": 580
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:29:51.890Z",
+        "operation": "validate",
+        "response_time_ms": 4848,
+        "tokens": {
+          "input": 2333,
+          "output": 191
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
       {
         "timestamp": "2025-11-23T14:29:15.234Z",
         "operation": "validate",
