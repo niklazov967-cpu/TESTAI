@@ -25,50 +25,20 @@ ${sourcesText}
 1. Для каждой страны найди наиболее подходящий аналог
 2. Укажи полный химический состав (C, Mn, Si, Cr, Ni, Mo, V, Ti, P, S, Fe)
    - Если элемент отсутствует в стали, укажи "0" или "0.0"
-
-3. КРИТИЧЕСКИЕ ТРЕБОВАНИЯ К МЕХАНИЧЕСКИМ СВОЙСТВАМ:
-
-⚠️ ИСПОЛЬЗУЙ ТОЛЬКО РЕАЛЬНЫЕ ДАННЫЕ ИЗ ИСТОЧНИКОВ!
-
-Для КАЖДОГО аналога (USA, Russia, China) ищи механические свойства ОТДЕЛЬНО:
-
-   a) **yield_strength** (предел текучести, МПа):
-      - Ищи КОНКРЕТНОЕ значение для ЭТОЙ марки стали в источниках
-      - Если НЕ найдено в источниках - укажи null
-      - НЕ копируй значение от других аналогов
-      - НЕ выдумывай "типичные" значения
-
-   b) **tensile_strength** (предел прочности, МПа):
-      - Ищи КОНКРЕТНОЕ значение для ЭТОЙ марки стали в источниках
-      - Если НЕ найдено в источниках - укажи null
-      - НЕ копируй значение от других аналогов
-      - НЕ выдумывай "типичные" значения
-
-   c) **elongation** (относительное удлинение, %):
-      - Ищи КОНКРЕТНОЕ значение для ЭТОЙ марки стали в источниках
-      - Если НЕ найдено в источниках - укажи null
-      - НЕ копируй значение от других аналогов
-      - НЕ выдумывай "типичные" значения
-
-   d) **impact_toughness** (ударная вязкость, Дж):
-      - Ищи КОНКРЕТНОЕ значение для ЭТОЙ марки стали в источниках
-      - Если НЕ найдено в источниках - укажи null (это допустимо)
-      - НЕ копируй значение от других аналогов
-      - Для нержавеющих сталей (304, 316, 904L и т.д.) этот параметр часто не указывается - это нормально
-      - Для углеродистых сталей старайся найти значение, но если нет данных - укажи null
-
-   ⛔ СТРОГО ЗАПРЕЩЕНО:
-   - Копировать одинаковые механические свойства для разных аналогов
-   - Выдумывать "типичные" значения если нет реальных данных в источниках
-   - Использовать значения одного аналога для другого
-   - Указывать "0" вместо null когда данных нет
-
-   ✅ ПРАВИЛЬНО:
-   - Каждый аналог имеет СВОИ уникальные механические свойства (или null если нет данных)
-   - Если для какого-то аналога нет данных - указать null для этого свойства
-   - Использовать только данные из источников поиска
-   - Разные аналоги ДОЛЖНЫ иметь разные значения (если они есть в источниках)
-
+3. Укажи механические свойства:
+   - yield_strength (предел текучести, МПа) - ОБЯЗАТЕЛЬНО
+   - tensile_strength (предел прочности, МПа) - ОБЯЗАТЕЛЬНО
+   - elongation (относительное удлинение, %) - ОБЯЗАТЕЛЬНО
+   - impact_toughness (ударная вязкость, Дж) - ЖЕЛАТЕЛЬНО
+   
+   ⚠️ ВАЖНО для impact_toughness:
+   - Если точное значение найдено в источниках - используй его
+   - Если точное значение НЕ найдено, используй типичное для класса стали:
+     * Аустенитные нержавеющие (304, 316, 904L): 100-200 Дж
+     * Ферритные/мартенситные нержавеющие: 40-80 Дж  
+     * Углеродистые и низколегированные стали: 20-60 Дж
+   - Для нержавеющих сталей допустимо указать "0" если данных нет
+   - Для углеродистых сталей ВСЕГДА укажи хотя бы примерное значение
 4. Укажи стандарт (AISI/ASTM для США, ГОСТ для России, GB для Китая)
 
 ПРИОРИТЕТЫ (по важности):
@@ -82,7 +52,6 @@ ${sourcesText}
 - Если входная сталь из Китая, то для Китая укажи ту же марку
 - Для остальных стран найди реальные аналоги
 - Все значения должны быть числовыми или диапазонами (например, "18.0-20.0")
-- Если нет данных для механического свойства - используй null, а НЕ "0" или выдуманное значение
 
 ФОРМАТ ОТВЕТА (строго JSON):
 {
@@ -107,36 +76,24 @@ ${sourcesText}
         "yield_strength": "205",
         "tensile_strength": "515",
         "elongation": "40",
-        "impact_toughness": null
+        "impact_toughness": "120"
       }
     },
     "Russia": {
       "grade": "08Х18Н10",
       "standard": "ГОСТ 5632-2014",
       "chemical_composition": { ... },
-      "mechanical_properties": {
-        "yield_strength": "196",
-        "tensile_strength": "530",
-        "elongation": "40",
-        "impact_toughness": null
-      }
+      "mechanical_properties": { ... }
     },
     "China": {
       "grade": "0Cr18Ni9",
       "standard": "GB/T 1220-2007",
       "chemical_composition": { ... },
-      "mechanical_properties": {
-        "yield_strength": "205",
-        "tensile_strength": "520",
-        "elongation": "40",
-        "impact_toughness": null
-      }
+      "mechanical_properties": { ... }
     }
   },
   "iterations_used": 1
-}
-
-ОБРАТИ ВНИМАНИЕ: В примере выше каждый аналог имеет РАЗНЫЕ значения механических свойств (205/196/205 для yield_strength, 515/530/520 для tensile_strength), даже если различия небольшие. Это правильно, потому что разные марки стали имеют разные свойства!`;
+}`;
 
   return prompt;
 }
@@ -166,13 +123,14 @@ ORIGINAL SEARCH DATA (for cross-reference, top 5 sources):
 ${sourcesText}
 
 VALIDATION CRITERIA (with weights):
-1. **Mechanical Properties (30%)** - Check if values are realistic and properly sourced
-   - ⚠️ IMPORTANT: null values are ACCEPTABLE if no data was found in sources
-   - If a property is null, do NOT penalize - this is honest reporting of missing data
-   - If values are present, check if they are realistic for the steel grade
-   - If ALL three analogs have IDENTICAL mechanical properties - this is SUSPICIOUS and should be flagged
-   - Yield strength MUST be < tensile strength (if both are present)
-   - Cross-reference with known standards when values are present
+1. **Mechanical Properties (30%)** - Check if values are realistic and within ±15% tolerance
+   - ⚠️ CRITICAL: ALL mechanical properties MUST be non-zero for all analogs
+   - Impact toughness MUST be > 0 (typical range: 10-400 J, depending on steel class)
+   - Yield strength MUST be > 0 and < tensile strength
+   - Tensile strength MUST be realistic for the steel grade (300-3000 MPa)
+   - Elongation MUST be > 0 (typical range: 1-80%)
+   - If ANY mechanical property is 0 or missing, score this criterion as 0/30
+   - Cross-reference with known standards
 
 2. **Chemical Composition (25%)** - Verify elements are within standard ranges
    - Check C, Cr, Ni, Mn, Si, Mo, V, Ti content
@@ -209,24 +167,20 @@ VALIDATION CRITERIA (with weights):
 
 FACT-CHECKING STEPS:
 1. Cross-reference chemical composition with known standards
-2. Verify mechanical properties are realistic for the steel class (if present)
-3. Check if all three analogs have identical mechanical properties - if yes, FLAG THIS as suspicious
-4. Accept null values for mechanical properties - this is honest reporting of missing data
-5. Recalculate carbon equivalent for each analog (но помни: для нержавеющих сталей CE не используется для оценки свариваемости!)
-6. Check if steel grades actually exist in respective countries
-7. Verify weldability classification:
+2. Verify mechanical properties are realistic for the steel class
+3. Recalculate carbon equivalent for each analog (но помни: для нержавеющих сталей CE не используется для оценки свариваемости!)
+4. Check if steel grades actually exist in respective countries
+5. Verify weldability classification:
    - Для нержавеющих сталей: проверь, что свариваемость соответствует классу стали (аустенитные = excellent)
    - Для углеродистых сталей: проверь, что свариваемость соответствует CE значению
-8. Check for any obvious errors or inconsistencies
+6. Check for any obvious errors or inconsistencies
 
 SCORING GUIDE:
 - 100: Perfect match, no issues
-- 90-99: Excellent match, minor differences or some null values
-- 80-89: Good match, acceptable differences or multiple null values
-- 70-79: Acceptable match, some concerns or many null values
+- 90-99: Excellent match, minor differences
+- 80-89: Good match, acceptable differences
+- 70-79: Acceptable match, some concerns
 - Below 70: Significant issues, needs revision
-
-⚠️ CRITICAL: If all three analogs have IDENTICAL mechanical properties (same yield_strength, tensile_strength, elongation), this indicates data was copied rather than sourced individually. Score mechanical_properties as 0 and add critical error.
 
 OUTPUT FORMAT (strict JSON):
 {
@@ -404,3 +358,4 @@ module.exports = {
   buildStandardsStage3Prompt,
   loadPromptBlock
 };
+

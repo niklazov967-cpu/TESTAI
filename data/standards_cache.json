@@ -1,1 +1,89 @@
-{}
+{
+  "JIS G3467": {
+    "input_standard": "JIS G3467",
+    "standard_type": "general",
+    "equivalents": {
+      "Russia": {
+        "standard_code": "ГОСТ 550-2020",
+        "full_name": "Трубы стальные бесшовные для котлов и трубопроводов высокого давления",
+        "equivalence_type": "close",
+        "confidence": 75,
+        "notes": "ГОСТ 550 covers seamless steel tubes for boilers and high-pressure pipelines with similar temperature and pressure applications. Material grades like 20, 12Х1МФ, 15Х5М have comparable properties to JIS G3467 STF grades."
+      },
+      "China": {
+        "standard_code": "GB/T 5310-2017",
+        "full_name": "高压锅炉用无缝钢管",
+        "equivalence_type": "close",
+        "confidence": 80,
+        "notes": "GB/T 5310 covers seamless steel tubes for high-pressure boilers with similar material grades (20G, 15CrMoG, 12Cr1MoVG) and application scope for fired heaters and high-temperature service."
+      },
+      "Europe": {
+        "standard_code": "EN 10216-2",
+        "full_name": "Seamless steel tubes for pressure purposes - Technical delivery conditions - Part 2: Non-alloy and alloy steel tubes with specified elevated temperature properties",
+        "equivalence_type": "close",
+        "confidence": 70,
+        "notes": "EN 10216-2 covers seamless steel tubes for pressure purposes with elevated temperature properties. Material grades like P235GH, P265GH, 10CrMo9-10 are functionally equivalent for fired heater applications."
+      }
+    },
+    "compatibility_assessment": {
+      "GOST_to_GB": {
+        "physical_interchange": "COMPATIBLE",
+        "functional_equivalence": "YES",
+        "risk_level": "low",
+        "notes": "ГОСТ and GB standards share common heritage with similar design approaches, safety factors (1.5-2.6), and dimensional systems. Material grades have direct equivalents with comparable chemical compositions and mechanical properties."
+      },
+      "GOST_to_EN": {
+        "physical_interchange": "PARTIALLY_COMPATIBLE",
+        "functional_equivalence": "CLOSE",
+        "risk_level": "medium",
+        "notes": "ГОСТ and EN have different safety factors (ГОСТ: 1.5-2.6 vs EN: 2.4-3.0) leading to potential wall thickness differences. Dimensional compatibility requires verification, especially for flange connections and bolt patterns."
+      },
+      "GB_to_EN": {
+        "physical_interchange": "PARTIALLY_COMPATIBLE",
+        "functional_equivalence": "CLOSE",
+        "risk_level": "medium",
+        "notes": "GB and EN standards have different design philosophies and safety factors. While functionally similar for high-temperature applications, dimensional verification and pressure rating confirmation are required before interchange."
+      }
+    },
+    "validation": {
+      "overall_score": 81,
+      "criteria_scores": {
+        "technical_accuracy": 80,
+        "dimensional_compatibility": 75,
+        "pressure_temperature_ratings": 85,
+        "material_equivalence": 80,
+        "regulatory_compliance": 85,
+        "practical_applicability": 80,
+        "safety_considerations": 70
+      },
+      "errors": [],
+      "warnings": [],
+      "recommendations": [
+        "Ensure detailed engineering analysis when substituting ГОСТ/GB to EN standards.",
+        "Verify dimensional compatibility through mockups or detailed drawings before finalizing replacements.",
+        "Consult with experts for critical applications, especially in high-pressure or safety-critical environments."
+      ]
+    },
+    "sources_count": 24,
+    "processing_info": {
+      "attempts": 1,
+      "model_used": "deepseek-chat",
+      "final_score": 81,
+      "escalation_triggered": false
+    },
+    "processing_time": {
+      "stage1": 0,
+      "stage2": 0,
+      "stage3": 0,
+      "total": 0
+    },
+    "cached": false,
+    "config_used": {
+      "version": "3.0",
+      "strictness": "relaxed",
+      "min_score": 60
+    },
+    "cached_at": "2025-11-23T12:46:53.747Z",
+    "config_version": "3.0"
+  }
+}

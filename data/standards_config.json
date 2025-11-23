@@ -1,6 +1,6 @@
 {
   "version": "3.0",
-  "last_updated": "2025-11-23T12:22:24.642Z",
+  "last_updated": "2025-11-23T12:54:57.789Z",
   "search_settings": {
     "tavily_queries_count": 6,
     "search_depth": "advanced",
@@ -29,7 +29,7 @@
   "validation_settings": {
     "strictness": "relaxed",
     "min_overall_score": 60,
-    "escalation_threshold": 80,
+    "escalation_threshold": 85,
     "criteria_weights": {
       "technical_accuracy": 30,
       "dimensional_compatibility": 25,
