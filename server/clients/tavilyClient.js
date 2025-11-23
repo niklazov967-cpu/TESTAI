@@ -1,4 +1,5 @@
 const axios = require('axios');
+const apiMonitor = require('../apiMonitor');
 
 class TavilyClient {
   constructor() {
@@ -57,6 +58,8 @@ class TavilyClient {
    * @param {number} maxResults - Максимальное количество результатов (по умолчанию 5)
    */
   async search(query, maxResults = 5) {
+    const startTime = Date.now();
+    
     try {
       const response = await axios.post(
         `${this.baseURL}/search`,
@@ -74,6 +77,15 @@ class TavilyClient {
         }
       );
 
+      const responseTime = Date.now() - startTime;
+      
+      // Логирование успешного запроса
+      apiMonitor.logRequest('tavily', 'search', {
+        success: true,
+        response_time_ms: responseTime,
+        results_count: response.data.results?.length || 0
+      });
+
       return {
         results: response.data.results.map(item => ({
           title: item.title,
@@ -84,6 +96,15 @@ class TavilyClient {
       };
 
     } catch (error) {
+      const responseTime = Date.now() - startTime;
+      
+      // Логирование ошибки
+      apiMonitor.logRequest('tavily', 'search', {
+        success: false,
+        response_time_ms: responseTime,
+        error: error.message
+      });
+      
       console.error('[Tavily] Ошибка API:', error.message);
       throw error;
     }

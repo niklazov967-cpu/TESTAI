@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     setupPresets();
     setupForm();
-    setupCacheButton();
-    updateCacheInfo();
+    setupCacheManagement();
+    setupTabs();
 });
 
 // Загрузка настроек
@@ -47,7 +47,6 @@ function applySettingsToUI(config) {
 
     // Настройки кэша
     document.getElementById('cache_enabled').checked = config.cache_settings.enabled;
-    document.getElementById('cache_ttl').value = config.cache_settings.ttl_hours;
 }
 
 // Сбор настроек из UI
@@ -77,7 +76,6 @@ function collectSettingsFromUI() {
 
     // Настройки кэша
     config.cache_settings.enabled = document.getElementById('cache_enabled').checked;
-    config.cache_settings.ttl_hours = parseInt(document.getElementById('cache_ttl').value);
 
     config.last_updated = new Date().toISOString();
 
@@ -233,6 +231,197 @@ async function updateCacheInfo() {
     } catch (error) {
         document.getElementById('cache-info').textContent = 'Кэш: ошибка загрузки';
     }
+}
+
+// Настройка управления кэшем
+function setupCacheManagement() {
+    // Загрузка списка кэша
+    loadCacheList();
+    
+    // Поиск по кэшу
+    const searchInput = document.getElementById('cache-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            filterCacheList(e.target.value);
+        });
+    }
+    
+    // Обновление списка
+    const refreshBtn = document.getElementById('refresh-cache-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', loadCacheList);
+    }
+    
+    // Очистка всего кэша
+    const clearBtn = document.getElementById('clear-cache-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', async () => {
+            if (!confirm('Вы уверены, что хотите очистить весь кэш стандартов?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/cache`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Ошибка очистки кэша');
+                }
+
+                showAlert('Кэш успешно очищен', 'success');
+                loadCacheList();
+            } catch (error) {
+                showAlert('Ошибка очистки кэша: ' + error.message, 'error');
+            }
+        });
+    }
+}
+
+// Загрузка списка кэша
+async function loadCacheList() {
+    const container = document.getElementById('cache-list');
+    const countSpan = document.getElementById('cache-count');
+    const sizeSpan = document.getElementById('cache-size');
+    
+    if (!container) return;
+    
+    container.innerHTML = '<p style="text-align: center; color: #666;">Загрузка...</p>';
+    
+    try {
+        const response = await fetch(`${API_BASE}/cache/admin/list`);
+        if (!response.ok) {
+            throw new Error('Ошибка загрузки списка кэша');
+        }
+        
+        const data = await response.json();
+        
+        // Обновляем счетчики
+        if (countSpan) countSpan.textContent = data.count;
+        if (sizeSpan) sizeSpan.textContent = data.size_mb + ' MB';
+        
+        // Отображаем список
+        if (data.entries.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #666;">Кэш пуст</p>';
+            return;
+        }
+        
+        container.innerHTML = data.entries.map(entry => `
+            <div class="cache-item" data-key="${escapeHtml(entry.key)}">
+                <div class="cache-item-info">
+                    <div class="cache-item-name">${escapeHtml(entry.standard)}</div>
+                    <div class="cache-item-meta">
+                        📅 ${new Date(entry.timestamp).toLocaleString('ru-RU')} | 
+                        📊 Эквивалентов: ${entry.equivalents_count} | 
+                        💾 ${(entry.size / 1024).toFixed(2)} KB
+                    </div>
+                </div>
+                <div class="cache-item-actions">
+                    <button class="btn-icon view" onclick="viewCacheEntry('${escapeHtml(entry.key)}')" title="Просмотр">👁️</button>
+                    <button class="btn-icon delete" onclick="deleteCacheEntry('${escapeHtml(entry.key)}')" title="Удалить">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        container.innerHTML = `<p style="color: red; text-align: center;">Ошибка: ${error.message}</p>`;
+    }
+}
+
+// Фильтрация списка кэша
+function filterCacheList(query) {
+    const items = document.querySelectorAll('.cache-item');
+    const lowerQuery = query.toLowerCase();
+    
+    items.forEach(item => {
+        const key = item.dataset.key.toLowerCase();
+        if (key.includes(lowerQuery)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+// Просмотр записи кэша
+async function viewCacheEntry(key) {
+    try {
+        const response = await fetch(`${API_BASE}/cache`);
+        const allData = await response.json();
+        
+        // Найти запись по ключу
+        const cache = allData.find(item => 
+            (item.input_standard || item.standard_code || '').trim().toUpperCase() === key
+        );
+        
+        if (cache) {
+            // Открываем модальное окно с данными
+            const jsonStr = JSON.stringify(cache, null, 2);
+            const newWindow = window.open('', '_blank', 'width=800,height=600');
+            newWindow.document.write(`
+                <html>
+                <head>
+                    <title>Кэш: ${key}</title>
+                    <style>
+                        body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+                        pre { background: white; padding: 20px; border-radius: 8px; overflow: auto; }
+                    </style>
+                </head>
+                <body>
+                    <h2>Кэш: ${key}</h2>
+                    <pre>${jsonStr}</pre>
+                </body>
+                </html>
+            `);
+        } else {
+            showAlert('Запись не найдена в кэше', 'error');
+        }
+    } catch (error) {
+        showAlert('Ошибка просмотра: ' + error.message, 'error');
+    }
+}
+
+// Удаление записи кэша
+async function deleteCacheEntry(key) {
+    if (!confirm(`Удалить запись "${key}" из кэша?`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/cache/admin/${encodeURIComponent(key)}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        if (response.ok) {
+            showAlert(`Запись "${key}" удалена`, 'success');
+            loadCacheList();
+        } else {
+            showAlert('Ошибка удаления: ' + result.message, 'error');
+        }
+    } catch (error) {
+        showAlert('Ошибка: ' + error.message, 'error');
+    }
+}
+
+// Настройка вкладок
+function setupTabs() {
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.dataset.tab;
+            
+            // Удаляем active у всех
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            
+            // Добавляем active к выбранным
+            tab.classList.add('active');
+            document.getElementById(targetTab).classList.add('active');
+        });
+    });
 }
 
 // Показать сообщение

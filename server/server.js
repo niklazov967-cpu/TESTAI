@@ -125,6 +125,44 @@ app.get('/api/cache/:steel_grade', (req, res) => {
   }
 });
 
+// 5.1 Получить список всех записей в кэше (администрирование)
+app.get('/api/cache/admin/list', (req, res) => {
+  try {
+    const info = cacheManager.getInfo();
+    res.json(info);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// 5.2 Удалить конкретную запись из кэша
+app.delete('/api/cache/admin/:steel_grade', (req, res) => {
+  try {
+    const { steel_grade } = req.params;
+    const deleted = cacheManager.deleteEntry(decodeURIComponent(steel_grade));
+    
+    if (deleted) {
+      res.json({
+        status: 'success',
+        message: `Запись "${steel_grade}" удалена`
+      });
+    } else {
+      res.status(404).json({
+        status: 'error',
+        message: 'Запись не найдена'
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
 // 6. Получить промпты для просмотра (стали)
 app.get('/api/prompts', (req, res) => {
   try {
@@ -303,16 +341,46 @@ app.delete('/api/standards/cache', (req, res) => {
 // 6. Получить информацию о кэше стандартов
 app.get('/api/standards/cache/info', (req, res) => {
   try {
-    const cache = cacheManager.loadStandardsCache();
-    const count = Object.keys(cache).length;
-    const sizeBytes = JSON.stringify(cache).length;
-    const sizeMB = sizeBytes / (1024 * 1024);
-    
-    res.json({
-      count,
-      size_bytes: sizeBytes,
-      size_mb: sizeMB
+    const info = cacheManager.getStandardsInfo();
+    res.json(info);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
     });
+  }
+});
+
+// 6.1 Получить список всех записей в кэше стандартов (администрирование)
+app.get('/api/standards/cache/admin/list', (req, res) => {
+  try {
+    const info = cacheManager.getStandardsInfo();
+    res.json(info);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// 6.2 Удалить конкретную запись из кэша стандартов
+app.delete('/api/standards/cache/admin/:standard_code', (req, res) => {
+  try {
+    const { standard_code } = req.params;
+    const deleted = cacheManager.deleteStandardsEntry(decodeURIComponent(standard_code));
+    
+    if (deleted) {
+      res.json({
+        status: 'success',
+        message: `Запись "${standard_code}" удалена`
+      });
+    } else {
+      res.status(404).json({
+        status: 'error',
+        message: 'Запись не найдена'
+      });
+    }
   } catch (error) {
     res.status(500).json({
       status: 'error',
@@ -373,6 +441,101 @@ app.get('/api/standards/prompts', async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: error.message
+    });
+  }
+});
+
+// ============================================
+// API МОНИТОРИНГА
+// ============================================
+
+// Получить общую статистику API
+app.get('/api/monitor/stats', (req, res) => {
+  try {
+    const apiMonitor = require('./apiMonitor');
+    const stats = apiMonitor.getStats();
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: error.message 
+    });
+  }
+});
+
+// Получить статистику конкретного API
+app.get('/api/monitor/stats/:apiName', (req, res) => {
+  try {
+    const apiMonitor = require('./apiMonitor');
+    const { apiName } = req.params;
+    
+    if (!['tavily', 'deepseek', 'openai'].includes(apiName)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Неверное имя API. Допустимые: tavily, deepseek, openai'
+      });
+    }
+    
+    const stats = apiMonitor.getStats(apiName);
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: error.message 
+    });
+  }
+});
+
+// Получить статистику за сегодня
+app.get('/api/monitor/today', (req, res) => {
+  try {
+    const apiMonitor = require('./apiMonitor');
+    const stats = apiMonitor.getTodayStats();
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: error.message 
+    });
+  }
+});
+
+// Получить статистику за текущий месяц
+app.get('/api/monitor/month', (req, res) => {
+  try {
+    const apiMonitor = require('./apiMonitor');
+    const stats = apiMonitor.getMonthStats();
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: error.message 
+    });
+  }
+});
+
+// Сбросить статистику
+app.post('/api/monitor/reset', (req, res) => {
+  try {
+    const apiMonitor = require('./apiMonitor');
+    const { apiName } = req.body;
+    
+    if (apiName && !['tavily', 'deepseek', 'openai'].includes(apiName)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Неверное имя API. Допустимые: tavily, deepseek, openai'
+      });
+    }
+    
+    apiMonitor.resetStats(apiName);
+    res.json({ 
+      status: 'success',
+      message: apiName ? `Статистика ${apiName} сброшена` : 'Вся статистика сброшена'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: error.message 
     });
   }
 });

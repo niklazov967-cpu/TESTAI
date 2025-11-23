@@ -1,4 +1,5 @@
 const axios = require('axios');
+const apiMonitor = require('../apiMonitor');
 
 class DeepSeekClient {
   constructor() {
@@ -14,6 +15,8 @@ class DeepSeekClient {
    * Обработка данных и поиск аналогов
    */
   async processData(prompt, options = {}) {
+    const startTime = Date.now();
+    
     try {
       console.log('[DeepSeek] Обработка данных...');
       
@@ -37,7 +40,21 @@ class DeepSeekClient {
         }
       );
 
+      const responseTime = Date.now() - startTime;
       const content = response.data.choices[0].message.content;
+      
+      // Логирование успешного запроса
+      const tokens = {
+        input: response.data.usage?.prompt_tokens || 0,
+        output: response.data.usage?.completion_tokens || 0
+      };
+      
+      apiMonitor.logRequest('deepseek', 'process', {
+        success: true,
+        response_time_ms: responseTime,
+        tokens,
+        model: 'deepseek-chat'
+      });
       
       try {
         return JSON.parse(content);
@@ -47,6 +64,16 @@ class DeepSeekClient {
       }
 
     } catch (error) {
+      const responseTime = Date.now() - startTime;
+      
+      // Логирование ошибки
+      apiMonitor.logRequest('deepseek', 'process', {
+        success: false,
+        response_time_ms: responseTime,
+        error: error.message,
+        model: 'deepseek-chat'
+      });
+      
       if (error.response) {
         console.error('[DeepSeek] Ошибка API:', error.response.data);
         throw new Error(`Ошибка DeepSeek API: ${error.response.data.error?.message || 'Неизвестная ошибка'}`);

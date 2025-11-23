@@ -59,7 +59,6 @@
   "cache_settings": {
     "enabled": true,
     "cache_after_validation_only": true,
-    "ttl_hours": 168,
     "max_cache_size_mb": 50
   },
   "ui_settings": {

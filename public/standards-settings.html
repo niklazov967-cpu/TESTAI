@@ -146,6 +146,33 @@
             font-size: 0.9em;
             max-height: 600px;
             overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
         }
     </style>
 </head>
@@ -155,8 +182,10 @@
             <h1>⚙️ Настройки конвертера стандартов</h1>
             <p class="subtitle">Настройка параметров поиска, валидации и алгоритма</p>
             <div style="margin-top: 10px;">
+                <a href="home.html" style="color: white; text-decoration: none; margin-right: 15px; opacity: 0.9; font-size: 0.9em;">🏠 Главная</a>
                 <a href="standards.html" style="color: white; text-decoration: none; margin-right: 15px; opacity: 0.9; font-size: 0.9em;">🔍 Поиск стандартов</a>
-                <a href="index.html" style="color: white; text-decoration: none; opacity: 0.9; font-size: 0.9em;">🔍 Поиск сталей</a>
+                <a href="index.html" style="color: white; text-decoration: none; margin-right: 15px; opacity: 0.9; font-size: 0.9em;">🔍 Поиск сталей</a>
+                <a href="stats.html" style="color: white; text-decoration: none; opacity: 0.9; font-size: 0.9em;">📊 Статистика</a>
             </div>
         </header>
 
@@ -250,19 +279,29 @@
 
                 <!-- Настройки кэша -->
                 <div class="settings-section">
-                    <h2>💾 Настройки кэша</h2>
+                    <h2>💾 Администрирование кэша</h2>
                     <div class="checkbox-group">
                         <input type="checkbox" id="cache_enabled" checked>
                         <label for="cache_enabled"><strong>Включить кэширование</strong></label>
                     </div>
-                    <div class="form-group">
-                        <label for="cache_ttl">Время жизни кэша (часы):</label>
-                        <input type="number" id="cache_ttl" min="1" max="720" value="168">
-                        <small>От 1 до 720 часов (30 дней). По умолчанию: 168 часов (7 дней).</small>
+                    
+                    <div id="cache-info" style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+                        <strong>Всего записей:</strong> <span id="cache-count">0</span> | 
+                        <strong>Размер:</strong> <span id="cache-size">0 MB</span>
                     </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="cache-search" placeholder="🔍 Поиск по коду стандарта..." 
+                               style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em;">
+                    </div>
+                    
+                    <div id="cache-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+                        <p style="text-align: center; color: #666;">Загрузка...</p>
+                    </div>
+                    
                     <div class="btn-group">
-                        <button class="btn btn-danger" id="clear-cache-btn">🗑️ Очистить кэш</button>
-                        <span id="cache-info" style="line-height: 40px; margin-left: 15px;">Кэш: загрузка...</span>
+                        <button class="btn btn-danger" id="clear-cache-btn">🗑️ Очистить весь кэш</button>
+                        <button class="btn btn-secondary" id="refresh-cache-btn">🔄 Обновить список</button>
                     </div>
                 </div>
 
@@ -276,12 +315,72 @@
 
                 <!-- Просмотр промптов -->
                 <div class="settings-section">
-                    <h2>📋 Просмотр промптов</h2>
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" id="load-prompts-btn">Загрузить промпты</button>
+                    <h2>📋 Документация системы</h2>
+                    
+                    <div class="tabs">
+                        <button class="tab active" data-tab="prompts">Промпты</button>
+                        <button class="tab" data-tab="algorithms">Алгоритмы</button>
                     </div>
-                    <div id="prompts-content" class="code-block" style="margin-top: 20px; display: none;">
-                        <p>Нажмите "Загрузить промпты" для просмотра</p>
+
+                    <div id="prompts" class="tab-content active">
+                        <h3>Модульные промпты для конвертера стандартов</h3>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" id="load-prompts-btn">Загрузить промпты</button>
+                        </div>
+                        <div id="prompts-content" class="code-block" style="margin-top: 20px; display: none;">
+                            <p>Нажмите "Загрузить промпты" для просмотра</p>
+                        </div>
+                    </div>
+
+                    <div id="algorithms" class="tab-content">
+                        <h3>Алгоритмы работы конвертера стандартов</h3>
+                        <div class="code-block">
+                            <h4>Stage 1: Tavily Search (Поиск данных)</h4>
+                            <pre>1. Формирование поисковых запросов (9 запросов по умолчанию)
+2. Выполнение параллельных запросов через Tavily API
+3. Агрегация результатов и удаление дубликатов
+4. Сортировка по релевантности
+5. Возврат топ-источников для обработки</pre>
+
+                            <h4>Stage 2: DeepSeek Processing (Обработка с модульными промптами)</h4>
+                            <pre>1. Построение промпта из выбранных блоков:
+   - Базовый системный промпт (обязательный)
+   - 10-этапная методология
+   - Техническое сравнение
+   - Проверка совместимости
+   - Кросс-референс материалов
+   - Анализ безопасности
+   - Экономическая оценка
+2. Отправка запроса в DeepSeek API
+3. Парсинг JSON ответа с эквивалентами
+4. Возврат обработанных данных</pre>
+
+                            <h4>Stage 3: OpenAI Validation (Валидация)</h4>
+                            <pre>1. Построение промпта валидации
+2. Отправка запроса в OpenAI API
+3. Фактчекинг всех параметров:
+   - Точность эквивалента (40%)
+   - Техническая совместимость (30%)
+   - Безопасность замены (20%)
+   - Полнота информации (10%)
+4. Расчет общей оценки (0-100)
+5. Проверка соответствия строгости валидации
+6. Генерация предупреждений и рекомендаций
+7. Только при успешной валидации результат сохраняется в кэш</pre>
+
+                            <h4>Модульная система промптов</h4>
+                            <pre>Блоки промптов загружаются из /prompts/standards_blocks/
+- base_system_prompt.txt (обязательный)
+- block_methodology.txt
+- block_technical_comparison.txt
+- block_compatibility_check.txt
+- block_material_crossref.txt
+- block_safety_analysis.txt
+- block_economic_eval.txt
+
+Конфигурация блоков в settings позволяет включать/отключать 
+отдельные блоки в зависимости от требований к анализу.</pre>
+                        </div>
                     </div>
                 </div>
             </div>

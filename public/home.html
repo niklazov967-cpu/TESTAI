@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steel & Standards Finder v3.0</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero-section {
+            text-align: center;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero-section h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 40px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            padding: 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 3px solid #e0e0e0;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .service-card .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .service-card h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-card .features {
+            text-align: left;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .service-card .features li {
+            padding: 8px 0;
+            color: #555;
+        }
+
+        .service-card .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover .btn {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .info-section {
+            background: #f9f9f9;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .info-section h2 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-card .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .nav-link {
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Фиксированная кнопка настроек -->
+    <a href="stats.html" class="settings-button" title="Статистика API" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        📊
+        <span class="tooltip">Статистика API</span>
+    </a>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>🔍 Steel & Standards Finder</h1>
+            <p class="subtitle">Интеллектуальная система поиска аналогов сталей и конвертации промышленных стандартов</p>
+            <p style="font-size: 0.9em; opacity: 0.9;">Версия 3.0 | Трёхэтапная архитектура: Tavily → DeepSeek → OpenAI</p>
+            
+            <div class="nav-links">
+                <a href="settings.html" class="nav-link">⚙️ Настройки сталей</a>
+                <a href="standards-settings.html" class="nav-link">⚙️ Настройки стандартов</a>
+                <a href="stats.html" class="nav-link">📊 Статистика API</a>
+            </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="services-grid">
+            <!-- Steel Analogs Service -->
+            <a href="index.html" class="service-card">
+                <div class="icon">🔧</div>
+                <h2>Поиск аналогов сталей</h2>
+                <p>Найдите международные аналоги марок сталей с подробными характеристиками и рекомендациями по замене</p>
+                
+                <div class="features">
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✅ Аналоги по странам (USA, Russia, China, Japan, EU)</li>
+                        <li>✅ Химический состав с элементами</li>
+                        <li>✅ Механические свойства</li>
+                        <li>✅ Углеродный эквивалент (CE)</li>
+                        <li>✅ Оценка свариваемости</li>
+                        <li>✅ Валидация через OpenAI</li>
+                    </ul>
+                </div>
+                
+                <div class="btn">Начать поиск сталей →</div>
+            </a>
+
+            <!-- Standards Converter Service -->
+            <a href="standards.html" class="service-card">
+                <div class="icon">📋</div>
+                <h2>Конвертер стандартов</h2>
+                <p>Конвертируйте промышленные стандарты между системами ГОСТ, GB, EN, DIN с проверкой совместимости</p>
+                
+                <div class="features">
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✅ Эквиваленты по странам</li>
+                        <li>✅ Техническая совместимость</li>
+                        <li>✅ Размерные характеристики</li>
+                        <li>✅ Материалы и сплавы</li>
+                        <li>✅ Модульные промпты (10+ блоков)</li>
+                        <li>✅ Проверка безопасности замены</li>
+                    </ul>
+                </div>
+                
+                <div class="btn">Конвертировать стандарты →</div>
+            </a>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <h2>Почему Steel & Standards Finder?</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">🤖</div>
+                    <h3>AI-Powered</h3>
+                    <p>Использование передовых AI моделей (DeepSeek, OpenAI) для точного анализа и валидации данных</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">⚡</div>
+                    <h3>Трёхэтапная проверка</h3>
+                    <p>Поиск данных → Обработка AI → Валидация эксперта для максимальной точности</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">💾</div>
+                    <h3>Кэширование</h3>
+                    <p>Мгновенный доступ к ранее найденным результатам с возможностью управления</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon">🔧</div>
+                    <h3>Гибкие настройки</h3>
+                    <p>Настраиваемые пресеты, параметры валидации и модульные промпты</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Steel & Standards Finder v3.0 | Three-Stage Pipeline Architecture</p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.8;">Powered by Tavily, DeepSeek & OpenAI</p>
+        </footer>
+    </div>
+</body>
+</html>
+

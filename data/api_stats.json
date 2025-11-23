@@ -1,0 +1,254 @@
+{
+  "tavily": {
+    "total_requests": 18,
+    "successful_requests": 18,
+    "failed_requests": 0,
+    "total_tokens": {
+      "input": 0,
+      "output": 0,
+      "total": 0
+    },
+    "total_cost_usd": 0,
+    "performance": {
+      "avg_response_time_ms": 613,
+      "min_response_time_ms": 162,
+      "max_response_time_ms": 1343,
+      "total_response_time_ms": 11034
+    },
+    "daily": {
+      "2025-11-23": {
+        "requests": 18,
+        "tokens": 0,
+        "cost": 0
+      }
+    },
+    "monthly": {
+      "2025-11": {
+        "requests": 18,
+        "tokens": 0,
+        "cost": 0
+      }
+    },
+    "recent_requests": [
+      {
+        "timestamp": "2025-11-23T09:53:59.193Z",
+        "operation": "search",
+        "response_time_ms": 173,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:58.516Z",
+        "operation": "search",
+        "response_time_ms": 166,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:57.847Z",
+        "operation": "search",
+        "response_time_ms": 174,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:57.171Z",
+        "operation": "search",
+        "response_time_ms": 164,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:56.505Z",
+        "operation": "search",
+        "response_time_ms": 170,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:55.832Z",
+        "operation": "search",
+        "response_time_ms": 168,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:55.159Z",
+        "operation": "search",
+        "response_time_ms": 185,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:54.471Z",
+        "operation": "search",
+        "response_time_ms": 162,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:53.807Z",
+        "operation": "search",
+        "response_time_ms": 354,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:21.899Z",
+        "operation": "search",
+        "response_time_ms": 964,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:20.433Z",
+        "operation": "search",
+        "response_time_ms": 884,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:19.044Z",
+        "operation": "search",
+        "response_time_ms": 813,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:17.727Z",
+        "operation": "search",
+        "response_time_ms": 1173,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:16.051Z",
+        "operation": "search",
+        "response_time_ms": 884,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:14.664Z",
+        "operation": "search",
+        "response_time_ms": 1343,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:12.815Z",
+        "operation": "search",
+        "response_time_ms": 1036,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:11.273Z",
+        "operation": "search",
+        "response_time_ms": 982,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:09.787Z",
+        "operation": "search",
+        "response_time_ms": 1239,
+        "success": true
+      }
+    ]
+  },
+  "deepseek": {
+    "total_requests": 2,
+    "successful_requests": 2,
+    "failed_requests": 0,
+    "total_tokens": {
+      "input": 3118,
+      "output": 1269,
+      "total": 4387
+    },
+    "total_cost_usd": 0.00079184,
+    "performance": {
+      "avg_response_time_ms": 22402.5,
+      "min_response_time_ms": 21961,
+      "max_response_time_ms": 22844,
+      "total_response_time_ms": 44805
+    },
+    "daily": {
+      "2025-11-23": {
+        "requests": 2,
+        "tokens": 4387,
+        "cost": 0
+      }
+    },
+    "monthly": {
+      "2025-11": {
+        "requests": 2,
+        "tokens": 4387,
+        "cost": 0
+      }
+    },
+    "recent_requests": [
+      {
+        "timestamp": "2025-11-23T09:54:22.040Z",
+        "operation": "process",
+        "response_time_ms": 22844,
+        "tokens": {
+          "input": 1559,
+          "output": 636
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:43.867Z",
+        "operation": "process",
+        "response_time_ms": 21961,
+        "tokens": {
+          "input": 1559,
+          "output": 633
+        },
+        "model": "deepseek-chat",
+        "success": true
+      }
+    ]
+  },
+  "openai": {
+    "total_requests": 2,
+    "successful_requests": 2,
+    "failed_requests": 0,
+    "total_tokens": {
+      "input": 4328,
+      "output": 414,
+      "total": 4742
+    },
+    "total_cost_usd": 0.0008975999999999999,
+    "performance": {
+      "avg_response_time_ms": 5871,
+      "min_response_time_ms": 4661,
+      "max_response_time_ms": 7081,
+      "total_response_time_ms": 11742
+    },
+    "daily": {
+      "2025-11-23": {
+        "requests": 2,
+        "tokens": 4742,
+        "cost": 0
+      }
+    },
+    "monthly": {
+      "2025-11": {
+        "requests": 2,
+        "tokens": 4742,
+        "cost": 0
+      }
+    },
+    "recent_requests": [
+      {
+        "timestamp": "2025-11-23T09:54:29.126Z",
+        "operation": "validate",
+        "response_time_ms": 7081,
+        "tokens": {
+          "input": 2165,
+          "output": 221
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T09:53:48.535Z",
+        "operation": "validate",
+        "response_time_ms": 4661,
+        "tokens": {
+          "input": 2163,
+          "output": 193
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      }
+    ]
+  },
+  "last_reset": "2025-11-23T09:44:03.943Z"
+}

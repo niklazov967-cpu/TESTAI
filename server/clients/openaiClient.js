@@ -1,4 +1,5 @@
 const axios = require('axios');
+const apiMonitor = require('../apiMonitor');
 
 class OpenAIClient {
   constructor() {
@@ -14,13 +15,16 @@ class OpenAIClient {
    * Валидация и фактчекинг результатов
    */
   async validate(prompt, options = {}) {
+    const startTime = Date.now();
+    const model = options.model || 'gpt-4o-mini';
+    
     try {
       console.log('[OpenAI] Валидация результатов...');
       
       const response = await axios.post(
         `${this.baseURL}/chat/completions`,
         {
-          model: options.model || 'gpt-4o-mini',
+          model,
           messages: [
             { 
               role: 'system', 
@@ -44,7 +48,21 @@ class OpenAIClient {
         }
       );
 
+      const responseTime = Date.now() - startTime;
       const content = response.data.choices[0].message.content;
+      
+      // Логирование успешного запроса
+      const tokens = {
+        input: response.data.usage?.prompt_tokens || 0,
+        output: response.data.usage?.completion_tokens || 0
+      };
+      
+      apiMonitor.logRequest('openai', 'validate', {
+        success: true,
+        response_time_ms: responseTime,
+        tokens,
+        model
+      });
       
       try {
         return JSON.parse(content);
@@ -54,6 +72,16 @@ class OpenAIClient {
       }
 
     } catch (error) {
+      const responseTime = Date.now() - startTime;
+      
+      // Логирование ошибки
+      apiMonitor.logRequest('openai', 'validate', {
+        success: false,
+        response_time_ms: responseTime,
+        error: error.message,
+        model
+      });
+      
       if (error.response) {
         console.error('[OpenAI] Ошибка API:', error.response.data);
         throw new Error(`Ошибка OpenAI API: ${error.response.data.error?.message || 'Неизвестная ошибка'}`);

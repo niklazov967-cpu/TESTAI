@@ -68,6 +68,51 @@ function clear() {
 }
 
 /**
+ * Получить весь кэш (для администрирования)
+ */
+function getAll() {
+  return loadCache();
+}
+
+/**
+ * Удалить конкретную запись из кэша
+ */
+function deleteEntry(steelGrade) {
+  const cache = loadCache();
+  const normalized = steelGrade.trim().toUpperCase();
+  if (cache[normalized]) {
+    delete cache[normalized];
+    saveCache(cache);
+    console.log(`[Cache] Удалена запись: ${normalized}`);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Получить информацию о кэше (размер, количество записей)
+ */
+function getInfo() {
+  const cache = loadCache();
+  const keys = Object.keys(cache);
+  const cacheString = JSON.stringify(cache);
+  const sizeInBytes = Buffer.byteLength(cacheString, 'utf8');
+  
+  return {
+    count: keys.length,
+    size_bytes: sizeInBytes,
+    size_mb: (sizeInBytes / (1024 * 1024)).toFixed(2),
+    entries: keys.map(key => ({
+      key,
+      steel: key,
+      timestamp: cache[key].cached_at || 'unknown',
+      size: Buffer.byteLength(JSON.stringify(cache[key]), 'utf8'),
+      analogs_count: cache[key].analogs?.length || 0
+    }))
+  };
+}
+
+/**
  * Загрузка кэша стандартов
  */
 function loadStandardsCache() {
@@ -140,13 +185,64 @@ function clearStandards() {
   saveStandardsCache({});
 }
 
+/**
+ * Получить весь кэш стандартов (для администрирования)
+ */
+function getAllStandards() {
+  return loadStandardsCache();
+}
+
+/**
+ * Удалить конкретную запись из кэша стандартов
+ */
+function deleteStandardsEntry(standardCode) {
+  const cache = loadStandardsCache();
+  const normalized = standardCode.trim().toUpperCase();
+  if (cache[normalized]) {
+    delete cache[normalized];
+    saveStandardsCache(cache);
+    console.log(`[Cache Standards] Удалена запись: ${normalized}`);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Получить информацию о кэше стандартов
+ */
+function getStandardsInfo() {
+  const cache = loadStandardsCache();
+  const keys = Object.keys(cache);
+  const cacheString = JSON.stringify(cache);
+  const sizeInBytes = Buffer.byteLength(cacheString, 'utf8');
+  
+  return {
+    count: keys.length,
+    size_bytes: sizeInBytes,
+    size_mb: (sizeInBytes / (1024 * 1024)).toFixed(2),
+    entries: keys.map(key => ({
+      key,
+      standard: key,
+      timestamp: cache[key].cached_at || 'unknown',
+      size: Buffer.byteLength(JSON.stringify(cache[key]), 'utf8'),
+      equivalents_count: cache[key].equivalents?.length || 0
+    }))
+  };
+}
+
 module.exports = {
   get,
   save,
   clear,
+  getAll,
+  deleteEntry,
+  getInfo,
   getStandards,
   saveStandards,
   clearStandards,
+  getAllStandards,
+  deleteStandardsEntry,
+  getStandardsInfo,
   loadStandardsCache
 };
 

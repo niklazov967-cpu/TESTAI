@@ -353,6 +353,136 @@ footer {
     padding: 20px;
     text-align: center;
     color: #666;
+    font-size: 0.9em;
+}
+
+/* Фиксированная кнопка настроек */
+.settings-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #667eea;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    z-index: 1000;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.settings-button:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.settings-button .tooltip {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.settings-button:hover .tooltip {
+    opacity: 1;
+}
+
+/* Стили для администрирования кэша */
+.cache-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: white;
+    transition: all 0.3s;
+}
+
+.cache-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.cache-item-info {
+    flex: 1;
+}
+
+.cache-item-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.cache-item-meta {
+    font-size: 0.85em;
+    color: #666;
+}
+
+.cache-item-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: transform 0.2s;
+}
+
+.btn-icon:hover {
+    transform: scale(1.2);
+}
+
+.btn-icon.view {
+    color: #667eea;
+}
+
+.btn-icon.delete {
+    color: #dc3545;
+}
+
+/* Стили для пресетов */
+.preset-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.preset-btn {
+    padding: 12px 24px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    background: white;
+    color: #667eea;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.preset-btn:hover,
+.preset-btn.active {
+    background: #667eea;
+    color: white;
 }
 
 @media (max-width: 768px) {
