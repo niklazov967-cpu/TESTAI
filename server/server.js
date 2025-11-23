@@ -7,6 +7,9 @@ const searchEngine = require('./searchEngine');
 const standardsEngine = require('./standardsEngine');
 const configManager = require('./config');
 const cacheManager = require('./cacheManager');
+const tavilyClient = require('./clients/tavilyClient');
+const deepseekClient = require('./clients/deepseekClient');
+const openaiClient = require('./clients/openaiClient');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -156,6 +159,61 @@ app.get('/api/prompts', (req, res) => {
     res.json({
       stage2: stage2Prompt,
       stage3: stage3Prompt
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+});
+
+// 7. Проверить балансы всех API
+app.get('/api/balance', async (req, res) => {
+  try {
+    const balances = {
+      tavily: null,
+      deepseek: null,
+      openai: null
+    };
+
+    // Проверяем баланс Tavily
+    try {
+      balances.tavily = await tavilyClient.checkBalance();
+    } catch (error) {
+      balances.tavily = {
+        success: false,
+        message: `Ошибка проверки баланса Tavily: ${error.message}`,
+        error: error.message
+      };
+    }
+
+    // Проверяем баланс DeepSeek
+    try {
+      balances.deepseek = await deepseekClient.checkBalance();
+    } catch (error) {
+      balances.deepseek = {
+        success: false,
+        message: `Ошибка проверки баланса DeepSeek: ${error.message}`,
+        error: error.message
+      };
+    }
+
+    // Проверяем баланс OpenAI
+    try {
+      balances.openai = await openaiClient.checkBalance();
+    } catch (error) {
+      balances.openai = {
+        success: false,
+        message: `Ошибка проверки баланса OpenAI: ${error.message}`,
+        error: error.message
+      };
+    }
+
+    res.json({
+      status: 'success',
+      balances,
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
     res.status(500).json({

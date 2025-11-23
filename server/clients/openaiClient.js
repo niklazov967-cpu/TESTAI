@@ -66,6 +66,66 @@ class OpenAIClient {
       }
     }
   }
+
+  /**
+   * Проверить баланс/использование API
+   */
+  async checkBalance() {
+    try {
+      // OpenAI API - проверяем через billing endpoint
+      const response = await axios.get(
+        `${this.baseURL}/usage`,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: 10000
+        }
+      );
+
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      // OpenAI может не иметь публичного usage endpoint
+      // Проверяем через subscription endpoint
+      try {
+        const subscriptionResponse = await axios.get(
+          `${this.baseURL}/dashboard/billing/subscription`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.apiKey}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 10000
+          }
+        );
+
+        return {
+          success: true,
+          data: subscriptionResponse.data
+        };
+      } catch (subError) {
+        // Если оба endpoint недоступны, возвращаем информацию
+        if (error.response) {
+          if (error.response.status === 401 || error.response.status === 403) {
+            return {
+              success: false,
+              message: 'Неверный API ключ или нет доступа',
+              error: 'Unauthorized'
+            };
+          }
+        }
+        return {
+          success: false,
+          message: 'Проверьте баланс на https://platform.openai.com/usage',
+          error: error.message
+        };
+      }
+    }
+  }
 }
 
 module.exports = new OpenAIClient();

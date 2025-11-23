@@ -59,6 +59,53 @@ class DeepSeekClient {
       }
     }
   }
+
+  /**
+   * Проверить баланс/использование API
+   */
+  async checkBalance() {
+    try {
+      // DeepSeek API использует стандартный OpenAI-совместимый формат
+      // Проверяем баланс через billing endpoint или usage endpoint
+      const response = await axios.get(
+        `${this.baseURL}/usage`,
+        {
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: 10000
+        }
+      );
+
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      // Если endpoint недоступен, пробуем получить информацию из ошибки
+      if (error.response) {
+        // Если получили 401/403, значит ключ неверный или нет доступа
+        if (error.response.status === 401 || error.response.status === 403) {
+          return {
+            success: false,
+            message: 'Неверный API ключ или нет доступа',
+            error: 'Unauthorized'
+          };
+        }
+        return {
+          success: false,
+          message: error.response.data?.error?.message || 'Не удалось получить баланс',
+          error: error.response.data || error.message
+        };
+      }
+      return {
+        success: false,
+        message: 'Проверьте баланс на https://platform.deepseek.com',
+        error: error.message
+      };
+    }
+  }
 }
 
 module.exports = new DeepSeekClient();

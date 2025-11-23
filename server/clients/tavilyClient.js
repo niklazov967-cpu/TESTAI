@@ -88,6 +88,45 @@ class TavilyClient {
       throw error;
     }
   }
+
+  /**
+   * Проверить баланс/использование API
+   */
+  async checkBalance() {
+    try {
+      const response = await axios.get(
+        `${this.baseURL}/usage`,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          params: {
+            api_key: this.apiKey
+          },
+          timeout: 10000
+        }
+      );
+
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      // Tavily может не иметь endpoint для баланса, возвращаем информацию об ошибке
+      if (error.response && error.response.status === 404) {
+        return {
+          success: false,
+          message: 'Эндпоинт проверки баланса недоступен. Проверьте баланс на https://tavily.com/dashboard',
+          error: 'Endpoint not found'
+        };
+      }
+      return {
+        success: false,
+        message: error.response?.data?.error || error.message,
+        error: error.message
+      };
+    }
+  }
 }
 
 module.exports = new TavilyClient();
