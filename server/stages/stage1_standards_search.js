@@ -38,25 +38,40 @@ async function execute(standardCode, standardType, config) {
 
 /**
  * Генерация множественных поисковых запросов для стандартов
+ * Стратегия: 60% английские запросы, 40% русские запросы
  */
 function generateSearchQueries(standardCode, standardType, config) {
   const queriesCount = config.search_settings.tavily_queries_count || 9;
   
-  // Базовые запросы
+  // Базовые запросы (английские + русские)
   const baseQueries = [
+    // Английские запросы (международные стандарты, документация)
     `${standardCode} standard specification technical requirements scope application`,
     `${standardCode} equivalent Russia GOST ГОСТ ТУ standard comparison`,
     `${standardCode} equivalent China GB standard comparison`,
     `${standardCode} equivalent Europe EN DIN ISO standard comparison`,
     `${standardCode} technical parameters pressure temperature dimensions materials metric`,
     `${standardCode} standards comparison table cross-reference ГОСТ GB EN`,
-    `${standardCode} dimensions DN PN compatibility metric system`,
-    `${standardCode} materials steel grades GOST GB EN comparison`,
-    `${standardCode} datasheet technical documentation PDF specification`
+    
+    // Русские запросы (ГОСТ, российские источники)
+    `${standardCode} стандарт технические требования область применения`,
+    `${standardCode} эквивалент ГОСТ ТУ таблица соответствия`,
+    `${standardCode} аналог российский китайский европейский стандарт`
   ];
 
   // Дополнительные запросы (если нужно больше 9)
   const additionalQueries = [
+    // Английские
+    `${standardCode} dimensions DN PN compatibility metric system`,
+    `${standardCode} materials steel grades GOST GB EN comparison`,
+    `${standardCode} datasheet technical documentation PDF specification`,
+    
+    // Русские
+    `${standardCode} материалы марки стали ГОСТ сравнение`,
+    `${standardCode} размеры DN PN метрическая система`,
+    `${standardCode} документация технические характеристики`,
+    
+    // Дополнительные английские
     `${standardCode} testing methods inspection requirements NDT`,
     `${standardCode} manufacturing process fabrication requirements`,
     `${standardCode} safety factors design margins pressure vessels`,

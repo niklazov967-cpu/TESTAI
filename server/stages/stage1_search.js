@@ -35,23 +35,27 @@ async function execute(steelGrade, config) {
 
 /**
  * Генерация множественных поисковых запросов
+ * Стратегия: 60% английские запросы, 40% русские запросы
  */
 function generateSearchQueries(steelGrade) {
   return [
-    // Основной запрос
+    // Английские запросы (международные стандарты, документация)
     `${steelGrade} steel properties chemical composition mechanical properties`,
-    
-    // Запросы по аналогам
     `${steelGrade} equivalent USA AISI ASTM`,
     `${steelGrade} equivalent Russia GOST ГОСТ`,
     `${steelGrade} equivalent China GB`,
-    
-    // Запросы по параметрам
     `${steelGrade} chemical composition C Cr Ni Mn Ti`,
     `${steelGrade} mechanical properties yield strength tensile strength`,
     `${steelGrade} carbon equivalent weldability`,
     
-    // Запросы по стандартам
+    // Русские запросы (ГОСТ, российские источники, форумы)
+    `${steelGrade} сталь химический состав механические свойства`,
+    `${steelGrade} аналог ГОСТ марка стали таблица`,
+    `${steelGrade} предел текучести прочность ударная вязкость`,
+    `${steelGrade} углеродный эквивалент свариваемость ГОСТ`,
+    `${steelGrade} российский аналог ГОСТ AISI GB сравнение`,
+    
+    // Дополнительные запросы (общие)
     `${steelGrade} standard specification datasheet`,
     `${steelGrade} steel grade comparison table`
   ];
