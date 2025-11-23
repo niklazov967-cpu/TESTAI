@@ -1,8 +1,8 @@
 {
   "tavily": {
-    "total_requests": 52,
-    "successful_requests": 52,
-    "failed_requests": 0,
+    "total_requests": 102,
+    "successful_requests": 94,
+    "failed_requests": 8,
     "total_tokens": {
       "input": 0,
       "output": 0,
@@ -10,174 +10,182 @@
     },
     "total_cost_usd": 0,
     "performance": {
-      "avg_response_time_ms": 468.9230769230769,
-      "min_response_time_ms": 159,
+      "avg_response_time_ms": 578.8627450980392,
+      "min_response_time_ms": 141,
       "max_response_time_ms": 3205,
-      "total_response_time_ms": 24384
+      "total_response_time_ms": 59044
     },
     "models_used": {},
     "daily": {
       "2025-11-23": {
-        "requests": 52,
+        "requests": 102,
         "tokens": 0,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 52,
+        "requests": 102,
         "tokens": 0,
         "cost": 0
       }
     },
     "recent_requests": [
       {
-        "timestamp": "2025-11-23T13:39:12.500Z",
+        "timestamp": "2025-11-23T14:29:16.597Z",
         "operation": "search",
-        "response_time_ms": 183,
+        "response_time_ms": 144,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:29:16.449Z",
+        "operation": "search",
+        "response_time_ms": 142,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:29:16.305Z",
+        "operation": "search",
+        "response_time_ms": 141,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:29:16.161Z",
+        "operation": "search",
+        "response_time_ms": 146,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:29:16.013Z",
+        "operation": "search",
+        "response_time_ms": 147,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:29:15.863Z",
+        "operation": "search",
+        "response_time_ms": 142,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:29:15.718Z",
+        "operation": "search",
+        "response_time_ms": 144,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:29:15.571Z",
+        "operation": "search",
+        "response_time_ms": 332,
+        "success": false,
+        "error": "Request failed with status code 422"
+      },
+      {
+        "timestamp": "2025-11-23T14:28:50.061Z",
+        "operation": "search",
+        "response_time_ms": 170,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T13:39:11.813Z",
-        "operation": "search",
-        "response_time_ms": 238,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:11.070Z",
-        "operation": "search",
-        "response_time_ms": 182,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:10.384Z",
-        "operation": "search",
-        "response_time_ms": 184,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:09.695Z",
-        "operation": "search",
-        "response_time_ms": 196,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:08.994Z",
-        "operation": "search",
-        "response_time_ms": 192,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:08.297Z",
-        "operation": "search",
-        "response_time_ms": 185,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:07.606Z",
-        "operation": "search",
-        "response_time_ms": 176,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:06.925Z",
-        "operation": "search",
-        "response_time_ms": 178,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:06.242Z",
-        "operation": "search",
-        "response_time_ms": 190,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:05.548Z",
-        "operation": "search",
-        "response_time_ms": 179,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:04.864Z",
-        "operation": "search",
-        "response_time_ms": 197,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:04.163Z",
-        "operation": "search",
-        "response_time_ms": 194,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:03.462Z",
-        "operation": "search",
-        "response_time_ms": 492,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:23:10.636Z",
-        "operation": "search",
-        "response_time_ms": 182,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:23:09.952Z",
+        "timestamp": "2025-11-23T14:28:49.384Z",
         "operation": "search",
         "response_time_ms": 175,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T13:23:09.274Z",
+        "timestamp": "2025-11-23T14:28:48.703Z",
         "operation": "search",
-        "response_time_ms": 1011,
+        "response_time_ms": 184,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T13:23:07.754Z",
+        "timestamp": "2025-11-23T14:28:48.015Z",
         "operation": "search",
-        "response_time_ms": 1033,
+        "response_time_ms": 203,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T13:23:06.219Z",
+        "timestamp": "2025-11-23T14:28:47.307Z",
         "operation": "search",
-        "response_time_ms": 1060,
+        "response_time_ms": 190,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T13:23:04.657Z",
+        "timestamp": "2025-11-23T14:28:46.615Z",
         "operation": "search",
-        "response_time_ms": 1081,
+        "response_time_ms": 188,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:28:45.926Z",
+        "operation": "search",
+        "response_time_ms": 189,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:28:45.231Z",
+        "operation": "search",
+        "response_time_ms": 171,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:28:44.556Z",
+        "operation": "search",
+        "response_time_ms": 175,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:28:43.878Z",
+        "operation": "search",
+        "response_time_ms": 191,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:28:43.184Z",
+        "operation": "search",
+        "response_time_ms": 183,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:28:42.500Z",
+        "operation": "search",
+        "response_time_ms": 172,
         "success": true
       }
     ]
   },
   "deepseek": {
-    "total_requests": 9,
-    "successful_requests": 7,
-    "failed_requests": 2,
+    "total_requests": 15,
+    "successful_requests": 10,
+    "failed_requests": 5,
     "total_tokens": {
-      "input": 30277,
-      "output": 12103,
-      "total": 42380
+      "input": 36515,
+      "output": 14253,
+      "total": 50768
     },
-    "total_cost_usd": 0.024626750000000003,
+    "total_cost_usd": 0.026102070000000005,
     "performance": {
-      "avg_response_time_ms": 78297.44444444444,
-      "min_response_time_ms": 21928,
+      "avg_response_time_ms": 53018.4,
+      "min_response_time_ms": 5029,
       "max_response_time_ms": 139352,
-      "total_response_time_ms": 704677
+      "total_response_time_ms": 795276
     },
     "models_used": {
       "deepseek-chat": {
-        "requests": 5,
+        "requests": 11,
         "tokens": {
-          "input": 26084,
-          "output": 4103,
-          "total": 30187
+          "input": 32322,
+          "output": 6253,
+          "total": 38575
         },
-        "cost": 0.0048006
+        "cost": 0.00627592
       },
       "deepseek-reasoner": {
         "requests": 4,
@@ -191,19 +199,76 @@
     },
     "daily": {
       "2025-11-23": {
-        "requests": 9,
-        "tokens": 42380,
+        "requests": 15,
+        "tokens": 50768,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 9,
-        "tokens": 42380,
+        "requests": 15,
+        "tokens": 50768,
         "cost": 0
       }
     },
     "recent_requests": [
+      {
+        "timestamp": "2025-11-23T14:29:47.037Z",
+        "operation": "process",
+        "response_time_ms": 30434,
+        "tokens": {
+          "input": 1486,
+          "output": 896
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:29:13.006Z",
+        "operation": "process",
+        "response_time_ms": 22939,
+        "tokens": {
+          "input": 2376,
+          "output": 636
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T14:26:22.216Z",
+        "operation": "process",
+        "response_time_ms": 5029,
+        "model": "deepseek-chat",
+        "success": false,
+        "error": "Client network socket disconnected before secure TLS connection was established"
+      },
+      {
+        "timestamp": "2025-11-23T14:26:13.183Z",
+        "operation": "process",
+        "response_time_ms": 5033,
+        "model": "deepseek-chat",
+        "success": false,
+        "error": "Client network socket disconnected before secure TLS connection was established"
+      },
+      {
+        "timestamp": "2025-11-23T14:26:06.145Z",
+        "operation": "process",
+        "response_time_ms": 5035,
+        "model": "deepseek-chat",
+        "success": false,
+        "error": "Client network socket disconnected before secure TLS connection was established"
+      },
+      {
+        "timestamp": "2025-11-23T14:24:23.055Z",
+        "operation": "process",
+        "response_time_ms": 22129,
+        "tokens": {
+          "input": 2376,
+          "output": 618
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
       {
         "timestamp": "2025-11-23T13:41:57.359Z",
         "operation": "process",
@@ -300,47 +365,58 @@
     ]
   },
   "openai": {
-    "total_requests": 5,
-    "successful_requests": 5,
+    "total_requests": 6,
+    "successful_requests": 6,
     "failed_requests": 0,
     "total_tokens": {
-      "input": 12583,
-      "output": 1020,
-      "total": 13603
+      "input": 14916,
+      "output": 1188,
+      "total": 16104
     },
-    "total_cost_usd": 0.0024994500000000003,
+    "total_cost_usd": 0.0029502,
     "performance": {
-      "avg_response_time_ms": 4984.4,
-      "min_response_time_ms": 3580,
+      "avg_response_time_ms": 4523.333333333333,
+      "min_response_time_ms": 2218,
       "max_response_time_ms": 6250,
-      "total_response_time_ms": 24922
+      "total_response_time_ms": 27140
     },
     "models_used": {
       "gpt-4o-mini": {
-        "requests": 5,
+        "requests": 6,
         "tokens": {
-          "input": 12583,
-          "output": 1020,
-          "total": 13603
+          "input": 14916,
+          "output": 1188,
+          "total": 16104
         },
-        "cost": 0.0024994500000000003
+        "cost": 0.0029502
       }
     },
     "daily": {
       "2025-11-23": {
-        "requests": 5,
-        "tokens": 13603,
+        "requests": 6,
+        "tokens": 16104,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 5,
-        "tokens": 13603,
+        "requests": 6,
+        "tokens": 16104,
         "cost": 0
       }
     },
     "recent_requests": [
+      {
+        "timestamp": "2025-11-23T14:29:15.234Z",
+        "operation": "validate",
+        "response_time_ms": 2218,
+        "tokens": {
+          "input": 2333,
+          "output": 168
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
       {
         "timestamp": "2025-11-23T13:39:38.737Z",
         "operation": "validate",
