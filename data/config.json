@@ -6,5 +6,5 @@
   "deepseek_temperature": 0.7,
   "openai_temperature": 0.3,
   "openai_model": "gpt-4o-mini",
-  "escalation_threshold": 90
+  "escalation_threshold": 85
 }
