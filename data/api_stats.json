@@ -1,7 +1,7 @@
 {
   "tavily": {
-    "total_requests": 212,
-    "successful_requests": 172,
+    "total_requests": 234,
+    "successful_requests": 194,
     "failed_requests": 40,
     "total_tokens": {
       "input": 0,
@@ -10,174 +10,174 @@
     },
     "total_cost_usd": 0,
     "performance": {
-      "avg_response_time_ms": 410.6556603773585,
+      "avg_response_time_ms": 390.55555555555554,
       "min_response_time_ms": 140,
       "max_response_time_ms": 3205,
-      "total_response_time_ms": 87059
+      "total_response_time_ms": 91390
     },
     "models_used": {},
     "daily": {
       "2025-11-23": {
-        "requests": 212,
+        "requests": 234,
         "tokens": 0,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 212,
+        "requests": 234,
         "tokens": 0,
         "cost": 0
       }
     },
     "recent_requests": [
       {
-        "timestamp": "2025-11-23T14:58:03.304Z",
+        "timestamp": "2025-11-23T15:05:09.594Z",
         "operation": "search",
-        "response_time_ms": 1107,
+        "response_time_ms": 157,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:58:02.195Z",
+        "timestamp": "2025-11-23T15:05:09.434Z",
         "operation": "search",
-        "response_time_ms": 1068,
+        "response_time_ms": 159,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:58:01.125Z",
+        "timestamp": "2025-11-23T15:05:09.272Z",
         "operation": "search",
-        "response_time_ms": 1086,
+        "response_time_ms": 160,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:58:00.038Z",
+        "timestamp": "2025-11-23T15:05:09.109Z",
         "operation": "search",
-        "response_time_ms": 870,
+        "response_time_ms": 162,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:59.164Z",
+        "timestamp": "2025-11-23T15:05:08.945Z",
         "operation": "search",
-        "response_time_ms": 927,
+        "response_time_ms": 159,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:58.234Z",
+        "timestamp": "2025-11-23T15:05:08.783Z",
         "operation": "search",
-        "response_time_ms": 972,
+        "response_time_ms": 157,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:57.260Z",
+        "timestamp": "2025-11-23T15:05:08.624Z",
         "operation": "search",
-        "response_time_ms": 1209,
+        "response_time_ms": 157,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:56.048Z",
+        "timestamp": "2025-11-23T15:05:08.465Z",
         "operation": "search",
-        "response_time_ms": 1059,
+        "response_time_ms": 342,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:33.682Z",
-        "operation": "search",
-        "response_time_ms": 175,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:57:33.004Z",
-        "operation": "search",
-        "response_time_ms": 177,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:57:32.324Z",
-        "operation": "search",
-        "response_time_ms": 179,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:57:31.641Z",
+        "timestamp": "2025-11-23T15:04:46.350Z",
         "operation": "search",
         "response_time_ms": 180,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:30.957Z",
+        "timestamp": "2025-11-23T15:04:45.668Z",
+        "operation": "search",
+        "response_time_ms": 169,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:04:44.997Z",
+        "operation": "search",
+        "response_time_ms": 184,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:04:44.310Z",
+        "operation": "search",
+        "response_time_ms": 189,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:04:43.617Z",
+        "operation": "search",
+        "response_time_ms": 197,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:04:42.912Z",
+        "operation": "search",
+        "response_time_ms": 196,
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:04:42.212Z",
         "operation": "search",
         "response_time_ms": 190,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:30.264Z",
+        "timestamp": "2025-11-23T15:04:41.517Z",
         "operation": "search",
-        "response_time_ms": 186,
+        "response_time_ms": 173,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:29.576Z",
-        "operation": "search",
-        "response_time_ms": 185,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:57:28.887Z",
-        "operation": "search",
-        "response_time_ms": 175,
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:57:28.207Z",
+        "timestamp": "2025-11-23T15:04:40.840Z",
         "operation": "search",
         "response_time_ms": 178,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:27.522Z",
+        "timestamp": "2025-11-23T15:04:40.159Z",
         "operation": "search",
-        "response_time_ms": 193,
+        "response_time_ms": 189,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:26.824Z",
+        "timestamp": "2025-11-23T15:04:39.468Z",
         "operation": "search",
-        "response_time_ms": 183,
+        "response_time_ms": 182,
         "success": true
       },
       {
-        "timestamp": "2025-11-23T14:57:26.137Z",
+        "timestamp": "2025-11-23T15:04:38.781Z",
         "operation": "search",
-        "response_time_ms": 186,
+        "response_time_ms": 182,
         "success": true
       }
     ]
   },
   "deepseek": {
-    "total_requests": 25,
-    "successful_requests": 20,
+    "total_requests": 27,
+    "successful_requests": 22,
     "failed_requests": 5,
     "total_tokens": {
-      "input": 55759,
-      "output": 22224,
-      "total": 77983
+      "input": 60657,
+      "output": 23877,
+      "total": 84534
     },
-    "total_cost_usd": 0.031028110000000005,
+    "total_cost_usd": 0.032176670000000004,
     "performance": {
-      "avg_response_time_ms": 42782.04,
+      "avg_response_time_ms": 41691.2962962963,
       "min_response_time_ms": 5029,
       "max_response_time_ms": 139352,
-      "total_response_time_ms": 1069551
+      "total_response_time_ms": 1125665
     },
     "models_used": {
       "deepseek-chat": {
-        "requests": 21,
+        "requests": 23,
         "tokens": {
-          "input": 51566,
-          "output": 14224,
-          "total": 65790
+          "input": 56464,
+          "output": 15877,
+          "total": 72341
         },
-        "cost": 0.011201960000000004
+        "cost": 0.012350520000000004
       },
       "deepseek-reasoner": {
         "requests": 4,
@@ -191,19 +191,41 @@
     },
     "daily": {
       "2025-11-23": {
-        "requests": 25,
-        "tokens": 77983,
+        "requests": 27,
+        "tokens": 84534,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 25,
-        "tokens": 77983,
+        "requests": 27,
+        "tokens": 84534,
         "cost": 0
       }
     },
     "recent_requests": [
+      {
+        "timestamp": "2025-11-23T15:05:43.964Z",
+        "operation": "process",
+        "response_time_ms": 34366,
+        "tokens": {
+          "input": 2522,
+          "output": 1047
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:05:08.114Z",
+        "operation": "process",
+        "response_time_ms": 21748,
+        "tokens": {
+          "input": 2376,
+          "output": 606
+        },
+        "model": "deepseek-chat",
+        "success": true
+      },
       {
         "timestamp": "2025-11-23T14:58:37.719Z",
         "operation": "process",
@@ -389,73 +411,84 @@
         },
         "model": "deepseek-reasoner",
         "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:39:34.441Z",
-        "operation": "process",
-        "response_time_ms": 21928,
-        "tokens": {
-          "input": 2404,
-          "output": 619
-        },
-        "model": "deepseek-chat",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T13:23:33.190Z",
-        "operation": "process",
-        "response_time_ms": 22548,
-        "tokens": {
-          "input": 1819,
-          "output": 628
-        },
-        "model": "deepseek-chat",
-        "success": true
       }
     ]
   },
   "openai": {
-    "total_requests": 28,
-    "successful_requests": 28,
+    "total_requests": 31,
+    "successful_requests": 31,
     "failed_requests": 0,
     "total_tokens": {
-      "input": 65603,
-      "output": 7617,
-      "total": 73220
+      "input": 72522,
+      "output": 8555,
+      "total": 81077
     },
-    "total_cost_usd": 0.01441065,
+    "total_cost_usd": 0.0160113,
     "performance": {
-      "avg_response_time_ms": 5790.142857142857,
+      "avg_response_time_ms": 6285.709677419355,
       "min_response_time_ms": 2198,
-      "max_response_time_ms": 14405,
-      "total_response_time_ms": 162124
+      "max_response_time_ms": 21680,
+      "total_response_time_ms": 194857
     },
     "models_used": {
       "gpt-4o-mini": {
-        "requests": 28,
+        "requests": 31,
         "tokens": {
-          "input": 65603,
-          "output": 7617,
-          "total": 73220
+          "input": 72522,
+          "output": 8555,
+          "total": 81077
         },
-        "cost": 0.01441065
+        "cost": 0.0160113
       }
     },
     "daily": {
       "2025-11-23": {
-        "requests": 28,
-        "tokens": 73220,
+        "requests": 31,
+        "tokens": 81077,
         "cost": 0
       }
     },
     "monthly": {
       "2025-11": {
-        "requests": 28,
-        "tokens": 73220,
+        "requests": 31,
+        "tokens": 81077,
         "cost": 0
       }
     },
     "recent_requests": [
+      {
+        "timestamp": "2025-11-23T15:06:16.715Z",
+        "operation": "validate",
+        "response_time_ms": 6493,
+        "tokens": {
+          "input": 2300,
+          "output": 183
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:06:10.219Z",
+        "operation": "processData",
+        "response_time_ms": 21680,
+        "tokens": {
+          "input": 2248,
+          "output": 578
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
+      {
+        "timestamp": "2025-11-23T15:05:48.532Z",
+        "operation": "validate",
+        "response_time_ms": 4560,
+        "tokens": {
+          "input": 2371,
+          "output": 177
+        },
+        "model": "gpt-4o-mini",
+        "success": true
+      },
       {
         "timestamp": "2025-11-23T14:58:57.363Z",
         "operation": "validate",
@@ -639,39 +672,6 @@
         "tokens": {
           "input": 2248,
           "output": 582
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:43:30.795Z",
-        "operation": "validate",
-        "response_time_ms": 5287,
-        "tokens": {
-          "input": 2353,
-          "output": 220
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:42:51.154Z",
-        "operation": "validate",
-        "response_time_ms": 6092,
-        "tokens": {
-          "input": 2303,
-          "output": 189
-        },
-        "model": "gpt-4o-mini",
-        "success": true
-      },
-      {
-        "timestamp": "2025-11-23T14:30:07.581Z",
-        "operation": "validate",
-        "response_time_ms": 2376,
-        "tokens": {
-          "input": 2302,
-          "output": 174
         },
         "model": "gpt-4o-mini",
         "success": true
