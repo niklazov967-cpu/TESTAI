@@ -200,9 +200,15 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     
     validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
     
-    const validationScore = validatedData.validation.overall_score;
+    let validationScore = validatedData.validation.overall_score;
     console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка валидации ${validationScore}/100`);
     console.log(`   - Валидация пройдена: ${validatedData.validation.passed}`);
+    
+    // ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ ДО ЭСКАЛАЦИИ
+    console.log('\n📊 МЕХАНИЧЕСКИЕ СВОЙСТВА (ДО ЭСКАЛАЦИИ):');
+    console.log('  USA:', processedData.analogs.USA.mechanical_properties);
+    console.log('  Russia:', processedData.analogs.Russia.mechanical_properties);
+    console.log('  China:', processedData.analogs.China.mechanical_properties);
     console.log(`   - Ошибки: ${validatedData.validation.errors.length}`);
     console.log(`   - Предупреждения: ${validatedData.validation.warnings.length}`);
     
@@ -217,6 +223,14 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
 
     // ========================================
     // ========================================
+    // Сохраняем лучший результат для сравнения
+    let bestResult = {
+      data: JSON.parse(JSON.stringify(processedData)),
+      validation: JSON.parse(JSON.stringify(validatedData)),
+      score: validationScore,
+      attempt: attempt,
+      model: modelUsed
+    };
     // ПРОВЕРКА: Нужна ли эскалация?
     // ========================================
     const escalationThreshold = config.escalation_threshold || 85;
@@ -329,6 +343,15 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
         
         console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка ${validationScore2}/100`);
         console.log(`   Улучшение: ${validationScore}/100 → ${validationScore2}/100 (+${(validationScore2 - validationScore).toFixed(1)})`);
+    
+    // ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ ПОСЛЕ ЭСКАЛАЦИИ
+    console.log('\n📊 МЕХАНИЧЕСКИЕ СВОЙСТВА (ПОСЛЕ ЭСКАЛАЦИИ):');
+    console.log('  USA:', improvedData.analogs.USA.mechanical_properties);
+    console.log('  Russia:', improvedData.analogs.Russia.mechanical_properties);
+    console.log('  China:', improvedData.analogs.China.mechanical_properties);
+    console.log('\n🔍 СРАВНЕНИЕ МАРОК:');
+    console.log('  ДО:  USA=' + processedData.analogs.USA.grade + ', Russia=' + processedData.analogs.Russia.grade + ', China=' + processedData.analogs.China.grade);
+    console.log('  ПОСЛЕ: USA=' + improvedData.analogs.USA.grade + ', Russia=' + improvedData.analogs.Russia.grade + ', China=' + improvedData.analogs.China.grade);
         
         sendProgress('stage3_complete', {
           stage: 3,
@@ -342,8 +365,6 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
         });
         
         // Обновляем балл и данные
-        validationScore = validationScore2;
-        processedData = improvedData;
         
         // Добавляем метаданные о целевом поиске
         processedData.targeted_search = {
@@ -402,6 +423,26 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
         validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
         const validationScore3 = validatedData.validation.overall_score;
         
+        // Проверяем улучшился ли результат после OpenAI
+        if (validationScore3 > bestResult.score) {
+          console.log(`✅ OpenAI улучшил результат: ${bestResult.score} → ${validationScore3}`);
+          bestResult = {
+            data: JSON.parse(JSON.stringify(processedData)),
+            validation: JSON.parse(JSON.stringify(validatedData)),
+            score: validationScore3,
+            attempt: attempt,
+            model: modelUsed
+          };
+          validationScore = validationScore3;
+        } else {
+          console.log(`⚠️ OpenAI не улучшил результат: ${bestResult.score} ≥ ${validationScore3}`);
+          console.log(`   Используем результат попытки ${bestResult.attempt} (балл: ${bestResult.score})`);
+          // Возвращаем лучший результат
+          processedData = JSON.parse(JSON.stringify(bestResult.data));
+          validatedData = JSON.parse(JSON.stringify(bestResult.validation));
+          validationScore = bestResult.score;
+        }
+        
         console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка ${validationScore3}/100`);
         
         if (validationScore3 < 70) {
@@ -427,6 +468,10 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     }
 
     // Финальный результат
+    console.log(`\n🏆 ФИНАЛЬНЫЙ РЕЗУЛЬТАТ: Попытка ${bestResult.attempt}, Модель: ${bestResult.model}, Балл: ${bestResult.score}/100`);
+    console.log(`   USA: ${processedData.analogs.USA.grade}`);
+    console.log(`   Russia: ${processedData.analogs.Russia.grade}`);
+    console.log(`   China: ${processedData.analogs.China.grade}`);
     let finalResult = {
       status: validatedData.validation.passed ? 'success' : 'partial_success',
       steel_input: steelGrade,
