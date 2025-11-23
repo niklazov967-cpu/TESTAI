@@ -2,6 +2,8 @@ const cacheManager = require('./cacheManager');
 const stage1Search = require('./stages/stage1_search');
 const stage2Process = require('./stages/stage2_process');
 const stage2SequentialSearch = require('./stages/stage2_sequential_search');
+const stage2SeparatePrompts = require('./stages/stage2_separate_prompts');
+const stage3SeparateValidation = require('./stages/stage3_separate_validation');
 const stage2ProcessOpenAI = require('./stages/stage2_process_openai');
 const stage3Validate = require('./stages/stage3_validate');
 const translator = require('./translator');
@@ -164,8 +166,12 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     
     // Выбор стратегии поиска
     const searchStrategy = config.search_strategy || 'parallel';
+    const useSeparatePrompts = config.use_separate_prompts !== false; // По умолчанию ВКЛ!
     
-    if (searchStrategy === 'sequential') {
+    if (useSeparatePrompts) {
+      console.log('[Этап 2] 🔀 Используется стратегия: ОТДЕЛЬНЫЕ ПРОМПТЫ для каждой марки');
+      processedData = await stage2SeparatePrompts.execute(steelGrade, searchData, config);
+    } else if (searchStrategy === 'sequential') {
       console.log('[Этап 2] 🔄 Используется последовательная стратегия поиска');
       processedData = await stage2SequentialSearch.execute(steelGrade, searchData, config);
     } else {
@@ -175,7 +181,6 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
         deepseek_model: 'deepseek-chat'
       });
     }
-    console.log(`✅ Этап 2 (попытка ${attempt}) завершен: аналоги найдены`);
     console.log(`   - США: ${processedData.analogs.USA.grade}`);
     console.log(`   - Россия: ${processedData.analogs.Russia.grade}`);
     console.log(`   - Китай: ${processedData.analogs.China.grade}`);
@@ -207,7 +212,7 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
       timestamp: Date.now()
     });
     
-    validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
+    validatedData = useSeparatePrompts ? await stage3SeparateValidation.execute(steelGrade, processedData, searchData, config) : await stage3Validate.execute(steelGrade, processedData, searchData, config);
     
     let validationScore = validatedData.validation.overall_score;
     console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка валидации ${validationScore}/100`);
@@ -448,7 +453,7 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
           timestamp: Date.now()
         });
         
-        validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
+        validatedData = useSeparatePrompts ? await stage3SeparateValidation.execute(steelGrade, processedData, searchData, config) : await stage3Validate.execute(steelGrade, processedData, searchData, config);
         const validationScore3 = validatedData.validation.overall_score;
         
         // Проверяем улучшился ли результат после OpenAI
