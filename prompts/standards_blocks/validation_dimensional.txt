@@ -1,0 +1,43 @@
+DIMENSIONAL COMPATIBILITY VALIDATION (weight: {weight}%):
+
+Verify the following:
+
+1. DN sizes are truly compatible:
+   - Same DN number doesn't always mean same dimensions
+   - Check if bolt circles match
+   - Check if flange faces match
+   - Check if gasket dimensions match
+
+2. Can parts be physically interchanged?:
+   - Bolt hole patterns
+   - Bolt hole diameters
+   - Flange thickness
+   - Hub dimensions
+   - Sealing surfaces
+
+3. Are there any dimensional mismatches?:
+   - Identify specific mismatches
+   - Assess impact of mismatches
+   - Determine if adapters are needed
+
+4. Common compatibility issues:
+   - ГОСТ and EN have different bolt circles even with same DN
+   - GB is often compatible with ГОСТ (based on Soviet standards)
+   - EN dimensions often differ from both ГОСТ and GB
+   - Metric vs metric (but different actual sizes)
+
+5. Verification recommendations:
+   - When dimensional drawings are required
+   - When physical mockup is recommended
+   - When expert consultation is mandatory
+
+SCORING:
+- 90-100: Fully compatible, direct interchange possible
+- 70-89: Compatible with verification, minor adjustments may be needed
+- 50-69: Partially compatible, adapters or modifications required
+- 0-49: Incompatible, replacement not recommended
+
+Provide score: ___/100
+Provide justification for the score.
+List specific dimensional concerns.
+

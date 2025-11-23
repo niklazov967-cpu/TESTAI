@@ -196,8 +196,152 @@ OUTPUT FORMAT (strict JSON):
   return prompt;
 }
 
+const fs = require('fs').promises;
+const path = require('path');
+
+/**
+ * Загрузка блока промпта для стандартов
+ */
+async function loadPromptBlock(blockName) {
+  const filePath = path.join(__dirname, '../prompts/standards_blocks', `${blockName}.txt`);
+  try {
+    return await fs.readFile(filePath, 'utf-8');
+  } catch (error) {
+    console.error(`[PromptBuilder] Error loading prompt block ${blockName}:`, error.message);
+    return '';
+  }
+}
+
+/**
+ * Сборка промпта Stage 2 для стандартов из активных блоков
+ */
+async function buildStandardsStage2Prompt(searchResults, standardCode, standardType, config) {
+  let prompt = '';
+
+  // Базовый системный промпт (всегда включен)
+  prompt += await loadPromptBlock('base_system_prompt');
+  prompt += '\n\n---\n\n';
+
+  // Добавляем активные блоки
+  const blocks = config.prompt_blocks.stage2_deepseek;
+
+  if (blocks.block_methodology) {
+    prompt += await loadPromptBlock('block_methodology');
+    prompt += '\n\n';
+  }
+
+  if (blocks.block_technical_comparison) {
+    prompt += await loadPromptBlock('block_technical_comparison');
+    prompt += '\n\n';
+  }
+
+  if (blocks.block_compatibility_check) {
+    prompt += await loadPromptBlock('block_compatibility_check');
+    prompt += '\n\n';
+  }
+
+  if (blocks.block_material_crossref) {
+    prompt += await loadPromptBlock('block_material_crossref');
+    prompt += '\n\n';
+  }
+
+  if (blocks.block_safety_analysis) {
+    prompt += await loadPromptBlock('block_safety_analysis');
+    prompt += '\n\n';
+  }
+
+  if (blocks.block_economic_eval) {
+    prompt += await loadPromptBlock('block_economic_eval');
+    prompt += '\n\n';
+  }
+
+  // Добавляем формат вывода
+  prompt += '\n\n---\n\nOUTPUT FORMAT: JSON\n\n';
+  prompt += 'Provide your analysis in structured JSON format with all required fields.';
+
+  // Замена переменных
+  prompt = prompt.replace(/{standardCode}/g, standardCode);
+  prompt = prompt.replace(/{standardType}/g, standardType || 'general');
+  prompt = prompt.replace(/{searchResults}/g, JSON.stringify(searchResults, null, 2));
+
+  return prompt;
+}
+
+/**
+ * Сборка промпта Stage 3 для стандартов из активных блоков
+ */
+async function buildStandardsStage3Prompt(equivalents, standardCode, config) {
+  let prompt = '';
+
+  // Базовый промпт валидации (всегда включен)
+  prompt += await loadPromptBlock('validation_base');
+  prompt += '\n\n---\n\n';
+
+  // Добавляем активные блоки валидации
+  const blocks = config.prompt_blocks.stage3_openai;
+  const weights = config.validation_settings.criteria_weights;
+
+  if (blocks.validation_technical) {
+    let block = await loadPromptBlock('validation_technical');
+    block = block.replace(/{weight}/g, weights.technical_accuracy);
+    prompt += block + '\n\n';
+  }
+
+  if (blocks.validation_dimensional) {
+    let block = await loadPromptBlock('validation_dimensional');
+    block = block.replace(/{weight}/g, weights.dimensional_compatibility);
+    prompt += block + '\n\n';
+  }
+
+  if (blocks.validation_material) {
+    let block = await loadPromptBlock('validation_material');
+    block = block.replace(/{weight}/g, weights.material_equivalence);
+    prompt += block + '\n\n';
+  }
+
+  if (blocks.validation_safety) {
+    let block = await loadPromptBlock('validation_safety');
+    block = block.replace(/{weight}/g, weights.safety_considerations);
+    prompt += block + '\n\n';
+  }
+
+  if (blocks.validation_practical) {
+    let block = await loadPromptBlock('validation_practical');
+    block = block.replace(/{weight}/g, weights.practical_applicability);
+    prompt += block + '\n\n';
+  }
+
+  // Добавляем инструкции по строгости
+  const strictnessInstructions = {
+    'relaxed': 'Be lenient in your validation. Accept equivalents with minor discrepancies.',
+    'normal': 'Apply standard validation criteria. Flag significant issues.',
+    'strict': 'Be strict in your validation. Flag even minor discrepancies.',
+    'very_strict': 'Be very strict. Only accept near-perfect equivalents. Flag any concerns.'
+  };
+
+  prompt += '\n\n---\n\nVALIDATION STRICTNESS: ' + config.validation_settings.strictness.toUpperCase() + '\n';
+  prompt += strictnessInstructions[config.validation_settings.strictness] || strictnessInstructions['normal'];
+  prompt += '\n\n';
+
+  // Добавляем минимальный балл
+  prompt += `MINIMUM ACCEPTABLE SCORE: ${config.validation_settings.min_overall_score}/100\n\n`;
+
+  // Добавляем формат вывода
+  prompt += '---\n\nOUTPUT FORMAT: JSON\n\n';
+  prompt += 'Provide your validation in structured JSON format with all scores and assessments.';
+
+  // Замена переменных
+  prompt = prompt.replace(/{standardCode}/g, standardCode);
+  prompt = prompt.replace(/{equivalents}/g, JSON.stringify(equivalents, null, 2));
+
+  return prompt;
+}
+
 module.exports = {
   buildStage2Prompt,
-  buildStage3Prompt
+  buildStage3Prompt,
+  buildStandardsStage2Prompt,
+  buildStandardsStage3Prompt,
+  loadPromptBlock
 };
 

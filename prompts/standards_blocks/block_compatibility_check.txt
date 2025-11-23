@@ -1,0 +1,32 @@
+COMPATIBILITY ANALYSIS:
+
+For each pair (ГОСТ↔GB, ГОСТ↔EN, GB↔EN), evaluate:
+
+1. Physical interchange:
+   - Can you physically replace one with another?
+   - Check bolt circles, flange faces, actual dimensions
+   - Check gasket grooves and sealing surfaces
+   - Result: "COMPATIBLE", "PARTIALLY_COMPATIBLE", "REQUIRES_VERIFICATION", or "INCOMPATIBLE"
+
+2. Functional equivalence:
+   - Do they serve the same purpose?
+   - Are performance characteristics similar?
+   - Can they handle same P and T?
+   - Result: "YES", "CLOSE", or "DIFFERENT"
+
+3. Risk level:
+   - What is the risk of replacement?
+   - Consider safety, reliability, compliance
+   - Consider failure consequences
+   - Result: "low", "medium", "high", or "critical"
+
+4. Recommendations:
+   - When replacement is acceptable
+   - When additional verification is needed
+   - When replacement is NOT recommended
+
+IMPORTANT: 
+- ГОСТ and GB are often compatible (GB based on Soviet standards)
+- ГОСТ and EN often have different dimensions even with same DN
+- GB and EN usually require verification
+

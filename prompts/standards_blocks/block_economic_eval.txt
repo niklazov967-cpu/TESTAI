@@ -1,0 +1,42 @@
+ECONOMIC EVALUATION:
+
+Provide economic analysis for each equivalent standard:
+
+1. Material cost comparison:
+   - Typical cost range for materials (per kg or per ton)
+   - Cost differences between ГОСТ, GB, EN materials
+   - Impact of safety factors on material quantity
+
+2. Manufacturing cost:
+   - Complexity of manufacturing
+   - Special requirements (heat treatment, NDT, etc.)
+   - Labor costs in different regions
+   - Equipment requirements
+
+3. Availability and lead times:
+   - Availability from suppliers
+   - Lead times for materials
+   - Lead times for finished products
+   - Import/export considerations
+
+4. Testing and certification costs:
+   - NDT costs
+   - Hydrostatic testing costs
+   - Certification costs (local authorities)
+   - Documentation costs
+
+5. Total cost of ownership:
+   - Initial cost
+   - Installation costs
+   - Maintenance costs
+   - Replacement costs
+   - Lifecycle costs
+
+6. Economic recommendations:
+   - Most cost-effective option
+   - Trade-offs between cost and quality
+   - Long-term vs short-term cost considerations
+   - Risk-adjusted cost analysis
+
+NOTE: This block increases processing time. Use only when cost is a critical factor.
+

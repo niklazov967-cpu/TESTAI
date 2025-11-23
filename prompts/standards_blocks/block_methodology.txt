@@ -1,0 +1,16 @@
+APPLY 10-STAGE METHODOLOGY:
+
+Follow these stages from the research:
+1. Identify requirements - determine standard type and application conditions
+2. Analyze functional purpose - operating conditions (P, T, environment)
+3. Compare technical parameters - calculation formulas, safety factors
+4. Check dimensional compatibility - all metric, but actual dimensions may differ
+5. Evaluate materials - cross-reference steel grades between systems
+6. Analyze testing methods - NDT, hydrostatic tests, certification
+7. Check availability - availability from suppliers
+8. Legal compliance check - compliance with local regulations
+9. Economic evaluation - cost of materials and manufacturing
+10. Decision making - documentation and approval of replacement
+
+Apply each stage sequentially and document findings for each stage.
+

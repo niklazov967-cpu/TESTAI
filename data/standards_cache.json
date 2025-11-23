@@ -1,0 +1,83 @@
+[
+  {
+    "input_standard": "ГОСТ 31610.20-1-2020",
+    "standard_type": "general",
+    "equivalents": {
+      "Russia": {
+        "standard_code": "ГОСТ 31610.20-1-2020",
+        "full_name": "Взрывоопасные среды. Часть 20-1. Характеристики веществ для классификации газов и паров. Методы испытаний и данные",
+        "equivalence_type": "exact",
+        "confidence": 100,
+        "notes": "Original Russian standard for explosive atmospheres - material characteristics for gas and vapor classification"
+      },
+      "China": {
+        "standard_code": "GB/T 3836.20-1",
+        "full_name": "爆炸性环境 第20-1部分：气体和蒸气分类用物质特性 试验方法和数据",
+        "equivalence_type": "close",
+        "confidence": 85,
+        "notes": "Chinese equivalent based on IEC/ISO standards, similar technical requirements for explosive atmospheres and material characteristics"
+      },
+      "Europe": {
+        "standard_code": "EN IEC 60079-20-1",
+        "full_name": "Explosive atmospheres - Part 20-1: Material characteristics for gas and vapour classification - Test methods and data",
+        "equivalence_type": "exact",
+        "confidence": 95,
+        "notes": "ГОСТ 31610.20-1-2020 is modified version of ISO/IEC 80079-20-1:2017 (equivalent to IEC 60079-20-1)"
+      }
+    },
+    "compatibility_assessment": {
+      "GOST_to_GB": {
+        "physical_interchange": "COMPATIBLE",
+        "functional_equivalence": "YES",
+        "risk_level": "low",
+        "notes": "Both standards are based on similar IEC/ISO foundations with minor regional adaptations. Material classification methods and test procedures are highly compatible."
+      },
+      "GOST_to_EN": {
+        "physical_interchange": "COMPATIBLE",
+        "functional_equivalence": "YES",
+        "risk_level": "low",
+        "notes": "ГОСТ 31610.20-1-2020 is a modified version of IEC 60079-20-1, ensuring high compatibility with European EN IEC 60079-20-1 standard."
+      },
+      "GB_to_EN": {
+        "physical_interchange": "COMPATIBLE",
+        "functional_equivalence": "YES",
+        "risk_level": "low",
+        "notes": "Both GB/T 3836.20-1 and EN IEC 60079-20-1 are based on identical IEC international standards, ensuring full compatibility for material classification in explosive atmospheres."
+      }
+    },
+    "validation": {
+      "overall_score": 85,
+      "criteria_scores": {
+        "technical_accuracy": 90,
+        "dimensional_compatibility": 80,
+        "pressure_temperature_ratings": 85,
+        "material_equivalence": 75,
+        "regulatory_compliance": 90,
+        "practical_applicability": 80,
+        "safety_considerations": 85
+      },
+      "errors": [],
+      "warnings": [],
+      "recommendations": [
+        "Ensure that all parties involved in the replacement are aware of the minor discrepancies in material properties and dimensional compatibility.",
+        "Conduct further verification of material properties before finalizing any replacements, especially for critical applications."
+      ]
+    },
+    "sources_count": 12,
+    "processing_time": {
+      "stage1": 0,
+      "stage2": 0,
+      "stage3": 0,
+      "total": 0
+    },
+    "cached": false,
+    "config_used": {
+      "version": "3.0",
+      "strictness": "relaxed",
+      "min_score": 60
+    },
+    "cached_at": "2025-11-23T05:59:28.155Z",
+    "config_version": "3.0",
+    "ttl_hours": 168
+  }
+]

@@ -1,0 +1,63 @@
+You are an expert in international industrial standards for Russia, China, and Europe (ГОСТ, GB, EN/DIN/ISO).
+
+Your task is to analyze search results from Tavily and find equivalent standards in 3 countries.
+
+IMPORTANT: Focus ONLY on METRIC systems (ГОСТ, GB, EN/DIN). Do NOT include American standards (ASME, ASTM, ANSI).
+
+INPUT STANDARD: {standardCode}
+STANDARD TYPE: {standardType}
+
+SEARCH RESULTS FROM TAVILY:
+{searchResults}
+
+YOUR TASK: Find equivalent standards in 3 countries (Russia, China, Europe).
+
+Provide your analysis in structured JSON format with the following structure:
+{
+  "input_standard": "{standardCode}",
+  "standard_type": "{standardType}",
+  "equivalents": {
+    "Russia": {
+      "standard_code": "ГОСТ XXX-XX",
+      "full_name": "Full name in Russian",
+      "equivalence_type": "exact|close|approximate",
+      "confidence": 0-100,
+      "notes": "Additional notes"
+    },
+    "China": {
+      "standard_code": "GB/T XXX-XXXX",
+      "full_name": "Full name in Chinese/English",
+      "equivalence_type": "exact|close|approximate",
+      "confidence": 0-100,
+      "notes": "Additional notes"
+    },
+    "Europe": {
+      "standard_code": "EN XXX or DIN XXX",
+      "full_name": "Full name in English",
+      "equivalence_type": "exact|close|approximate",
+      "confidence": 0-100,
+      "notes": "Additional notes"
+    }
+  },
+  "compatibility_assessment": {
+    "GOST_to_GB": {
+      "physical_interchange": "COMPATIBLE|PARTIALLY_COMPATIBLE|REQUIRES_VERIFICATION|INCOMPATIBLE",
+      "functional_equivalence": "YES|CLOSE|DIFFERENT",
+      "risk_level": "low|medium|high|critical",
+      "notes": "Detailed assessment"
+    },
+    "GOST_to_EN": {
+      "physical_interchange": "COMPATIBLE|PARTIALLY_COMPATIBLE|REQUIRES_VERIFICATION|INCOMPATIBLE",
+      "functional_equivalence": "YES|CLOSE|DIFFERENT",
+      "risk_level": "low|medium|high|critical",
+      "notes": "Detailed assessment"
+    },
+    "GB_to_EN": {
+      "physical_interchange": "COMPATIBLE|PARTIALLY_COMPATIBLE|REQUIRES_VERIFICATION|INCOMPATIBLE",
+      "functional_equivalence": "YES|CLOSE|DIFFERENT",
+      "risk_level": "low|medium|high|critical",
+      "notes": "Detailed assessment"
+    }
+  }
+}
+

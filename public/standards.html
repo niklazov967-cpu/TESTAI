@@ -3,31 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поиск аналогов сталей v3.0</title>
+    <title>Конвертер стандартов v3.0</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🔍 Поиск аналогов сталей</h1>
+            <h1>🔍 Конвертер стандартов</h1>
             <p class="subtitle">Трёхэтапная архитектура: Tavily → DeepSeek → OpenAI</p>
             <div style="margin-top: 10px;">
-                <a href="settings.html" style="color: white; text-decoration: none; margin-right: 15px; opacity: 0.9; font-size: 0.9em;">⚙️ Настройки</a>
-                <a href="standards.html" style="color: white; text-decoration: none; opacity: 0.9; font-size: 0.9em;">📋 Конвертер стандартов</a>
+                <a href="index.html" style="color: white; text-decoration: none; margin-right: 15px; opacity: 0.9; font-size: 0.9em;">🔍 Поиск сталей</a>
+                <a href="standards-settings.html" style="color: white; text-decoration: none; opacity: 0.9; font-size: 0.9em;">⚙️ Настройки</a>
             </div>
         </header>
 
         <main>
             <div class="search-section">
                 <div class="input-group">
-                    <label for="steel-grade">Марка стали:</label>
+                    <label for="standard-code">Код стандарта:</label>
                     <input 
                         type="text" 
-                        id="steel-grade" 
-                        placeholder="Например: AISI 304, 09Г2С, Q345"
+                        id="standard-code" 
+                        placeholder="Например: ГОСТ 12821-80, GB/T 9112-2010, EN 1092-1"
                         autocomplete="off"
                     >
-                    <button id="search-btn" class="btn-primary">Найти аналоги</button>
+                    <label for="standard-type" style="margin-top: 10px;">Тип стандарта (опционально):</label>
+                    <select id="standard-type" style="margin-top: 5px;">
+                        <option value="">Общий</option>
+                        <option value="flanges">Фланцы</option>
+                        <option value="pressure_vessels">Сосуды под давлением</option>
+                        <option value="drawings">Технические чертежи</option>
+                        <option value="fasteners">Крепёжные элементы</option>
+                        <option value="piping">Трубопроводы</option>
+                        <option value="materials">Материалы</option>
+                    </select>
+                    <button id="search-btn" class="btn-primary" style="margin-top: 15px;">Найти эквиваленты</button>
                 </div>
             </div>
 
@@ -59,14 +69,6 @@
                             <div class="stage-iterations" id="stage3-iterations">Проверок: 0</div>
                         </div>
                     </div>
-                    <div id="stage4" class="stage">
-                        <div class="stage-header">🌐 Stage 4: Перевод</div>
-                        <div class="stage-status" id="stage4-status">Ожидание...</div>
-                        <div class="stage-details">
-                            <div class="stage-time" id="stage4-time">00:00</div>
-                            <div class="stage-iterations" id="stage4-iterations">Текстов: 0</div>
-                        </div>
-                    </div>
                 </div>
                 <div class="total-time">
                     <strong>Общее время: <span id="total-time">00:00</span></strong>
@@ -85,10 +87,6 @@
                 </div>
 
                 <div class="analogs-grid">
-                    <div class="analog-card" id="analog-usa">
-                        <h3>🇺🇸 США</h3>
-                        <div class="analog-content"></div>
-                    </div>
                     <div class="analog-card" id="analog-russia">
                         <h3>🇷🇺 Россия</h3>
                         <div class="analog-content"></div>
@@ -97,21 +95,30 @@
                         <h3>🇨🇳 Китай</h3>
                         <div class="analog-content"></div>
                     </div>
+                    <div class="analog-card" id="analog-europe">
+                        <h3>🇪🇺 Европа</h3>
+                        <div class="analog-content"></div>
+                    </div>
                 </div>
 
                 <div class="validation-details">
                     <h3>Детали валидации</h3>
                     <div id="validation-info"></div>
                 </div>
+
+                <div class="compatibility-section" id="compatibility-section" style="display: none;">
+                    <h3>Оценка совместимости</h3>
+                    <div id="compatibility-info"></div>
+                </div>
             </div>
         </main>
 
         <footer>
-            <p>Версия 3.0 | Three-Stage Pipeline Architecture</p>
+            <p>Версия 3.0 | Three-Stage Pipeline Architecture | Только метрические системы (ГОСТ, GB, EN/DIN)</p>
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="standards-script.js"></script>
 </body>
 </html>
 

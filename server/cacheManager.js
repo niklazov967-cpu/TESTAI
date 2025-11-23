@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CACHE_PATH = path.join(__dirname, '../data/cache.json');
+const STANDARDS_CACHE_PATH = path.join(__dirname, '../data/standards_cache.json');
 
 /**
  * Загрузка кэша
@@ -66,9 +67,86 @@ function clear() {
   saveCache({});
 }
 
+/**
+ * Загрузка кэша стандартов
+ */
+function loadStandardsCache() {
+  try {
+    if (fs.existsSync(STANDARDS_CACHE_PATH)) {
+      const data = fs.readFileSync(STANDARDS_CACHE_PATH, 'utf8');
+      const parsed = JSON.parse(data);
+      // Если это массив, преобразуем в объект
+      if (Array.isArray(parsed)) {
+        const obj = {};
+        parsed.forEach((item) => {
+          if (item.input_standard || item.standard_code) {
+            const key = (item.input_standard || item.standard_code).trim().toUpperCase();
+            obj[key] = item;
+          }
+        });
+        return obj;
+      }
+      return parsed;
+    }
+  } catch (error) {
+    console.error('[Cache] Error loading standards cache:', error.message);
+  }
+  return {};
+}
+
+/**
+ * Сохранение кэша стандартов
+ */
+function saveStandardsCache(cache) {
+  try {
+    const dir = path.dirname(STANDARDS_CACHE_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    // Преобразуем объект в массив для сохранения
+    const array = Object.values(cache);
+    fs.writeFileSync(STANDARDS_CACHE_PATH, JSON.stringify(array, null, 2), 'utf8');
+  } catch (error) {
+    console.error('[Cache] Error saving standards cache:', error.message);
+  }
+}
+
+/**
+ * Получить запись из кэша стандартов
+ */
+function getStandards(standardCode) {
+  const cache = loadStandardsCache();
+  const normalized = standardCode.trim().toUpperCase();
+  return cache[normalized] || null;
+}
+
+/**
+ * Сохранить запись в кэш стандартов
+ */
+function saveStandards(standardCode, data) {
+  const cache = loadStandardsCache();
+  const normalized = standardCode.trim().toUpperCase();
+  cache[normalized] = {
+    ...data,
+    cached_at: new Date().toISOString()
+  };
+  saveStandardsCache(cache);
+}
+
+/**
+ * Очистить кэш стандартов
+ */
+function clearStandards() {
+  saveStandardsCache({});
+}
+
 module.exports = {
   get,
   save,
-  clear
+  clear,
+  getStandards,
+  saveStandards,
+  clearStandards,
+  loadStandardsCache
 };
 

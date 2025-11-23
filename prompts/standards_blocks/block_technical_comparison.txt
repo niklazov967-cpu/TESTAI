@@ -1,0 +1,30 @@
+TECHNICAL COMPARISON:
+
+Provide detailed technical comparison including:
+
+1. Pressure class equivalence:
+   - Convert between МПа and bar (1 bar = 0.1 МПа)
+   - Compare pressure ratings (PN in ГОСТ/GB vs PN in EN)
+   - Note: Same PN number doesn't always mean same pressure!
+
+2. Dimensional compatibility:
+   - DN is nominally same across all systems
+   - BUT actual dimensions (bolt circles, flange faces) may differ
+   - Check compatibility tables for each DN size
+
+3. Temperature ranges:
+   - Operating temperature limits
+   - Material temperature limits
+   - Thermal expansion considerations
+
+4. Design approaches and calculation methods:
+   - ГОСТ: based on strength theory
+   - GB: similar to ГОСТ (Soviet heritage)
+   - EN: based on European standards (different approach)
+
+5. Safety factors comparison:
+   - ГОСТ: typically 1.5-2.6
+   - GB: similar to ГОСТ
+   - EN: typically 2.4-3.0
+   - Impact on wall thickness and weight
+

@@ -1,0 +1,38 @@
+MATERIAL CROSS-REFERENCE:
+
+Provide cross-reference table for material grades mentioned in standards:
+
+ГОСТ ↔ GB ↔ EN
+
+For each material, provide:
+
+1. Material grades:
+   - ГОСТ designation (e.g., Ст20, 09Г2С, 12Х18Н10Т)
+   - GB designation (e.g., 20#, 16Mn, 0Cr18Ni9)
+   - EN designation (e.g., P250GH, P355GH, 1.4541)
+
+2. Chemical composition:
+   - C, Mn, Si, P, S, Cr, Ni, Mo, etc.
+   - Compare ranges
+   - Note significant differences
+
+3. Mechanical properties:
+   - Yield strength (σт / ReH)
+   - Tensile strength (σв / Rm)
+   - Elongation (δ / A)
+   - Impact energy (KCV / KV)
+
+4. Typical applications:
+   - Pressure vessels
+   - Piping
+   - Flanges
+   - Fasteners
+
+5. Equivalence accuracy:
+   - "EXACT" - nearly identical
+   - "CLOSE" - similar, minor differences
+   - "APPROXIMATE" - similar application, different properties
+   - "NOT_EQUIVALENT" - different materials
+
+IMPORTANT: Similar names don't always mean equivalent properties!
+

@@ -1,0 +1,34 @@
+SAFETY ANALYSIS:
+
+Analyze safety factors and requirements:
+
+1. Safety factors comparison:
+   - ГОСТ: typically 1.5-2.6 depending on material and conditions
+   - GB: similar to ГОСТ (1.5-2.6)
+   - EN: typically 2.4-3.0 (more conservative)
+
+2. Impact on design:
+   - Wall thickness differences (can be 15-25% due to safety factors)
+   - Pressure rating differences
+   - Temperature rating differences
+   - Weight and cost differences
+
+3. Failure modes analysis:
+   - What happens if wrong standard is used?
+   - Overstress scenarios
+   - Leakage scenarios
+   - Catastrophic failure scenarios
+
+4. Safety recommendations:
+   - When replacement is safe (e.g., ГОСТ → GB often OK)
+   - When additional analysis is required (e.g., ГОСТ → EN)
+   - When replacement is NOT recommended (e.g., lower safety factor)
+   - When expert consultation is mandatory
+
+5. Regulatory compliance:
+   - Local regulations (Russia, China, Europe)
+   - Industry-specific requirements (oil & gas, nuclear, etc.)
+   - Certification requirements
+
+CRITICAL: Safety must NEVER be compromised for cost or convenience!
+

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки - Конвертер стандартов</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .settings-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .settings-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .settings-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .checkbox-group label {
+            display: inline;
+            font-weight: normal;
+        }
+        .preset-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .preset-btn {
+            padding: 12px 24px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .preset-btn:hover,
+        .preset-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ Настройки конвертера стандартов</h1>
+            <p class="subtitle">Настройка параметров поиска, валидации и алгоритма</p>
+            <div style="margin-top: 10px;">
+                <a href="standards.html" style="color: white; text-decoration: none; margin-right: 15px; opacity: 0.9; font-size: 0.9em;">🔍 Поиск стандартов</a>
+                <a href="index.html" style="color: white; text-decoration: none; opacity: 0.9; font-size: 0.9em;">🔍 Поиск сталей</a>
+            </div>
+        </header>
+
+        <main>
+            <div class="settings-container">
+                <div id="alert" class="alert"></div>
+
+                <!-- Пресеты -->
+                <div class="settings-section">
+                    <h2>🎛️ Пресеты</h2>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-preset="quick">⚡ Быстрый поиск</button>
+                        <button class="preset-btn active" data-preset="balanced">⚖️ Сбалансированный</button>
+                        <button class="preset-btn" data-preset="thorough">🔍 Тщательный анализ</button>
+                        <button class="preset-btn" data-preset="critical">🚨 Критическое применение</button>
+                    </div>
+                </div>
+
+                <!-- Параметры поиска -->
+                <div class="settings-section">
+                    <h2>🔎 Параметры поиска (Stage 1: Tavily)</h2>
+                    <div class="form-group">
+                        <label for="tavily_queries_count">Количество поисковых запросов:</label>
+                        <input type="number" id="tavily_queries_count" min="3" max="20" value="9">
+                        <small>От 3 до 20. Больше запросов = больше данных, но медленнее.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="search_depth">Глубина поиска:</label>
+                        <select id="search_depth">
+                            <option value="basic">Базовая</option>
+                            <option value="advanced" selected>Расширенная</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="max_results_per_query">Результатов на запрос:</label>
+                        <input type="number" id="max_results_per_query" min="3" max="10" value="5">
+                    </div>
+                </div>
+
+                <!-- Блоки промптов Stage 2 -->
+                <div class="settings-section">
+                    <h2>📝 Блоки промптов (Stage 2: DeepSeek)</h2>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="block_base_system" checked disabled>
+                        <label for="block_base_system"><strong>Базовый системный промпт</strong> (обязательный)</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="block_methodology" checked>
+                        <label for="block_methodology"><strong>10-этапная методология</strong></label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="block_technical_comparison" checked>
+                        <label for="block_technical_comparison"><strong>Техническое сравнение</strong></label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="block_compatibility_check" checked>
+                        <label for="block_compatibility_check"><strong>Проверка совместимости</strong></label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="block_material_crossref" checked>
+                        <label for="block_material_crossref"><strong>Кросс-референс материалов</strong></label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="block_safety_analysis" checked>
+                        <label for="block_safety_analysis"><strong>Анализ безопасности</strong></label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="block_economic_eval">
+                        <label for="block_economic_eval"><strong>Экономическая оценка</strong> (увеличивает время)</label>
+                    </div>
+                </div>
+
+                <!-- Параметры валидации -->
+                <div class="settings-section">
+                    <h2>🎚️ Параметры валидации</h2>
+                    <div class="form-group">
+                        <label for="validation_strictness">Строгость валидации:</label>
+                        <select id="validation_strictness">
+                            <option value="relaxed">Мягкая (60+ баллов)</option>
+                            <option value="normal" selected>Нормальная (70+ баллов)</option>
+                            <option value="strict">Строгая (80+ баллов)</option>
+                            <option value="very_strict">Очень строгая (90+ баллов)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="min_overall_score">Минимальный общий балл:</label>
+                        <input type="number" id="min_overall_score" min="50" max="100" value="70">
+                        <small>От 50 до 100. Результаты ниже этого балла будут отклонены.</small>
+                    </div>
+                </div>
+
+                <!-- Настройки кэша -->
+                <div class="settings-section">
+                    <h2>💾 Настройки кэша</h2>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="cache_enabled" checked>
+                        <label for="cache_enabled"><strong>Включить кэширование</strong></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="cache_ttl">Время жизни кэша (часы):</label>
+                        <input type="number" id="cache_ttl" min="1" max="720" value="168">
+                        <small>От 1 до 720 часов (30 дней). По умолчанию: 168 часов (7 дней).</small>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-danger" id="clear-cache-btn">🗑️ Очистить кэш</button>
+                        <span id="cache-info" style="line-height: 40px; margin-left: 15px;">Кэш: загрузка...</span>
+                    </div>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="settings-section">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="save-btn">💾 Сохранить настройки</button>
+                        <button class="btn btn-secondary" id="reset-btn">🔄 Сбросить к умолчаниям</button>
+                    </div>
+                </div>
+
+                <!-- Просмотр промптов -->
+                <div class="settings-section">
+                    <h2>📋 Просмотр промптов</h2>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" id="load-prompts-btn">Загрузить промпты</button>
+                    </div>
+                    <div id="prompts-content" class="code-block" style="margin-top: 20px; display: none;">
+                        <p>Нажмите "Загрузить промпты" для просмотра</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Версия 3.0 | Three-Stage Pipeline Architecture</p>
+        </footer>
+    </div>
+
+    <script src="standards-settings-script.js"></script>
+</body>
+</html>
+

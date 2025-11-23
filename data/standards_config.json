@@ -1,0 +1,131 @@
+{
+  "version": "3.0",
+  "last_updated": "2025-11-23T05:58:47.655Z",
+  "search_settings": {
+    "tavily_queries_count": 6,
+    "search_depth": "advanced",
+    "max_results_per_query": 5,
+    "include_raw_content": true
+  },
+  "prompt_blocks": {
+    "stage2_deepseek": {
+      "base_system_prompt": true,
+      "block_methodology": false,
+      "block_technical_comparison": true,
+      "block_compatibility_check": true,
+      "block_material_crossref": true,
+      "block_safety_analysis": true,
+      "block_economic_eval": false
+    },
+    "stage3_openai": {
+      "validation_base": true,
+      "validation_technical": true,
+      "validation_dimensional": true,
+      "validation_material": true,
+      "validation_safety": true,
+      "validation_practical": true
+    }
+  },
+  "validation_settings": {
+    "strictness": "relaxed",
+    "min_overall_score": 60,
+    "criteria_weights": {
+      "technical_accuracy": 30,
+      "dimensional_compatibility": 25,
+      "pressure_temperature_ratings": 20,
+      "material_equivalence": 15,
+      "regulatory_compliance": 5,
+      "practical_applicability": 3,
+      "safety_considerations": 2
+    },
+    "enabled_criteria": {
+      "technical_accuracy": true,
+      "dimensional_compatibility": true,
+      "pressure_temperature_ratings": true,
+      "material_equivalence": true,
+      "regulatory_compliance": true,
+      "practical_applicability": true,
+      "safety_considerations": true
+    }
+  },
+  "algorithm_settings": {
+    "apply_10_stage_methodology": true,
+    "check_dimensional_compatibility": true,
+    "perform_material_crossreference": true,
+    "analyze_safety_factors": true,
+    "calculate_economic_impact": true,
+    "generate_detailed_recommendations": true
+  },
+  "cache_settings": {
+    "enabled": true,
+    "cache_after_validation_only": true,
+    "ttl_hours": 168,
+    "max_cache_size_mb": 50
+  },
+  "ui_settings": {
+    "show_progress_details": true,
+    "show_stage_timings": true,
+    "show_source_count": true,
+    "auto_export_results": false
+  },
+  "presets": {
+    "quick": {
+      "name": "Быстрый поиск",
+      "description": "Минимальная валидация, быстрые результаты",
+      "search_settings": {
+        "tavily_queries_count": 6
+      },
+      "validation_settings": {
+        "strictness": "relaxed",
+        "min_overall_score": 60
+      },
+      "prompt_blocks": {
+        "stage2_deepseek": {
+          "block_methodology": false,
+          "block_economic_eval": false
+        }
+      }
+    },
+    "balanced": {
+      "name": "Сбалансированный",
+      "description": "Оптимальное соотношение скорости и точности",
+      "search_settings": {
+        "tavily_queries_count": 9
+      },
+      "validation_settings": {
+        "strictness": "normal",
+        "min_overall_score": 70
+      }
+    },
+    "thorough": {
+      "name": "Тщательный анализ",
+      "description": "Максимальная валидация, высокая точность",
+      "search_settings": {
+        "tavily_queries_count": 12
+      },
+      "validation_settings": {
+        "strictness": "strict",
+        "min_overall_score": 80
+      },
+      "prompt_blocks": {
+        "stage2_deepseek": {
+          "block_economic_eval": true
+        }
+      }
+    },
+    "critical": {
+      "name": "Критическое применение",
+      "description": "Для ответственных конструкций, максимальная строгость",
+      "search_settings": {
+        "tavily_queries_count": 15
+      },
+      "validation_settings": {
+        "strictness": "very_strict",
+        "min_overall_score": 90
+      },
+      "algorithm_settings": {
+        "calculate_economic_impact": true
+      }
+    }
+  }
+}

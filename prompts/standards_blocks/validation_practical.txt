@@ -1,0 +1,48 @@
+PRACTICAL APPLICABILITY VALIDATION (weight: {weight}%):
+
+Verify the following:
+
+1. Standards are available from suppliers:
+   - Can you actually buy products to these standards?
+   - Are there multiple suppliers?
+   - What is the market availability?
+
+2. Documentation is available:
+   - Is the standard document available for purchase?
+   - Is it available in required languages?
+   - Is it available in English for international projects?
+
+3. Certification is possible:
+   - Can products be certified to this standard?
+   - Are there accredited certification bodies?
+   - What is the certification process?
+   - What is the certification cost?
+
+4. Lead times are acceptable:
+   - Material lead times
+   - Manufacturing lead times
+   - Certification lead times
+   - Total project timeline impact
+
+5. Local regulations allow usage:
+   - Is the standard accepted in the target country?
+   - Are there any legal restrictions?
+   - Are there any industry-specific requirements?
+   - Are there any customer-specific requirements?
+
+6. Practical recommendations:
+   - When replacement is practical
+   - When additional planning is required
+   - When replacement is NOT practical
+   - Alternative solutions
+
+SCORING:
+- 90-100: Highly practical, readily available
+- 70-89: Practical, minor challenges
+- 50-69: Moderately practical, significant challenges
+- 0-49: Impractical, not recommended
+
+Provide score: ___/100
+Provide justification for the score.
+List specific practical concerns.
+

@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CONFIG_PATH = path.join(__dirname, '../data/config.json');
+const STANDARDS_CONFIG_PATH = path.join(__dirname, '../data/standards_config.json');
 
 // Конфигурация по умолчанию
 const DEFAULT_CONFIG = {
@@ -68,8 +69,64 @@ function updateConfig(updates) {
   return updated;
 }
 
+/**
+ * Загрузка конфигурации стандартов
+ */
+function loadStandardsConfig() {
+  try {
+    if (fs.existsSync(STANDARDS_CONFIG_PATH)) {
+      const data = fs.readFileSync(STANDARDS_CONFIG_PATH, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('[Config] Error loading standards config:', error.message);
+  }
+  
+  // Возвращаем пустой объект, если файл не найден
+  return null;
+}
+
+/**
+ * Сохранение конфигурации стандартов
+ */
+function saveStandardsConfig(config) {
+  try {
+    const dir = path.dirname(STANDARDS_CONFIG_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(STANDARDS_CONFIG_PATH, JSON.stringify(config, null, 2), 'utf8');
+  } catch (error) {
+    console.error('[Config] Error saving standards config:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Получить конфигурацию стандартов
+ */
+function getStandardsConfig() {
+  return loadStandardsConfig();
+}
+
+/**
+ * Обновить конфигурацию стандартов
+ */
+function updateStandardsConfig(updates) {
+  const current = loadStandardsConfig();
+  if (!current) {
+    throw new Error('Standards config not found');
+  }
+  const updated = { ...current, ...updates };
+  saveStandardsConfig(updated);
+  return updated;
+}
+
 module.exports = {
   getConfig,
-  updateConfig
+  updateConfig,
+  getStandardsConfig,
+  updateStandardsConfig,
+  loadStandardsConfig
 };
 
