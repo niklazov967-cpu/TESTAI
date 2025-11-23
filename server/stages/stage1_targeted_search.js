@@ -174,15 +174,16 @@ async function execute(steelGrade, validationResult, existingAnalogs, existingSo
     
     try {
       const results = await tavilyClient.search(queryObj.query, maxResultsPerQuery);
+      const searchData = results.results || [];
       
       // Добавляем метаданные о фокусе поиска
-      results.forEach(result => {
+      searchData.forEach(result => {
         result.search_focus = queryObj.focus;
         result.target_country = queryObj.country;
         result.target_grade = queryObj.grade;
       });
       
-      allResults.push(...results);
+      allResults.push(...searchData);
     } catch (error) {
       console.error(`[Целевой поиск] Ошибка запроса ${i + 1}:`, error.message);
     }
