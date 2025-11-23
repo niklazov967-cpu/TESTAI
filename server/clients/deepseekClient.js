@@ -104,8 +104,25 @@ class DeepSeekClient {
       try {
         return JSON.parse(content);
       } catch (parseError) {
-        console.error('[DeepSeek] Ошибка парсинга ответа:', content);
-        throw new Error('Неверный JSON ответ от DeepSeek API');
+        console.error('[DeepSeek] Ошибка парсинга JSON ответа');
+        console.error('[DeepSeek] Модель:', model);
+        console.error('[DeepSeek] Длина ответа:', content.length, 'символов');
+        console.error('[DeepSeek] Первые 500 символов:', content.substring(0, 500));
+        console.error('[DeepSeek] Последние 500 символов:', content.substring(Math.max(0, content.length - 500)));
+        console.error('[DeepSeek] Ошибка парсинга:', parseError.message);
+        
+        // Попытка найти JSON в ответе (иногда модель добавляет текст до/после JSON)
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          try {
+            console.log('[DeepSeek] Попытка извлечь JSON из текста...');
+            return JSON.parse(jsonMatch[0]);
+          } catch (secondError) {
+            console.error('[DeepSeek] Вторая попытка парсинга не удалась');
+          }
+        }
+        
+        throw new Error(`Неверный JSON ответ от DeepSeek API (модель: ${model}). Проверьте логи для деталей.`);
       }
 
     } catch (error) {

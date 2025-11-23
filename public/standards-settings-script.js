@@ -348,13 +348,16 @@ function filterCacheList(query) {
 // Просмотр записи кэша
 async function viewCacheEntry(key) {
     try {
+        // Правильный endpoint для получения кэша стандартов
         const response = await fetch(`${API_BASE}/cache`);
+        if (!response.ok) {
+            throw new Error(`Ошибка загрузки кэша: ${response.status}`);
+        }
+        
         const allData = await response.json();
         
-        // Найти запись по ключу
-        const cache = allData.find(item => 
-            (item.input_standard || item.standard_code || '').trim().toUpperCase() === key
-        );
+        // Кэш стандартов - это объект, где ключи - это коды стандартов
+        const cache = allData[key];
         
         if (cache) {
             // Открываем модальное окно с данными
@@ -363,15 +366,15 @@ async function viewCacheEntry(key) {
             newWindow.document.write(`
                 <html>
                 <head>
-                    <title>Кэш: ${key}</title>
+                    <title>Кэш: ${escapeHtml(key)}</title>
                     <style>
                         body { font-family: monospace; padding: 20px; background: #f5f5f5; }
                         pre { background: white; padding: 20px; border-radius: 8px; overflow: auto; }
                     </style>
                 </head>
                 <body>
-                    <h2>Кэш: ${key}</h2>
-                    <pre>${jsonStr}</pre>
+                    <h2>Кэш: ${escapeHtml(key)}</h2>
+                    <pre>${escapeHtml(jsonStr)}</pre>
                 </body>
                 </html>
             `);
