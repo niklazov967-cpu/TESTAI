@@ -34,14 +34,14 @@ function generateTargetedQueries(steelGrade, validationResult, existingAnalogs) 
       
       // Специфичные запросы для каждого аналога
       queries.push({
-        query: `${grade} mechanical properties yield strength tensile strength datasheet`,
+        query: `${grade} mechanical properties datasheet`,
         focus: 'mechanical_properties',
         country: country,
         grade: grade
       });
       
       queries.push({
-        query: `${grade} предел текучести прочности удлинение ГОСТ`,
+        query: `${grade} предел текучести прочности`,
         focus: 'mechanical_properties',
         country: country,
         grade: grade
@@ -71,14 +71,14 @@ function generateTargetedQueries(steelGrade, validationResult, existingAnalogs) 
       const grade = analog.grade;
       
       queries.push({
-        query: `${grade} impact toughness Charpy test KCV`,
+        query: `${grade} impact toughness`,
         focus: 'impact_toughness',
         country: country,
         grade: grade
       });
       
       queries.push({
-        query: `${grade} ударная вязкость KCU испытания`,
+        query: `${grade} ударная вязкость`,
         focus: 'impact_toughness',
         country: country,
         grade: grade
@@ -94,14 +94,14 @@ function generateTargetedQueries(steelGrade, validationResult, existingAnalogs) 
       const grade = analog.grade;
       
       queries.push({
-        query: `${grade} chemical composition C Cr Ni Mo Mn specification`,
+        query: `${grade} chemical composition`,
         focus: 'chemical_composition',
         country: country,
         grade: grade
       });
       
       queries.push({
-        query: `${grade} химический состав элементы стандарт`,
+        query: `${grade} химический состав`,
         focus: 'chemical_composition',
         country: country,
         grade: grade
@@ -114,12 +114,12 @@ function generateTargetedQueries(steelGrade, validationResult, existingAnalogs) 
     console.log('[Целевой поиск] Фокус: свариваемость');
     
     queries.push({
-      query: `${steelGrade} weldability carbon equivalent CE preheating`,
+      query: `${steelGrade} weldability`,
       focus: 'weldability'
     });
     
     queries.push({
-      query: `${steelGrade} свариваемость углеродный эквивалент предварительный подогрев`,
+      query: `${steelGrade} свариваемость`,
       focus: 'weldability'
     });
   }
@@ -132,7 +132,7 @@ function generateTargetedQueries(steelGrade, validationResult, existingAnalogs) 
       const grade = analog.grade;
       
       queries.push({
-        query: `${grade} availability suppliers manufacturers stock`,
+        query: `${grade} suppliers availability`,
         focus: 'popularity',
         country: country,
         grade: grade
