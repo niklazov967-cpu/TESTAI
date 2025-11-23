@@ -1,6 +1,7 @@
 const cacheManager = require('./cacheManager');
 const stage1Search = require('./stages/stage1_search');
 const stage2Process = require('./stages/stage2_process');
+const stage2SequentialSearch = require('./stages/stage2_sequential_search');
 const stage2ProcessOpenAI = require('./stages/stage2_process_openai');
 const stage3Validate = require('./stages/stage3_validate');
 const translator = require('./translator');
@@ -161,11 +162,19 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
       timestamp: Date.now()
     });
     
-    processedData = await stage2Process.execute(steelGrade, searchData, {
-      ...config,
-      deepseek_model: 'deepseek-chat'
-    });
+    // Выбор стратегии поиска
+    const searchStrategy = config.search_strategy || 'parallel';
     
+    if (searchStrategy === 'sequential') {
+      console.log('[Этап 2] 🔄 Используется последовательная стратегия поиска');
+      processedData = await stage2SequentialSearch.execute(steelGrade, searchData, config);
+    } else {
+      console.log('[Этап 2] 💬 Используется стандартная параллельная стратегия');
+      processedData = await stage2Process.execute(steelGrade, searchData, {
+        ...config,
+        deepseek_model: 'deepseek-chat'
+      });
+    }
     console.log(`✅ Этап 2 (попытка ${attempt}) завершен: аналоги найдены`);
     console.log(`   - США: ${processedData.analogs.USA.grade}`);
     console.log(`   - Россия: ${processedData.analogs.Russia.grade}`);

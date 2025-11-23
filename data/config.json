@@ -6,5 +6,7 @@
   "deepseek_temperature": 0.7,
   "openai_temperature": 0.3,
   "openai_model": "gpt-4o-mini",
-  "escalation_threshold": 85
+  "escalation_threshold": 85,
+  "search_strategy": "sequential",
+  "_search_strategy_options": "parallel (стандартная) или sequential (последовательная)"
 }
