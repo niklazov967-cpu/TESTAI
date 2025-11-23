@@ -373,6 +373,25 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
         });
         
         // Обновляем балл и данные
+        // Проверяем улучшился ли результат
+        if (validationScore2 > bestResult.score) {
+          console.log(`✅ Reasoner улучшил результат: ${bestResult.score} → ${validationScore2}`);
+          bestResult = {
+            data: JSON.parse(JSON.stringify(improvedData)),
+            validation: JSON.parse(JSON.stringify(validatedData)),
+            score: validationScore2,
+            attempt: attempt,
+            model: modelUsed
+          };
+          validationScore = validationScore2;
+          processedData = improvedData;
+        } else {
+          console.log(`⚠️ Reasoner не улучшил результат: ${bestResult.score} ≥ ${validationScore2}`);
+          console.log(`   Используем результат попытки ${bestResult.attempt} (балл: ${bestResult.score})`);
+          processedData = JSON.parse(JSON.stringify(bestResult.data));
+          validatedData = JSON.parse(JSON.stringify(bestResult.validation));
+          validationScore = bestResult.score;
+        }
         
         // Добавляем метаданные о целевом поиске
         processedData.targeted_search = {
