@@ -5,8 +5,8 @@ const stage2SequentialSearch = require('./stages/stage2_sequential_search');
 const stage2SeparatePrompts = require('./stages/stage2_separate_prompts');
 const stage3SeparateValidation = require('./stages/stage3_separate_validation');
 const stage2ProcessOpenAI = require('./stages/stage2_process_openai');
-const stage3Validate = require('./stages/stage3_validate');
-const translator = require('./translator');
+const stage2OpenAISeparatePrompts = require('./stages/stage2_openai_separate_prompts');const stage3Validate = require('./stages/stage3_validate');
+const stage2ReasonerSeparate = require('./stages/stage2_reasoner_separate');const translator = require('./translator');
 const stage1TargetedSearch = require('./stages/stage1_targeted_search');
 const promptBuilder = require('./promptBuilder');
 const deepseekClient = require('./clients/deepseekClient');
@@ -307,21 +307,29 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
         });
         
         // Строим специальный промпт для Reasoner
-        const reasonerPrompt = promptBuilder.buildStage2ReasonerPrompt(
-          steelGrade,
-          processedData,
-          validatedData.validation,
-          targetedSearchData,
-          config
-        );
-        
-        const improvedData = await deepseekClient.processData(
-          reasonerPrompt,
-          'deepseek-reasoner',
-          config
-        );
-        
-        console.log('[Этап 2] DeepSeek Reasoner завершил обработку');
+        // Улучшаем данные через Reasoner (с отдельными промптами или старым способом)
+        const improvedData = useSeparatePrompts 
+          ? await stage2ReasonerSeparate.execute(
+              steelGrade,
+              processedData,
+              validatedData.validation,
+              targetedSearchData,
+              config
+            )
+          : await (async () => {
+              const reasonerPrompt = promptBuilder.buildStage2ReasonerPrompt(
+                steelGrade,
+                processedData,
+                validatedData.validation,
+                targetedSearchData,
+                config
+              );
+              return await deepseekClient.processData(
+                reasonerPrompt,
+                'deepseek-reasoner',
+                config
+              );
+            })();
         if (improvedData.improvements_made) {
           console.log('Улучшения:');
           improvedData.improvements_made.forEach(imp => console.log(`  - ${imp}`));
@@ -346,13 +354,7 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
           timestamp: Date.now()
         });
         
-        validatedData = await stage3Validate.execute(
-          steelGrade,
-          improvedData,
-          searchData,
-          config
-        );
-        
+        validatedData = useSeparatePrompts ? await stage3SeparateValidation.execute(steelGrade, improvedData, searchData, config) : await stage3Validate.execute(steelGrade, improvedData, searchData, config);
         const validationScore2 = validatedData.validation.overall_score;
         
         console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка ${validationScore2}/100`);
@@ -429,7 +431,7 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
           model: 'gpt-4o-mini',
           timestamp: Date.now()
         });
-        
+        processedData = useSeparatePrompts ? await stage2OpenAISeparatePrompts.execute(steelGrade, searchData, config) : await stage2ProcessOpenAI.execute(steelGrade, searchData, config);
         processedData = await stage2ProcessOpenAI.execute(steelGrade, searchData, config);
         
         console.log(`✅ Этап 2 (попытка ${attempt}) завершен`);
