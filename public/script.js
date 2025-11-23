@@ -148,6 +148,19 @@ function handleProgressEvent(eventType, data) {
             }
             updateLoadingStatus('Этап 1 завершен. Запуск этапа 2...');
             break;
+        
+        case 'stage1_targeted':
+            // Целевой дополнительный поиск
+            const targetedBadge = `<span style="background: #17a2b8; color: white; padding: 3px 8px; border-radius: 4px; margin-left: 8px; font-size: 0.85em;">🎯 ЦЕЛЕВОЙ ПОИСК</span>`;
+            updateStageStatus(1, `Найдено ${data.sources_count} дополнительных источников` + targetedBadge);
+            
+            // Обновляем информацию
+            const stage1Info = document.getElementById('stage1-iterations');
+            if (stage1Info) {
+                const currentText = stage1Info.textContent;
+                stage1Info.textContent = currentText + ` + ${data.sources_count} целевых (запросов: ${data.queries_used})`;
+            }
+            break;
             
         case 'stage2_start':
             updateStageStatus(2, data.message || 'Обработка данных...');

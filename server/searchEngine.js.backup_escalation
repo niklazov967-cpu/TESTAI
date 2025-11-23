@@ -216,163 +216,81 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
     });
 
     // ========================================
-    // ========================================
     // ПРОВЕРКА: Нужна ли эскалация?
     // ========================================
-    const escalationThreshold = config.escalation_threshold || 85;
+    const escalationThreshold = config.escalation_threshold || 70;
     
     if (validationScore < escalationThreshold && attempt < maxAttempts) {
-      // ПОПЫТКА 2: DeepSeek Reasoner с целевым дополнительным поиском
+      // ПОПЫТКА 2: DeepSeek Reasoner (умная модель)
       attempt = 2;
       modelUsed = 'deepseek-reasoner';
       
       console.log(`\n⚠️ Валидация не прошла (балл: ${validationScore}/100)`);
-      console.log(`\n[Попытка ${attempt}/${maxAttempts}] 🧠 DeepSeek Reasoner + целевой поиск`);
+      console.log(`\n[Попытка ${attempt}/${maxAttempts}] 🧠 DeepSeek Reasoner (умная модель с расширенным мышлением)`);
       console.log('─'.repeat(60));
       
       sendProgress('stage2_retry', {
         stage: 2,
-        status: 'starting',
-        message: `Целевой дополнительный поиск данных <span style="font-size: 0.85em; color: #666;">(попытка ${attempt})</span>`,
-        reason: `Балл валидации ${validationScore}/100 ниже порога ${escalationThreshold}`,
+        message: 'Повторная обработка с DeepSeek Reasoner...',
+        attempt: attempt,
+        reason: `Предыдущая попытка: балл ${validationScore}/100`,
+        timestamp: Date.now()
+      });
+      
+      processedData = await stage2Process.execute(steelGrade, searchData, {
+        ...config,
+        deepseek_model: 'deepseek-reasoner'
+      });
+      
+      console.log(`✅ Этап 2 (попытка ${attempt}) завершен`);
+      
+      sendProgress('stage2_complete', {
+        stage: 2,
+        message: 'Обработка через Reasoner завершена',
+        attempt: attempt,
         model: 'deepseek-reasoner',
-        mode: 'targeted_search',
+        timestamp: Date.now()
+      });
+      
+      // Повторная валидация
+      console.log('\n✅ ЭТАП 3: Повторная валидация через OpenAI');
+      console.log('─'.repeat(60));
+      
+      sendProgress('stage3_start', {
+        stage: 3,
+        message: 'Повторная валидация результатов...',
         attempt: attempt,
         timestamp: Date.now()
       });
       
-      try {
-        // ШАГ 1: Целевой дополнительный поиск
-        console.log('\n📡 Дополнительный целевой поиск Tavily');
-        console.log('─'.repeat(60));
-        
-        const existingUrls = searchData.aggregated_data.top_sources.map(s => s.url);
-        const targetedSearchData = await stage1TargetedSearch.execute(
-          steelGrade,
-          validatedData.validation,
-          processedData.analogs,
-          existingUrls,
-          config
-        );
-        
-        console.log(`✅ Целевой поиск завершен: ${targetedSearchData.sources.length} новых источников`);
-        
-        sendProgress('stage1_targeted', {
-          stage: 1,
-          status: 'complete',
-          message: `Найдено ${targetedSearchData.sources.length} дополнительных источников`,
-          sources_count: targetedSearchData.sources.length,
-          queries_used: targetedSearchData.queries_used,
-          timestamp: Date.now()
-        });
-        
-        // ШАГ 2: Обработка через DeepSeek Reasoner
-        console.log('\n🤖 Обработка через DeepSeek Reasoner');
-        console.log('─'.repeat(60));
-        
-        sendProgress('stage2_retry', {
-          stage: 2,
-          status: 'processing',
-          message: `DeepSeek Reasoner анализирует данные <span style="font-size: 0.85em; color: #666;">(попытка ${attempt})</span>`,
-          model: 'deepseek-reasoner',
-          timestamp: Date.now()
-        });
-        
-        // Строим специальный промпт для Reasoner
-        const reasonerPrompt = promptBuilder.buildStage2ReasonerPrompt(
-          steelGrade,
-          processedData,
-          validatedData.validation,
-          targetedSearchData,
-          config
-        );
-        
-        const improvedData = await deepseekClient.processData(
-          reasonerPrompt,
-          'deepseek-reasoner',
-          config
-        );
-        
-        console.log('[Этап 2] DeepSeek Reasoner завершил обработку');
-        if (improvedData.improvements_made) {
-          console.log('Улучшения:');
-          improvedData.improvements_made.forEach(imp => console.log(`  - ${imp}`));
-        }
-        
-        sendProgress('stage2_complete', {
-          stage: 2,
-          message: `DeepSeek Reasoner <span style="font-size: 0.85em; color: #666;">(попытка ${attempt})</span>`,
-          attempt: attempt,
-          model: 'deepseek-reasoner',
-          timestamp: Date.now()
-        });
-        
-        // ШАГ 3: Повторная валидация
-        console.log('\n✅ Повторная валидация');
-        console.log('─'.repeat(60));
-        
-        sendProgress('stage3_start', {
-          stage: 3,
-          message: 'Повторная валидация результатов...',
-          attempt: attempt,
-          timestamp: Date.now()
-        });
-        
-        validatedData = await stage3Validate.execute(
-          steelGrade,
-          improvedData,
-          searchData,
-          config
-        );
-        
-        const validationScore2 = validatedData.validation.overall_score;
-        
-        console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка ${validationScore2}/100`);
-        console.log(`   Улучшение: ${validationScore}/100 → ${validationScore2}/100 (+${(validationScore2 - validationScore).toFixed(1)})`);
-        
-        sendProgress('stage3_complete', {
-          stage: 3,
-          status: 'success',
-          message: `Валидация: ${validationScore2}/100 <span style="font-size: 0.85em; color: #666;">(было ${validationScore})</span>`,
-          attempt: attempt,
-          score: validationScore2,
-          improvement: validationScore2 - validationScore,
-          passed: validatedData.validation.passed,
-          timestamp: Date.now()
-        });
-        
-        // Обновляем балл и данные
-        validationScore = validationScore2;
-        processedData = improvedData;
-        
-        // Добавляем метаданные о целевом поиске
-        processedData.targeted_search = {
-          enabled: true,
-          new_sources: targetedSearchData.sources.length,
-          queries_used: targetedSearchData.queries_used,
-          improvements: improvedData.improvements_made || []
-        };
-        
-      } catch (error) {
-        console.error(`❌ Ошибка целевого поиска + Reasoner:`, error.message);
-        console.log(`⚠️ Используем результат первой попытки (балл: ${validationScore})`);
-        // Продолжаем с первым результатом
-      }
+      validatedData = await stage3Validate.execute(steelGrade, processedData, searchData, config);
+      const validationScore2 = validatedData.validation.overall_score;
       
-      // ПОПЫТКА 3: OpenAI (если все еще не хватает)
-      if (validationScore < escalationThreshold && attempt < maxAttempts) {
+      console.log(`✅ Этап 3 (попытка ${attempt}) завершен: оценка ${validationScore2}/100`);
+      
+      sendProgress('stage3_complete', {
+        stage: 3,
+        message: 'Повторная валидация завершена',
+        attempt: attempt,
+        score: validationScore2,
+        passed: validatedData.validation.passed,
+        timestamp: Date.now()
+      });
+      
+      // ПОПЫТКА 3: OpenAI (запасной вариант)
+      if (validationScore2 < escalationThreshold && attempt < maxAttempts) {
         attempt = 3;
         modelUsed = 'gpt-4o-mini';
         
-        console.log(`\n⚠️ Reasoner не помог (балл: ${validationScore}/100)`);
-        console.log(`\n[Попытка ${attempt}/${maxAttempts}] 🤖 OpenAI GPT-4o-mini (запасной вариант)`);
+        console.log(`\n⚠️ Повторная валидация не прошла (балл: ${validationScore2}/100)`);
+        console.log(`\n[Попытка ${attempt}/${maxAttempts}] 🚀 OpenAI GPT-4o-mini (запасной вариант)`);
         console.log('─'.repeat(60));
         
         sendProgress('stage2_retry', {
           stage: 2,
-          message: 'Обработка через OpenAI GPT-4o-mini...',
+          message: 'Финальная попытка с OpenAI...',
           attempt: attempt,
-          model: 'gpt-4o-mini',
+          reason: `DeepSeek Reasoner: балл ${validationScore2}/100`,
           timestamp: Date.now()
         });
         
@@ -419,8 +337,8 @@ async function findSteelAnalogs(steelGrade, config, progressCallback = null) {
           passed: validatedData.validation.passed,
           timestamp: Date.now()
         });
-      } else if (validationScore >= 70) {
-        console.log(`\n🎉 Попытка ${attempt} (Reasoner) успешна! Балл: ${validationScore}/100`);
+      } else if (validationScore2 >= 70) {
+        console.log(`\n🎉 Попытка ${attempt} (Reasoner) успешна! Балл: ${validationScore2}/100`);
       }
     } else if (validationScore >= 70) {
       console.log(`\n🎉 Попытка ${attempt} успешна с первого раза! Балл: ${validationScore}/100`);

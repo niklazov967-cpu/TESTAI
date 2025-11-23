@@ -397,7 +397,93 @@ async function buildStandardsStage3Prompt(equivalents, standardCode, config) {
   return prompt;
 }
 
+
+/**
+ * Построение промпта для DeepSeek Reasoner с целевыми данными
+ */
+function buildStage2ReasonerPrompt(steelGrade, originalResult, validationResult, targetedSearchData, config) {
+  // Группируем новые источники по фокусу
+  const sourcesByFocus = targetedSearchData.sources_by_focus || {};
+  
+  let sourcesText = '';
+  for (const [focus, sources] of Object.entries(sourcesByFocus)) {
+    sourcesText += `\n### ЦЕЛЕВЫЕ ДАННЫЕ: ${focus.toUpperCase()}\n`;
+    sources.slice(0, 5).forEach((source, index) => {
+      sourcesText += `[${focus}-${index + 1}] ${source.title}\n`;
+      sourcesText += `${source.content.substring(0, 300)}...\n\n`;
+    });
+  }
+  
+  const criteriaScores = validationResult.criteria_scores || {};
+  const weakCriteria = Object.entries(criteriaScores)
+    .filter(([_, score]) => score < 85)
+    .map(([criterion, score]) => `- ${criterion}: ${score}/100`)
+    .join('\n');
+  
+  const prompt = `Ты - эксперт по металлургии. Тебе нужно УЛУЧШИТЬ существующий результат поиска аналогов стали.
+
+ВХОДНАЯ СТАЛЬ: ${steelGrade}
+
+ТЕКУЩИЙ РЕЗУЛЬТАТ (требует улучшения):
+${JSON.stringify(originalResult.analogs, null, 2)}
+
+ПРОБЛЕМЫ ВАЛИДАЦИИ (балл: ${validationResult.overall_score}/100):
+${weakCriteria}
+
+ОШИБКИ:
+${validationResult.errors.map(e => `- ${e}`).join('\n')}
+
+ПРЕДУПРЕЖДЕНИЯ:
+${validationResult.warnings.map(w => `- ${w}`).join('\n')}
+
+ДОПОЛНИТЕЛЬНЫЕ ЦЕЛЕВЫЕ ДАННЫЕ (новый поиск):
+${sourcesText}
+
+ТВОЯ ЗАДАЧА:
+1. Проанализируй ТЕКУЩИЙ результат и НОВЫЕ целевые данные
+2. ИСПРАВЬ ошибки и заполни пробелы, используя новые источники
+3. Сохрани корректные данные из текущего результата
+4. Улучши слабые критерии (балл < 85)
+
+КРИТИЧЕСКИ ВАЖНО:
+⚠️ Используй ТОЛЬКО реальные данные из источников!
+⚠️ Если для какого-то свойства нет данных - укажи null
+⚠️ НЕ копируй одинаковые значения между аналогами
+⚠️ Каждый аналог должен иметь СВОИ уникальные механические свойства
+
+ПРИОРИТЕТЫ УЛУЧШЕНИЯ:
+${Object.entries(criteriaScores)
+  .filter(([_, score]) => score < 85)
+  .sort((a, b) => a[1] - b[1])
+  .map(([criterion, score]) => `${criterion} (текущий балл: ${score}/100)`)
+  .join(' → ')}
+
+ФОРМАТ ОТВЕТА (строго JSON):
+{
+  "analogs": {
+    "USA": { 
+      "grade": "...",
+      "standard": "...",
+      "chemical_composition": { ... },
+      "mechanical_properties": { ... }
+    },
+    "Russia": { ... },
+    "China": { ... }
+  },
+  "improvements_made": [
+    "Добавлены механические свойства для 03Х20Н16АГ6 из ГОСТ 5632-2014",
+    "Уточнен химический состав 022Cr19Ni13Mo4"
+  ],
+  "data_sources_used": [
+    "mechanical_properties-1",
+    "chemical_composition-2"
+  ]
+}`;
+
+  return prompt;
+}
 module.exports = {
+  buildStage2ReasonerPrompt,
   buildStage2Prompt,
   buildStage3Prompt,
   buildStandardsStage2Prompt,
